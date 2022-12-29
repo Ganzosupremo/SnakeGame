@@ -36,10 +36,16 @@ public class Room
 
     public List<string> childRoomIDList;
     public string parentRoomID;
-    //public List<Doorway> doorwayList;
+    public List<Doorway> doorwayList;
     public bool isPositioned = false;
     public InstantiatedRoom instantiatedRoom;
-    public bool isLit;
+    public bool isLit = false;
     public bool isClearOfEnemies = false;
     public bool isPreviouslyVisited = false;
+
+    public Room()
+    {
+        childRoomIDList = new();
+        doorwayList = new();
+    }
 }
