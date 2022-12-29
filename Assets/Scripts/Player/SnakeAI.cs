@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeGame : SingletonMonoBehaviour<SnakeGame>
+public class SnakeAI : SingletonMonoBehaviour<SnakeAI>
 {
     // The grid dimensions
     public int GridWidth { get; set; }

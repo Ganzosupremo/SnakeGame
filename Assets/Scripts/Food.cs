@@ -18,8 +18,8 @@ public class Food : MonoBehaviour
 
     private void Awake()
     {
-        gridWidth = SnakeGame.Instance.GridWidth;
-        gridHeight = SnakeGame.Instance.GridHeight;
+        gridWidth = SnakeAI.Instance.GridWidth;
+        gridHeight = SnakeAI.Instance.GridHeight;
         foodPrefab = this.gameObject;
     }
 

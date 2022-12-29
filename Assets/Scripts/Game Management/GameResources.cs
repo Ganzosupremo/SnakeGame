@@ -16,5 +16,15 @@ public class GameResources : MonoBehaviour
         }
     }
 
-    
+    [Header("DUNGEON")]
+    public RoomNodeTypeListSO roomNodeTypeList;
+
+    #region Validation
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        HelperUtilities.ValidateCheckNullValue(this, nameof(roomNodeTypeList), roomNodeTypeList);
+    }
+#endif
+    #endregion
 }
