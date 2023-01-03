@@ -16,15 +16,47 @@ MonoBehaviour:
   prefab: {fileID: 4154312413488295907, guid: 6753a2ea2594aef4cadfd725a8f22dd5, type: 3}
   previousPrefab: {fileID: 4154312413488295907, guid: 6753a2ea2594aef4cadfd725a8f22dd5, type: 3}
   roomNodeType: {fileID: 11400000, guid: d06698c63491bf14c8b89fcbe1d44588, type: 2}
-  lowerBounds: {x: -8, y: -7}
-  upperBounds: {x: 7, y: 8}
-  doorwayList: []
+  lowerBounds: {x: -9, y: -8}
+  upperBounds: {x: 7, y: 9}
+  doorwayList:
+  - doorPosition: {x: 0, y: 9}
+    doorOrientation: 0
+    doorPrefab: {fileID: 5249997635963020509, guid: 21ed1631188e63c4797f20ca7a29a904, type: 3}
+    doorwayStartCopyPosition: {x: -3, y: 9}
+    doorwayCopyTileWidth: 6
+    doorwayCopyTileHeight: 3
+    isConnected: 0
+    isUnavailable: 0
+  - doorPosition: {x: -1, y: -8}
+    doorOrientation: 2
+    doorPrefab: {fileID: 5249997635963020509, guid: b4a40bfd2443fc94ea7dc955be8d8aee, type: 3}
+    doorwayStartCopyPosition: {x: -4, y: -6}
+    doorwayCopyTileWidth: 6
+    doorwayCopyTileHeight: 3
+    isConnected: 0
+    isUnavailable: 0
+  - doorPosition: {x: 7, y: 0}
+    doorOrientation: 1
+    doorPrefab: {fileID: 2875601794430873091, guid: 200c96d0a897fac47b1f4d01be3957d3, type: 3}
+    doorwayStartCopyPosition: {x: 4, y: 3}
+    doorwayCopyTileWidth: 4
+    doorwayCopyTileHeight: 7
+    isConnected: 0
+    isUnavailable: 0
+  - doorPosition: {x: -9, y: 0}
+    doorOrientation: 3
+    doorPrefab: {fileID: 2875601794430873091, guid: 200c96d0a897fac47b1f4d01be3957d3, type: 3}
+    doorwayStartCopyPosition: {x: -9, y: 3}
+    doorwayCopyTileWidth: 3
+    doorwayCopyTileHeight: 7
+    isConnected: 0
+    isUnavailable: 0
   spawnPositionArray:
   - {x: 0, y: 0}
-  - {x: -7, y: -1}
-  - {x: 7, y: -1}
+  - {x: -4, y: -1}
+  - {x: 3, y: -1}
   - {x: -1, y: 5}
-  - {x: -1, y: -7}
+  - {x: -1, y: -5}
   foodSpawnPositionArray:
   - {x: -4, y: -1}
   - {x: 0, y: 0}

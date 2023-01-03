@@ -11,14 +11,19 @@ public class PoolManager : SingletonMonoBehaviour<PoolManager>
     public Pool[] poolArray = null;
     private Transform objectPoolTransform;
 
-    private Dictionary<int, Queue<Component>> poolDictionary = new();
+    private Dictionary<int, Queue<Component>> poolDictionary = new Dictionary<int, Queue<Component>>();
 
     [System.Serializable]
     public struct Pool
     {
+        [Tooltip("The pool size this object will have, the number of gameobjects created in the pool" +
+            " will be defined by the pool size")]
         public int PoolSize;
+        [Tooltip("The prefab to instantiate in the pool")]
         public GameObject prefabToUse;
-        public string typeOfComponent;
+        [Tooltip("Type exactly the type of component that the prefab is," +
+            "otherwise it won't work.")]
+        public string componentType;
     }
 
     private void Start()
@@ -28,7 +33,7 @@ public class PoolManager : SingletonMonoBehaviour<PoolManager>
 
         for (int i = 0; i < poolArray.Length; i++)
         {
-            CreatePool(poolArray[i].prefabToUse, poolArray[i].PoolSize, poolArray[i].typeOfComponent);
+            CreatePool(poolArray[i].prefabToUse, poolArray[i].PoolSize, poolArray[i].componentType);
         }
     }
 
@@ -40,7 +45,7 @@ public class PoolManager : SingletonMonoBehaviour<PoolManager>
         int poolKey = prefabToUse.GetInstanceID();
         string prefabName = prefabToUse.name; //Gets the name of the prefab
 
-        GameObject parentGameObject = new GameObject(prefabName + "Anchor"); //Creates the parent gameobject to attach the child gameobjects to
+        GameObject parentGameObject = new GameObject(prefabName + "Anchor"); //Creates the parent gameobject to attached the child gameobjects to
         parentGameObject.transform.SetParent(objectPoolTransform);
 
         if (!poolDictionary.ContainsKey(poolKey))
@@ -58,12 +63,11 @@ public class PoolManager : SingletonMonoBehaviour<PoolManager>
         }
     }
 
-
     /// <summary>
     /// Reuses A Game Object Contained In The Pool.
     /// </summary>
-    /// <param name="prefabToUse">Is The Prefab Containing The Component. </param>
-    /// <param name="position">Is The World Position Where The Gameobject Should Appear When Enabled.</param>
+    /// <param name="prefabToUse">The Prefab Containing The Component.</param>
+    /// <param name="position">The World Position Where The Gameobject Should Appear When Enabled.</param>
     /// <param name="rotation">Should Be Set If The Component Needs A Rotation.</param>
     /// <returns></returns>
     public Component ReuseComponent(GameObject prefabToUse, Vector3 position, Quaternion rotation)
@@ -87,10 +91,8 @@ public class PoolManager : SingletonMonoBehaviour<PoolManager>
     }
 
     /// <summary>
-    /// Gets a gameobject from the pool.
+    /// Gets A Gameobject From The Pool using The 'poolKey'
     /// </summary>
-    /// <param name="poolKey">The key used to retrieve the componentToReuse</param>
-    /// <returns>The gameobject to reuse</returns>
     private Component GetComponentFromPool(int poolKey)
     {
         Component componentToReuse = poolDictionary[poolKey].Dequeue();

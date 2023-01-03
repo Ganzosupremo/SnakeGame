@@ -8,26 +8,29 @@ public class Food : MonoBehaviour
     // The grid dimensions
     private int gridWidth = 20;
     private int gridHeight = 20;
+    private float timer = 2f;
 
     // The prefab for the food
-    private GameObject foodPrefab;
+    public GameObject foodPrefab;
 
     // The position of the food
     int foodX = 0;
     int foodY = 0;
 
-    private void Awake()
+    private void Update()
     {
-        gridWidth = SnakeAI.Instance.GridWidth;
-        gridHeight = SnakeAI.Instance.GridHeight;
-        foodPrefab = this.gameObject;
+        timer -= Time.deltaTime;
+
+        if (timer <= 0)
+        {
+            timer = 2f;
+        }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.CompareTag("Player"))
+        if (other.CompareTag(Settings.playerTag))
         {
-            GenerateFood();
             DisableFood();
         }
     }

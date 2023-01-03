@@ -23,7 +23,6 @@ public static class HelperUtilities
         //Vector3 worldPosition = mainCamera.ScreenToWorldPoint(mouseScreenPosition);
         //worldPosition.z = 0f;
         return mainCamera.ScreenToWorldPoint(mouseScreenPosition);
-
     }
 
     public static Vector3 GetAimPositionGamepad()
@@ -41,21 +40,6 @@ public static class HelperUtilities
 
         // Return the world position of the joystick
         return mainCamera.ScreenToWorldPoint(newJoystickPosition);
-    }
-
-    /// <summary>
-    /// Get the camera viewport lower and upper bounds
-    /// </summary>
-    /// <param name="worldPositionLowerBounds">The lower world lower bounds of the camera</param>
-    /// <param name="worldPositionUpperBounds">The upper world bounds of the camera</param>
-    /// <param name="camera">The camera to calculate the position bounds</param>
-    public static void CameraWorldPositionBounds(out Vector2Int worldPositionLowerBounds, out Vector2Int worldPositionUpperBounds, Camera camera)
-    {
-        Vector3 worldPositionViewportBottomLeft = camera.ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
-        Vector3 worldPositionViewportTopRight = camera.ViewportToWorldPoint(new Vector3(1f, 1f, 0f));
-
-        worldPositionLowerBounds = new Vector2Int((int)worldPositionViewportBottomLeft.x, (int)worldPositionViewportBottomLeft.y);
-        worldPositionUpperBounds = new Vector2Int((int)worldPositionViewportTopRight.x, (int)worldPositionViewportTopRight.y);
     }
 
     /// <summary>
@@ -79,6 +63,37 @@ public static class HelperUtilities
     {
         Vector3 directionVector = new(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad * angle), 0f);
         return directionVector;
+    }
+    
+    /// <summary>
+    /// Get the nearest spawn point position
+    /// </summary>
+    /// <param name="position">The position to get the nearest spawn point from</param>
+    /// <returns></returns>
+    public static Vector3 GetNearestSpawnPointPosition(Vector3 position)
+    {
+        Room currentRoom = GameManager.Instance.GetCurrentRoom();
+
+        Grid grid = currentRoom.instantiatedRoom.grid;
+
+        Vector3 nearestSpawnPosition = new(10000f, 10000f, 0);
+
+        // Loop theough all the room spawn points
+        foreach (Vector2Int spawnPositionGrid in currentRoom.spawnPositionArray)
+        {
+            //Convert the local spawn grid positions to world positions values
+            Vector3 worldSpawnPosition = grid.CellToWorld((Vector3Int)spawnPositionGrid);
+
+            //If the distance between worldSpawnPosition and the position is less than the nearesSpawnPosition and position, then we found
+            // the nearest spawn point to the passed position
+            if (Vector3.Distance(worldSpawnPosition, position) < Vector3.Distance(nearestSpawnPosition, position))
+            {
+                //This is now the nearest spawn position
+                nearestSpawnPosition = worldSpawnPosition;
+            }
+        }
+
+        return nearestSpawnPosition;
     }
 
     /// <summary>
@@ -143,6 +158,21 @@ public static class HelperUtilities
 
     //    return nearestSpawnPosition;
     //}
+
+    /// <summary>
+    /// Get the camera viewport lower and upper bounds
+    /// </summary>
+    /// <param name="worldPositionLowerBounds">The lower world lower bounds of the camera</param>
+    /// <param name="worldPositionUpperBounds">The upper world bounds of the camera</param>
+    /// <param name="camera">The camera to calculate the position bounds</param>
+    public static void CameraWorldPositionBounds(out Vector2Int worldPositionLowerBounds, out Vector2Int worldPositionUpperBounds, Camera camera)
+    {
+        Vector3 worldPositionViewportBottomLeft = camera.ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
+        Vector3 worldPositionViewportTopRight = camera.ViewportToWorldPoint(new Vector3(1f, 1f, 0f));
+
+        worldPositionLowerBounds = new Vector2Int((int)worldPositionViewportBottomLeft.x, (int)worldPositionViewportBottomLeft.y);
+        worldPositionUpperBounds = new Vector2Int((int)worldPositionViewportTopRight.x, (int)worldPositionViewportTopRight.y);
+    }
 
     /// <summary>
     /// Convert The Linear Volume Scale To Decibels

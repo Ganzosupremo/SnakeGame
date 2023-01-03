@@ -6,6 +6,9 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
+    [HideInInspector] public GameState currentGameState;
+    [HideInInspector] public GameState previousGameState;
+
     #region Header Dungeon Levels
     [Space(10)]
     [Header("The Levels Of The Dungeon")]
@@ -20,8 +23,31 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     #endregion
     [SerializeField] private int currentDungeonLevelListIndex = 0;
 
-    [HideInInspector] public GameState currentGameState;
-    [HideInInspector] public GameState previousGameState;
+    private Room currentRoom;
+    private Room previousRoom;
+    private SnakeDetailsSO snakeDetails;
+    private Snake snake;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        snakeDetails = GameResources.Instance.currentPlayer.snakeDetails;
+
+        InstantiatePlayer();
+    }
+
+    /// <summary>
+    /// Instantiates the snake in the scene at position
+    /// </summary>
+    private void InstantiatePlayer()
+    {
+        GameObject snakeGameObject = Instantiate(snakeDetails.snakePrefab);
+
+        snake = snakeGameObject.GetComponent<Snake>();
+
+        snake.Initialize(snakeDetails);
+    }
 
     private void Start()
     {
@@ -32,10 +58,27 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         HandleGameStates();
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             currentGameState = GameState.Started;
         }
+    }
+
+    private void OnEnable()
+    {
+        StaticEventHandler.OnRoomChanged += StaticEventHandler_OnRoomChanged;
+    }
+
+
+
+    private void OnDisable()
+    {
+        StaticEventHandler.OnRoomChanged -= StaticEventHandler_OnRoomChanged;
+    }
+
+    private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
+    {
+        SetCurrentRoom(roomChangedEventArgs.room);
     }
 
     /// <summary>
@@ -74,7 +117,46 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void PlayDungeonLevel(int currentDungeonLevelListIndex)
     {
-        throw new NotImplementedException();
+        bool dungeonBuiltSuccesfully = DungeonBuilder.Instance.GenerateDungeon(gameLevelList[currentDungeonLevelListIndex]);
+
+        if (!dungeonBuiltSuccesfully)
+        {
+            Debug.LogError("Couldn't build dungeon from the specified node graphs");
+        }
+
+        // Trigger the room changed event for the first time
+        StaticEventHandler.CallRoomChangedEvent(currentRoom);
+
+        // Set the snake position roughly in the middle of the room
+        snake.gameObject.transform.position = new Vector3((currentRoom.worldLowerBounds.x + currentRoom.worldUpperBounds.x) / 2f,
+            (currentRoom.worldLowerBounds.y + currentRoom.worldUpperBounds.y) / 2f, 0f);
+
+        // Get the nearest spawn point position of the room, so the snake doesn't spawn in walls or something
+        snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(snake.gameObject.transform.position);
+    }
+    
+    /// <summary>
+    /// Sets the current room the player is in
+    /// </summary>
+    /// <param name="room">The room to set as the current room</param>
+    public void SetCurrentRoom(Room room)
+    {
+        previousRoom = currentRoom;
+        currentRoom = room;
+    }
+
+    /// <summary>
+    /// Gets the current room 
+    /// </summary>
+    /// <returns>The room the player currently is in</returns>
+    public Room GetCurrentRoom()
+    {
+        return currentRoom;
+    }
+
+    public Snake GetSnake()
+    {
+        return snake;
     }
 
     #region Validation

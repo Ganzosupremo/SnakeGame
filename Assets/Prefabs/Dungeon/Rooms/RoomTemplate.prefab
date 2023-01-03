@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 4154312413123538110}
   m_Layer: 11
   m_Name: Tilemap_Minimap
-  m_TagString: Tilemap6_Minimap
+  m_TagString: Tilemap_Collision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,6 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4154312413488295904}
   - component: {fileID: 4154312413488295905}
+  - component: {fileID: -1589455813661910923}
   m_Layer: 12
   m_Name: RoomTemplate
   m_TagString: Untagged
@@ -229,6 +230,28 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-1589455813661910923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4154312413488295907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2053bf6662fb2e84b88d853701ad26c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grid: {fileID: 0}
+  groundtilemap: {fileID: 0}
+  decorations1Tilemap: {fileID: 0}
+  decorations2Tilemap: {fileID: 0}
+  frontTilemap: {fileID: 0}
+  collisionTilemap: {fileID: 0}
+  minimapTilemap: {fileID: 0}
+  roomColliderBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!1 &4154312413557124286
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,7 +265,7 @@ GameObject:
   - component: {fileID: 4154312413557124284}
   m_Layer: 0
   m_Name: Tilemap_Decorations2
-  m_TagString: Tilemap3_Decorations2
+  m_TagString: Tilemap_Decorations2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -362,7 +385,7 @@ GameObject:
   - component: {fileID: 4154312413558470748}
   m_Layer: 0
   m_Name: Tilemap_Front
-  m_TagString: Tilemap4_Front
+  m_TagString: Tilemap_Front
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -482,7 +505,7 @@ GameObject:
   - component: {fileID: 4154312414154019573}
   m_Layer: 0
   m_Name: Tilemap_Decorations1
-  m_TagString: Tilemap2_Decorations1
+  m_TagString: Tilemap_Decorations1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -602,7 +625,7 @@ GameObject:
   - component: {fileID: 4154312414454829204}
   m_Layer: 0
   m_Name: Tilemap_Ground
-  m_TagString: Tilemap1_Ground
+  m_TagString: Tilemap_Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -725,7 +748,7 @@ GameObject:
   - component: {fileID: 4154312414824606671}
   m_Layer: 13
   m_Name: Tilemap_Collisions
-  m_TagString: Tilemap5_Collisions
+  m_TagString: Tilemap_Collision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

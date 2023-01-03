@@ -18,7 +18,7 @@ public static class Settings
     public const float fadeInTime = 0.5f; //Time the rooms and doors take to fade in
     public const int maxChildCorridors = 4; //Max number of child corridors leading from a room - max should be 3 although
                                             //this is not recommended since it can cause the dungeon building to fail, since the rooms are more likely to not fit together
-    public const float doorUnlockDelay = 1.5f;
+    public const float doorUnlockDelay = 1f;
     #endregion
 
     #region ANIMATOR PARAMETERS
@@ -62,8 +62,8 @@ public static class Settings
     #endregion
 
     #region GAME AUDIO
-    public const float musicFadeInTime = 0.8f;
-    public const float musicFadeOutTiem = 0.8f;
+    public const float musicFadeInTime = 1.1f;
+    public const float musicFadeOutTime = 0.9f;
     #endregion
 
     #region FIRING CONTROL

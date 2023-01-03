@@ -16,8 +16,24 @@ MonoBehaviour:
   prefab: {fileID: 4154312413488295907, guid: 9816134bc5fb71546a0713eaca73cf55, type: 3}
   previousPrefab: {fileID: 4154312413488295907, guid: 9816134bc5fb71546a0713eaca73cf55, type: 3}
   roomNodeType: {fileID: 11400000, guid: 4b65fe3e5cd375242abfde29a92a0eb6, type: 2}
-  lowerBounds: {x: -4, y: -5}
-  upperBounds: {x: 3, y: 4}
-  doorwayList: []
+  lowerBounds: {x: -3, y: -7}
+  upperBounds: {x: 3, y: 8}
+  doorwayList:
+  - doorPosition: {x: 0, y: 8}
+    doorOrientation: 0
+    doorPrefab: {fileID: 0}
+    doorwayStartCopyPosition: {x: 0, y: 0}
+    doorwayCopyTileWidth: 0
+    doorwayCopyTileHeight: 0
+    isConnected: 0
+    isUnavailable: 0
+  - doorPosition: {x: 0, y: -7}
+    doorOrientation: 2
+    doorPrefab: {fileID: 0}
+    doorwayStartCopyPosition: {x: 0, y: 0}
+    doorwayCopyTileWidth: 0
+    doorwayCopyTileHeight: 0
+    isConnected: 0
+    isUnavailable: 0
   spawnPositionArray: []
   foodSpawnPositionArray: []

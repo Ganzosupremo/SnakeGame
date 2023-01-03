@@ -55,14 +55,14 @@ public class MovementDetailsSO : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        //HelperUtilities.ValidateCheckPositiveRange(this, nameof(minMoveSpeed), minMoveSpeed, nameof(maxMoveSpeed), maxMoveSpeed, false);
+        HelperUtilities.ValidateCheckPositiveRange(this, nameof(minMoveSpeed), minMoveSpeed, nameof(maxMoveSpeed), maxMoveSpeed, false);
 
-        //if (rollDistance != 0 || rollSpeed != 0 || rollCooldownTime != 0)
-        //{
-        //    HelperUtilities.ValidateCheckPositiveValue(this, nameof(rollDistance), rollDistance, false);
-        //    HelperUtilities.ValidateCheckPositiveValue(this, nameof(rollSpeed), rollSpeed, false);
-        //    HelperUtilities.ValidateCheckPositiveValue(this, nameof(rollCooldownTime), rollCooldownTime, false);
-        //}
+        if (dashDistance != 0 || dashSpeed != 0 || dashCooldownTime != 0)
+        {
+            HelperUtilities.ValidateCheckPositiveValue(this, nameof(dashDistance), dashDistance, false);
+            HelperUtilities.ValidateCheckPositiveValue(this, nameof(dashSpeed), dashSpeed, false);
+            HelperUtilities.ValidateCheckPositiveValue(this, nameof(dashCooldownTime), dashCooldownTime, false);
+        }
     }
 #endif
     #endregion
