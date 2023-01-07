@@ -51,13 +51,14 @@ public class Snake : MonoBehaviour
     [HideInInspector] public ReloadWeapon reloadWeapon;
     [HideInInspector] public WeaponReloadedEvent weaponReloadedEvent;
     [HideInInspector] public SpriteRenderer spriteRenderer;
+    [HideInInspector] public SnakeBody snakeBody;
 
-    public List<Weapon> weaponList = new(); 
-
-    private float timer = 2f;
-
+    public List<Weapon> weaponList = new();
     public GameObject foodPrefab;
-    
+    public GameObject snakeBodyPrefab;
+
+    private List<Transform> childList = new();
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -75,33 +76,16 @@ public class Snake : MonoBehaviour
         reloadWeapon = GetComponent<ReloadWeapon>();
         weaponReloadedEvent = GetComponent<WeaponReloadedEvent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        snakeBody = snakeBodyPrefab.GetComponent<SnakeBody>();
     }
-
-    // This is a test to see when the snake collides with the walls can be respawned again in the spawn positions
-    // of the room templates and lose a specific amount of health
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        StartCoroutine(DisableObject());
-    }
-
-    private void Update()
-    {
-        timer -= Time.deltaTime;
-
-        if (timer <= 0f)
-        {
-            SpawnFood();
-            timer = 2f;
-        }
-    }
-
-    private void SpawnFood()
+    
+    public void SpawnFood()
     {
         // Know in which room the food should spawn
         Room currentRoom = GameManager.Instance.GetCurrentRoom();
 
-        Vector3 spawnPosition = new(Random.Range(currentRoom.worldLowerBounds.x, currentRoom.worldUpperBounds.x),
-            Random.Range(currentRoom.worldLowerBounds.y, currentRoom.worldUpperBounds.y), 0f);
+        Vector3 spawnPosition = new(Random.Range(currentRoom.tilemapLowerBounds.x, currentRoom.tilemapUpperBounds.x),
+            Random.Range(currentRoom.tilemapLowerBounds.y, currentRoom.tilemapUpperBounds.y), 0f);
 
         // Make sure the food spawns within the room
         Food food = (Food)PoolManager.Instance.ReuseComponent(foodPrefab, HelperUtilities.GetNearestSpawnPointPosition(spawnPosition),
@@ -165,11 +149,25 @@ public class Snake : MonoBehaviour
         return weapon;
     }
 
-    private IEnumerator DisableObject()
+    public void EatFood()
     {
-        yield return null;
-        spriteRenderer.color = Color.blue;
-        yield return new WaitForSeconds(3f);
-        spriteRenderer.color = Color.white;
+        foodPrefab.SetActive(false);
+        var body = Instantiate(snakeBodyPrefab, transform.position, Quaternion.identity);
+        body.GetComponent<BoxCollider2D>().enabled = false;
+        StartCoroutine(ActivateBodyCollider(body.transform));
+        body.GetComponent<SnakeBody>().WaitHeadUpdateCicle(childList.Count);
+        childList.Add(body.transform);
+        SpawnFood();
+    }
+
+    private IEnumerator ActivateBodyCollider(Transform body)
+    {
+        yield return new WaitForSeconds(0.8f);
+        body.GetComponent<BoxCollider2D>().enabled = true;
+    }
+
+    public void SetChildList(List<Transform> childList)
+    {
+        this.childList = childList;
     }
 }

@@ -60,6 +60,10 @@ public class ReloadWeapon : MonoBehaviour
 
     private IEnumerator ReloadingWeaponCoroutine(Weapon weapon, int reloadPercent)
     {
+        // Play the reload sound when the weapon is reloaded
+        if (weapon.weaponDetails.reloadSound != null)
+            SoundEffectManager.Instance.PlaySoundEffect(weapon.weaponDetails.reloadSound);
+
         weapon.isWeaponReloading = true;
 
         //Update the reload timer

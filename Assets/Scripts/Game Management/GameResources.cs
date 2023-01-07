@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class GameResources : MonoBehaviour
 {
@@ -30,6 +31,44 @@ public class GameResources : MonoBehaviour
     #endregion
     public CurrentPlayerSO currentPlayer;
 
+    #region Header Game Audio
+    [Space(10)]
+    [Header("Game Music")]
+    #endregion
+    #region Tooltip
+    [Tooltip("The master mixer group of the music")]
+    #endregion
+    public AudioMixerGroup musicMasterMixerGroup;
+
+    #region Tooltip
+    [Tooltip("The music full snapshot")]
+    #endregion
+    public AudioMixerSnapshot musicOnFull;
+
+    #region Tooltip
+    [Tooltip("The low music snapshot")]
+    #endregion
+    public AudioMixerSnapshot musicOnLow;
+
+    #region Tooltip
+    [Tooltip("The music off snapshot")]
+    #endregion
+    public AudioMixerSnapshot musicOff;
+
+    #region Header Sound Management
+    [Space(10)]
+    [Header("Sound Management")]
+    #endregion
+    #region Tooltip
+    [Tooltip("Populate with the SFX master group on the audio mixer")]
+    #endregion
+    public AudioMixerGroup soundMasterMixerGroup;
+
+    #region Tooltip
+    [Tooltip("The sound effects for the door")]
+    #endregion
+    public SoundEffectSO doorSoundEffect;
+
     #region Header Materials
     [Space(10)]
     [Header("Materials")]
@@ -49,6 +88,15 @@ public class GameResources : MonoBehaviour
     #endregion
     public Shader variableLitShader;
 
+    #region Header UI
+    [Space(10)]
+    [Header("Game UI")]
+    #endregion
+    #region Tooltip
+    [Tooltip("Populate with the AmmoIcon prefab")]
+    #endregion
+    public GameObject ammoIconPrefab;
+
     #region Validation
 #if UNITY_EDITOR
     private void OnValidate()
@@ -58,6 +106,15 @@ public class GameResources : MonoBehaviour
         HelperUtilities.ValidateCheckNullValue(this, nameof(dimmedMaterial), dimmedMaterial);
         HelperUtilities.ValidateCheckNullValue(this, nameof(litMaterial), litMaterial);
         HelperUtilities.ValidateCheckNullValue(this, nameof(variableLitShader), variableLitShader);
+        HelperUtilities.ValidateCheckNullValue(this, nameof(ammoIconPrefab), ammoIconPrefab);
+
+        HelperUtilities.ValidateCheckNullValue(this, nameof(musicMasterMixerGroup), musicMasterMixerGroup);
+        HelperUtilities.ValidateCheckNullValue(this, nameof(musicOnFull), musicOnFull);
+        HelperUtilities.ValidateCheckNullValue(this, nameof(musicOnLow), musicOnLow);
+        HelperUtilities.ValidateCheckNullValue(this, nameof(musicOff), musicOff);
+
+        HelperUtilities.ValidateCheckNullValue(this, nameof(soundMasterMixerGroup), soundMasterMixerGroup);
+        HelperUtilities.ValidateCheckNullValue(this, nameof(doorSoundEffect), doorSoundEffect);
     }
 #endif
     #endregion

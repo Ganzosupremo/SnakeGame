@@ -73,6 +73,24 @@ namespace SnakeInput
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SwitchWeapons"",
+                    ""type"": ""Value"",
+                    ""id"": ""147acacf-5ca4-43d4-80c8-84c858b2a3d4"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SetWeaponAtFirstPos"",
+                    ""type"": ""Button"",
+                    ""id"": ""ae880602-9c8f-4f4b-9037-395159eddd55"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -251,6 +269,50 @@ namespace SnakeInput
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""42f7727b-8bff-4448-ac9e-759d563cd73c"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SwitchWeapons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""68baca70-d749-4e9e-99fa-9972f4bcf303"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SetWeaponAtFirstPos"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""8bdfc9d8-957d-46a3-91e6-2d13e606e22b"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetWeaponAtFirstPos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""b218e6c8-e4f8-4194-ab88-eadf76c3ff73"",
+                    ""path"": ""<Keyboard>/rightShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SetWeaponAtFirstPos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -292,6 +354,8 @@ namespace SnakeInput
             m_Snake_Dash = m_Snake.FindAction("Dash", throwIfNotFound: true);
             m_Snake_Fire = m_Snake.FindAction("Fire", throwIfNotFound: true);
             m_Snake_Reload = m_Snake.FindAction("Reload", throwIfNotFound: true);
+            m_Snake_SwitchWeapons = m_Snake.FindAction("SwitchWeapons", throwIfNotFound: true);
+            m_Snake_SetWeaponAtFirstPos = m_Snake.FindAction("SetWeaponAtFirstPos", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -356,6 +420,8 @@ namespace SnakeInput
         private readonly InputAction m_Snake_Dash;
         private readonly InputAction m_Snake_Fire;
         private readonly InputAction m_Snake_Reload;
+        private readonly InputAction m_Snake_SwitchWeapons;
+        private readonly InputAction m_Snake_SetWeaponAtFirstPos;
         public struct SnakeActions
         {
             private @SnakeControl m_Wrapper;
@@ -365,6 +431,8 @@ namespace SnakeInput
             public InputAction @Dash => m_Wrapper.m_Snake_Dash;
             public InputAction @Fire => m_Wrapper.m_Snake_Fire;
             public InputAction @Reload => m_Wrapper.m_Snake_Reload;
+            public InputAction @SwitchWeapons => m_Wrapper.m_Snake_SwitchWeapons;
+            public InputAction @SetWeaponAtFirstPos => m_Wrapper.m_Snake_SetWeaponAtFirstPos;
             public InputActionMap Get() { return m_Wrapper.m_Snake; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -389,6 +457,12 @@ namespace SnakeInput
                     @Reload.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnReload;
                     @Reload.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnReload;
                     @Reload.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnReload;
+                    @SwitchWeapons.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSwitchWeapons;
+                    @SwitchWeapons.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSwitchWeapons;
+                    @SwitchWeapons.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSwitchWeapons;
+                    @SetWeaponAtFirstPos.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSetWeaponAtFirstPos;
+                    @SetWeaponAtFirstPos.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSetWeaponAtFirstPos;
+                    @SetWeaponAtFirstPos.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSetWeaponAtFirstPos;
                 }
                 m_Wrapper.m_SnakeActionsCallbackInterface = instance;
                 if (instance != null)
@@ -408,6 +482,12 @@ namespace SnakeInput
                     @Reload.started += instance.OnReload;
                     @Reload.performed += instance.OnReload;
                     @Reload.canceled += instance.OnReload;
+                    @SwitchWeapons.started += instance.OnSwitchWeapons;
+                    @SwitchWeapons.performed += instance.OnSwitchWeapons;
+                    @SwitchWeapons.canceled += instance.OnSwitchWeapons;
+                    @SetWeaponAtFirstPos.started += instance.OnSetWeaponAtFirstPos;
+                    @SetWeaponAtFirstPos.performed += instance.OnSetWeaponAtFirstPos;
+                    @SetWeaponAtFirstPos.canceled += instance.OnSetWeaponAtFirstPos;
                 }
             }
         }
@@ -437,6 +517,8 @@ namespace SnakeInput
             void OnDash(InputAction.CallbackContext context);
             void OnFire(InputAction.CallbackContext context);
             void OnReload(InputAction.CallbackContext context);
+            void OnSwitchWeapons(InputAction.CallbackContext context);
+            void OnSetWeaponAtFirstPos(InputAction.CallbackContext context);
         }
     }
 }

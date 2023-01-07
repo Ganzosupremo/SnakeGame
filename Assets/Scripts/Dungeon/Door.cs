@@ -64,7 +64,7 @@ public class Door : MonoBehaviour
             doorAnimator.SetBool(Settings.openDoor, true);
 
             //Play one random sound effect from the array
-            //SoundManager.Instance.PlaySoundEffect(GameResources.Instance.openCloseDoorSoundEffect[playRandomSound]);
+            SoundEffectManager.Instance.PlaySoundEffect(GameResources.Instance.doorSoundEffect);
         }
     }
 

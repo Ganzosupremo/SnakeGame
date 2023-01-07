@@ -27,40 +27,51 @@ public class SnakeControler : MonoBehaviour
     private bool isSnakeDashing = false;
     private float dashCooldownTimer = 0f;
 
+    private List<Transform> snakeBodyList = new();
+
     private SnakeControl snakeControl;
+    private SnakeBody snakeBody;
 
     private void Awake()
     {
-        // Use the script version of the Input System to
-        // fire the weapon, so the weapon keeps firing as long
-        // the fire button is pressed.
-        // I couldn't find a way to do it with the Player Input component
         snakeControl = new();
         snakeControl.Snake.Enable();
         
         snake = GetComponent<Snake>();
-        moveSpeed = movementDetails.GetMoveSpeed();
-        savedDirection = new Vector2(1f, 0f);
+        //savedDirection = new Vector2(0.01f, 0f);
     }
 
     private void Start()
     {
         waitForFixedUpdate = new();
+        savedDirection = new Vector2(1f, 0f);
+        snakeBody = snake.snakeBody;
 
         SetInitialWeapon();
 
         SetAnimatorSpeed();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         OnMove();
+    }
 
+    private void Update()
+    {
         OnDash();
 
-        OnAim();
+        WeaponInputs();
 
         SnakeDashCooldownTimer();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Food"))
+        {
+            snake.EatFood();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -99,23 +110,39 @@ public class SnakeControler : MonoBehaviour
     /// <summary>
     /// Moves the snake to the <see cref="moveDirection"/> position using the <seealso cref="MovementByVelocityEvent"/>.
     /// </summary>
-    /// <param name="movement"></param>
     public void OnMove()
     {
         // If the snake is dashing, no other movement will be precessed
         if (isSnakeDashing) return;
+
         moveDirection = snakeControl.Snake.Move.ReadValue<Vector2>();
 
-        // Check if the move direction is allowed
+        // Check if the movement is allowed
         if (IsMovementAllowed(moveDirection))
         {
             savedDirection = moveDirection;
-        }
+            moveSpeed = movementDetails.GetMoveSpeed();
 
-        snake.movementByVelocityEvent.MovementByVelocity(savedDirection, moveSpeed);
-        RotateBody(savedDirection);
+            SetSnakeBodyTarget();
+
+            snake.movementByVelocityEvent.MovementByVelocity(savedDirection, moveSpeed);
+            RotateBody(savedDirection);
+        }
     }
 
+    private void WeaponInputs()
+    {
+        OnAim();
+
+        OnReload();
+
+        OnSwitchWeapon();
+    }
+
+    /// <summary>
+    /// Aims the weapon at the position of the mouse,
+    /// also handles the firing of the weapon.
+    /// </summary>
     public void OnAim()
     {
         // If the snake is dashing, no other movement will be precessed
@@ -131,6 +158,9 @@ public class SnakeControler : MonoBehaviour
         FireWeaponInput(weaponDirection, weaponAngleDegrees, snakeAngleDegrees, aimDirection);
     }
 
+    /// <summary>
+    /// Reloads the weapon when the R key is pressed
+    /// </summary>
     public void OnReload()
     {
         Weapon weapon = snake.activeWeapon.GetCurrentWeapon();
@@ -145,22 +175,35 @@ public class SnakeControler : MonoBehaviour
         if (weapon.weaponClipRemaining == weapon.weaponDetails.clipMaxCapacity)
             return;
 
-        if (snakeControl.Snake.Reload.IsPressed())
-        {
+        if (snakeControl.Snake.Reload.WasPressedThisFrame())
             // Trigger the reload weapon event
             snake.reloadWeaponEvent.CallReloadEvent(snake.activeWeapon.GetCurrentWeapon(), 0);
-        }
     }
 
+    /// <summary>
+    /// Makes the snake dash, while dashing the snake is invincible
+    /// and moves faster.
+    /// </summary>
     public void OnDash()
     {
-        if (snakeControl.Snake.Dash.IsPressed())
-        {
-            if (dashCooldownTimer <= 0f)
-            {
-                SnakeDash((Vector3)savedDirection);
-            }
-        }
+        if (snakeControl.Snake.Dash.WasPressedThisFrame() && dashCooldownTimer <= 0f)
+            SnakeDash((Vector3)savedDirection);
+    }
+
+    /// <summary>
+    /// Switches The Active Weapon With The Mouse Wheel
+    /// </summary>
+    public void OnSwitchWeapon()
+    {
+        Vector2 switchWeaponInput = snakeControl.Snake.SwitchWeapons.ReadValue<Vector2>();
+
+        if (switchWeaponInput.y < 0f || switchWeaponInput.x < -0.5f)
+            SelectPreviousWeapon();
+        if (switchWeaponInput.y > 0f || switchWeaponInput.x > 0.5f)
+            SelectNextWeapon();
+
+        if (snakeControl.Snake.SetWeaponAtFirstPos.WasPressedThisFrame())
+            SetWeaponFirstInList();
     }
 
     /// <summary>
@@ -242,6 +285,10 @@ public class SnakeControler : MonoBehaviour
 
     private void SnakeDash(Vector3 savedDirection)
     {
+        if (snakeDashCoroutine != null)
+        {
+            StopCoroutine(snakeDashCoroutine);
+        }
         snakeDashCoroutine = StartCoroutine(SnakeDashRoutine(savedDirection));
     }
 
@@ -321,6 +368,82 @@ public class SnakeControler : MonoBehaviour
             fireButtonPressedPreviousFrame = false;
     }
 
+    /// <summary>
+    /// Selects the next weapon in the weapon list
+    /// </summary>
+    private void SelectNextWeapon()
+    {
+        currentWeaponIndex++;
+
+        if (currentWeaponIndex > snake.weaponList.Count)
+            currentWeaponIndex = 1;
+
+        SetWeaponByIndex(currentWeaponIndex);
+    }
+
+    /// <summary>
+    /// Selects the previous weapon in the weapon list
+    /// </summary>
+    private void SelectPreviousWeapon()
+    {
+        currentWeaponIndex--;
+
+        if (currentWeaponIndex < 1)
+            currentWeaponIndex = snake.weaponList.Count;
+
+        SetWeaponByIndex(currentWeaponIndex);
+    }
+
+    /// <summary>
+    /// Sets the current weapon at the first position in the weapon list
+    /// </summary>
+    private void SetWeaponFirstInList()
+    {
+        List<Weapon> tempList = new();
+        
+        // Add current weapon to be the first in the temporary list
+        Weapon weapon = snake.weaponList[currentWeaponIndex - 1];
+        weapon.weaponListPosition = 1;
+        tempList.Add(weapon);
+
+
+        // Loop in the existing weapon list - skips the current weapon
+        int index = 2;
+
+        foreach (Weapon weapon1 in snake.weaponList)
+        {
+            if (weapon1 == weapon) continue;
+
+            tempList.Add(weapon1);
+            weapon1.weaponListPosition = index;
+            index++;
+        }
+
+        // Assign the temporary list to the player weapon list
+        snake.weaponList = tempList;
+        currentWeaponIndex = 1;
+        SetWeaponByIndex(currentWeaponIndex);
+    }
+    
+
+    private void SetSnakeBodyTarget()
+    {
+        if (snakeBodyList.Count > 0)
+        {
+            snakeBodyList[0].GetComponent<SnakeBody>().SetTargetPosition(transform.position);
+        }
+        for (int i = snakeBodyList.Count - 1; i > 0; i--)
+        {
+            snakeBodyList[i].GetComponent<SnakeBody>().SetTargetPosition(snakeBodyList[i - 1].position);
+        }
+
+        snake.SetChildList(snakeBodyList);
+    }
+
+    public float GetMoveSpeed()
+    {
+        return moveSpeed;
+    }
     #region Validation
 #if UNITY_EDITOR
     private void OnValidate()

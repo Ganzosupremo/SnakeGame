@@ -79,6 +79,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
     {
         SetCurrentRoom(roomChangedEventArgs.room);
+        snake.SpawnFood();
     }
 
     /// <summary>

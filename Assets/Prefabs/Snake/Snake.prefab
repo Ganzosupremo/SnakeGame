@@ -413,7 +413,9 @@ MonoBehaviour:
   reloadWeapon: {fileID: 0}
   weaponReloadedEvent: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  snakeMovePositionList: []
   foodPrefab: {fileID: 7338082217808987913, guid: aa068fa4ec15301499092874ada9112f, type: 3}
+  snakeBodyPrefab: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
 --- !u!114 &8266277145047211176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -634,7 +636,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSpriteRenderer: {fileID: 8182033735335509260}
-  weaponPolygonCollider: {fileID: 0}
   weaponShootPosition: {fileID: 7744678937136800536}
   weaponEffectPosition: {fileID: 4535233281347273686}
 --- !u!114 &4760146493644783039

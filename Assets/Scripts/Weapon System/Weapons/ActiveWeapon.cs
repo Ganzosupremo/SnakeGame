@@ -54,7 +54,9 @@ public class ActiveWeapon : MonoBehaviour
     {
         currentWeapon = weapon;
 
-        weaponSpriteRenderer.sprite = currentWeapon.weaponDetails.weaponSprite;
+        // In the final game the weapon won't have a sprite,
+        // just in the UI, comment this code later
+        //weaponSpriteRenderer.sprite = currentWeapon.weaponDetails.weaponSprite;
 
         //// Set the weapon polygon collider based on the shape the weapon sprite has
         //if (weaponPolygonCollider != null && weaponSpriteRenderer.sprite != null)
