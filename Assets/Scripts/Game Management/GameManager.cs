@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [DisallowMultipleComponent]
 public class GameManager : SingletonMonoBehaviour<GameManager>
@@ -23,16 +24,25 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     #endregion
     [SerializeField] private int currentDungeonLevelListIndex = 0;
 
+    [SerializeField] private float foodSpawnTimer = 10f;
+
     private Room currentRoom;
     private Room previousRoom;
     private SnakeDetailsSO snakeDetails;
     private Snake snake;
+
+    private float timer;
+    //private int foodSpawnedSoFar = 0;
 
     protected override void Awake()
     {
         base.Awake();
 
         snakeDetails = GameResources.Instance.currentPlayer.snakeDetails;
+
+        timer = foodSpawnTimer;
+
+        //testList = snake.snakeControler.GetSnakeSegmentList();
 
         InstantiatePlayer();
     }
@@ -62,6 +72,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
             currentGameState = GameState.Started;
         }
+
+        foodSpawnTimer -= Time.deltaTime;
+        if (foodSpawnTimer <= 0f)
+        {
+            SpawnFood();
+        }
     }
 
     private void OnEnable()
@@ -79,7 +95,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
     {
         SetCurrentRoom(roomChangedEventArgs.room);
-        snake.SpawnFood();
+        SpawnFood();
     }
 
     /// <summary>
@@ -134,8 +150,28 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         // Get the nearest spawn point position of the room, so the snake doesn't spawn in walls or something
         snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(snake.gameObject.transform.position);
+
+        //foodSpawnedSoFar = 0;
+
+        //testList = snake.snakeControler.GetSnakeSegmentList();
     }
-    
+
+    /// <summary>
+    /// Spawn the snake food on the dungeon
+    /// </summary>
+    public void SpawnFood()
+    {
+        // Know in which room the food should spawn
+        Vector3 spawnPosition = new(Random.Range(currentRoom.tilemapLowerBounds.x, currentRoom.tilemapUpperBounds.x),
+            Random.Range(currentRoom.tilemapLowerBounds.y, currentRoom.tilemapUpperBounds.y), 0f);
+
+        // Make sure the food spawns within the room
+        Food food = (Food)PoolManager.Instance.ReuseComponent(GameResources.Instance.foodPrefab, HelperUtilities.GetNearestSpawnPointPosition(spawnPosition),
+            Quaternion.identity);
+        food.gameObject.SetActive(true);
+        foodSpawnTimer = timer;
+    }
+
     /// <summary>
     /// Sets the current room the player is in
     /// </summary>
@@ -158,6 +194,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public Snake GetSnake()
     {
         return snake;
+    }
+
+    public Sprite GetMinimapIcon()
+    {
+        return snakeDetails.snakeMinimapIcon;
     }
 
     #region Validation

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6251298838282165959}
   - component: {fileID: 8182033735335509260}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Weapon
   m_TagString: playerWeapon
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4535233281347273686}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: WeaponEffectPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7744678937136800536}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: WeaponFirePosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2248241594929721749}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: WeaponRotationPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -251573173
   m_SortingLayer: 4
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_Sprite: {fileID: 221767701, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 35ca293c933613040961fb3cd50f0e89, type: 3}
-  m_NotificationBehavior: 3
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -313,35 +313,11 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8266277145047211176}
-        m_TargetAssemblyTypeName: SnakeControler, Assembly-CSharp
-        m_MethodName: OnMove
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 3f4b2961-ae43-4915-9297-a4c03032af77
     m_ActionName: Snake/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8266277145047211176}
-        m_TargetAssemblyTypeName: SnakeControler, Assembly-CSharp
-        m_MethodName: OnAim
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: dc006e9b-f49a-4948-a5be-a52318cf925e
     m_ActionName: Snake/New action
   - m_PersistentCalls:
@@ -365,21 +341,17 @@ MonoBehaviour:
     m_ActionId: 192fd7d4-8222-4d55-ade4-18255eb672bb
     m_ActionName: Snake/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8266277145047211176}
-        m_TargetAssemblyTypeName: SnakeControler, Assembly-CSharp
-        m_MethodName: OnReload
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 7b2a4269-277e-4b14-afd9-536ff955bbac
     m_ActionName: Snake/Reload[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 147acacf-5ca4-43d4-80c8-84c858b2a3d4
+    m_ActionName: Snake/SwitchWeapons[/Mouse/scroll]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ae880602-9c8f-4f4b-9037-395159eddd55
+    m_ActionName: Snake/SetWeaponAtFirstPos[/Keyboard/leftShift,/Keyboard/rightShift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Snake
@@ -413,9 +385,6 @@ MonoBehaviour:
   reloadWeapon: {fileID: 0}
   weaponReloadedEvent: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  snakeMovePositionList: []
-  foodPrefab: {fileID: 7338082217808987913, guid: aa068fa4ec15301499092874ada9112f, type: 3}
-  snakeBodyPrefab: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
 --- !u!114 &8266277145047211176
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -31,6 +31,8 @@ public class MovementByVelocity : MonoBehaviour
 
     private void MoveRigidBody(Vector2 moveDirection, float velocity)
     {
+        //this.transform.position = new(Mathf.Round(transform.position.x) + moveDirection.x,
+        //    Mathf.Round(transform.position.y) + moveDirection.y, 0f);
         m_RB.velocity = moveDirection * velocity;
     }
 }

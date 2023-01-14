@@ -11,7 +11,7 @@ public class PoolManager : SingletonMonoBehaviour<PoolManager>
     public Pool[] poolArray = null;
     private Transform objectPoolTransform;
 
-    private Dictionary<int, Queue<Component>> poolDictionary = new Dictionary<int, Queue<Component>>();
+    private Dictionary<int, Queue<Component>> poolDictionary = new();
 
     [System.Serializable]
     public struct Pool
@@ -45,7 +45,7 @@ public class PoolManager : SingletonMonoBehaviour<PoolManager>
         int poolKey = prefabToUse.GetInstanceID();
         string prefabName = prefabToUse.name; //Gets the name of the prefab
 
-        GameObject parentGameObject = new GameObject(prefabName + "Anchor"); //Creates the parent gameobject to attached the child gameobjects to
+        GameObject parentGameObject = new GameObject(prefabName + " Anchor"); //Creates the parent gameobject to attached the child gameobjects to
         parentGameObject.transform.SetParent(objectPoolTransform);
 
         if (!poolDictionary.ContainsKey(poolKey))

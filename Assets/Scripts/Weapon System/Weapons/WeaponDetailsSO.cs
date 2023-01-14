@@ -36,9 +36,9 @@ public class WeaponDetailsSO : ScriptableObject
     public AmmoDetailsSO weaponCurrentAmmo;
 
     #region Tooltip
-    //[Tooltip("The current shoot effect for the weapon")]
+    [Tooltip("The current shoot effect for the weapon")]
     #endregion
-    //public WeaponShootEffectSO shootEffect;
+    public WeaponShootEffectSO shootEffect;
 
     #region Tooltip
     [Tooltip("The firing sound effect for the weapon")]

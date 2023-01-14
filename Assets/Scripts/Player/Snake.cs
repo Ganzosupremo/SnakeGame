@@ -51,13 +51,12 @@ public class Snake : MonoBehaviour
     [HideInInspector] public ReloadWeapon reloadWeapon;
     [HideInInspector] public WeaponReloadedEvent weaponReloadedEvent;
     [HideInInspector] public SpriteRenderer spriteRenderer;
-    [HideInInspector] public SnakeBody snakeBody;
+    [HideInInspector] public List<Weapon> weaponList = new();
 
-    public List<Weapon> weaponList = new();
-    public GameObject foodPrefab;
-    public GameObject snakeBodyPrefab;
+    private List<Transform> snakeSegmentsList = new();
+    private int snakeSegmentCount;
 
-    private List<Transform> childList = new();
+    public bool IsSnakeColliding { get; private set; }
 
     private void Awake()
     {
@@ -76,22 +75,27 @@ public class Snake : MonoBehaviour
         reloadWeapon = GetComponent<ReloadWeapon>();
         weaponReloadedEvent = GetComponent<WeaponReloadedEvent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        snakeBody = snakeBodyPrefab.GetComponent<SnakeBody>();
     }
-    
-    public void SpawnFood()
+
+    private void Start()
     {
-        // Know in which room the food should spawn
-        Room currentRoom = GameManager.Instance.GetCurrentRoom();
+        snakeSegmentsList.Add(this.transform);
+        snakeSegmentCount = 0;
+    }
 
-        Vector3 spawnPosition = new(Random.Range(currentRoom.tilemapLowerBounds.x, currentRoom.tilemapUpperBounds.x),
-            Random.Range(currentRoom.tilemapLowerBounds.y, currentRoom.tilemapUpperBounds.y), 0f);
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag(Settings.food))
+        {
+            GrowSnake();
+            //IsSnakeColliding = true;
+        }
+    }
 
-        // Make sure the food spawns within the room
-        Food food = (Food)PoolManager.Instance.ReuseComponent(foodPrefab, HelperUtilities.GetNearestSpawnPointPosition(spawnPosition),
-            Quaternion.identity);
-
-        food.gameObject.SetActive(true);
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.collider.CompareTag(Settings.CollisionTilemapTag))
+            SubstractSegmentFromSnake();
     }
 
     /// <summary>
@@ -102,6 +106,7 @@ public class Snake : MonoBehaviour
     {
         this.snakeDetails = snakeDetails;
 
+        IsSnakeColliding = false;
 
         SetPlayerHealth();
 
@@ -149,25 +154,71 @@ public class Snake : MonoBehaviour
         return weapon;
     }
 
-    public void EatFood()
+    private void GrowSnake()
     {
-        foodPrefab.SetActive(false);
-        var body = Instantiate(snakeBodyPrefab, transform.position, Quaternion.identity);
-        body.GetComponent<BoxCollider2D>().enabled = false;
-        StartCoroutine(ActivateBodyCollider(body.transform));
-        body.GetComponent<SnakeBody>().WaitHeadUpdateCicle(childList.Count);
-        childList.Add(body.transform);
-        SpawnFood();
+        // TODO - Add More health and weapon damage when the snake grows
+
+        SnakeBody snakeBody = (SnakeBody)PoolManager.Instance.ReuseComponent(GameResources.Instance.snakeBodyPrefab.gameObject,
+            this.transform.position, Quaternion.identity);
+        snakeBody.gameObject.SetActive(true);
+        
+        Transform segment = snakeBody.transform;
+        segment.position = snakeSegmentsList[snakeSegmentCount].position;
+        snakeSegmentsList.Add(segment);
+        snakeSegmentCount++;
+
+        IncreaseWeaponDamage();
     }
 
-    private IEnumerator ActivateBodyCollider(Transform body)
+
+    private void SubstractSegmentFromSnake()
     {
-        yield return new WaitForSeconds(0.8f);
-        body.GetComponent<BoxCollider2D>().enabled = true;
+        if (snakeSegmentsList.Count > 0 && snakeSegmentCount > 0)
+        {
+            bool bodyFound = snakeSegmentsList[snakeSegmentCount].TryGetComponent(out SnakeBody body);
+            if (bodyFound)
+            {
+                body.gameObject.SetActive(false);
+                snakeSegmentsList.RemoveAt(snakeSegmentCount);
+                snakeSegmentCount--;
+
+                DecreaseWeaponDamage();
+            }
+        }
+        else
+        {
+            Debug.Log("No more lives left");
+        }
     }
 
-    public void SetChildList(List<Transform> childList)
+    /// <summary>
+    /// Decreases the damage of the weapon when collided with something.
+    /// </summary>
+    private void DecreaseWeaponDamage()
     {
-        this.childList = childList;
+        Weapon currentWeapon = activeWeapon.GetCurrentWeapon();
+        currentWeapon.weaponDetails.weaponCurrentAmmo.DecreaseDamage(20);
     }
+
+    /// <summary>
+    /// Increase the damage of the weapon when a food was eated.
+    /// </summary>
+    private void IncreaseWeaponDamage()
+    {
+        Weapon currentWeapon = activeWeapon.GetCurrentWeapon();
+        currentWeapon.weaponDetails.weaponCurrentAmmo.IncreaseDamage(20);
+    }
+
+    public void UpdateSnakeSegments()
+    {
+        for (int i = snakeSegmentsList.Count - 1; i > 0; i--)
+        {
+            snakeSegmentsList[i].position = snakeSegmentsList[i - 1].position;
+        }
+    }
+    // TODO After training, change the update of the snake segments to this script
+    // and just call this new method from the snake controler
+    // add an int to keep track of how many segment the snake currently has
+    // so when the snake collides, the last segment can be removed from the list
+    // and deactivate it, so it returns to the pool.
 }

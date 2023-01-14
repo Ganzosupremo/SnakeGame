@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AmmoDetails_", menuName = "Scriptable Objects/Weapon System/Ammo Details")]
@@ -65,6 +66,18 @@ public class AmmoDetailsSO : ScriptableObject
     [Tooltip("The damage for each individual ammo")]
     #endregion
     public int ammoDamage = 1;
+
+    #region Tooltip
+    [Tooltip("As the damage of the weapon will increase in runtime, this variable sets the damage" +
+        " to it's original value when exiting app or restarting the game" +
+        " ppopulate with the starting damage of each weapon.")]
+    #endregion
+    public int originalAmmoDamage = 1;
+
+    #region Tooltip
+    [Tooltip("The max damage this weapon will do in this entire round")]
+    #endregion
+    public int maxAmmoDamage = 100;
 
     #region Tooltip
     [Tooltip("The min speed for each ammo - the speed will be a random value between the min and max speed")]
@@ -157,6 +170,39 @@ public class AmmoDetailsSO : ScriptableObject
     #endregion
     [Range(0f, 2f)] public float ammoTrailEndWidth;
 
+    /// <summary>
+    /// Increases the weapon damage in percentage
+    /// </summary>
+    /// <param name="PercentageToIncrease">The new damage in percent</param>
+    public void IncreaseDamage(int PercentageToIncrease)
+    {
+        int damageIncrease = Mathf.RoundToInt(ammoDamage * PercentageToIncrease / 100);
+        int totalDamageIncrease = ammoDamage + damageIncrease;
+        
+        if (totalDamageIncrease < maxAmmoDamage)
+            ammoDamage = totalDamageIncrease;
+        else
+            ammoDamage = maxAmmoDamage;
+    }
+
+    /// <summary>
+    /// Decreases the weapon damage in percentage
+    /// </summary>
+    /// <param name="percentageToDecrease">The damage to decrease in percentage</param>
+    public void DecreaseDamage(int percentageToDecrease)
+    {
+        int decreaseDamage = Mathf.RoundToInt((ammoDamage * percentageToDecrease) / 100);
+
+        if (ammoDamage != 0)
+            ammoDamage -= decreaseDamage;
+        else
+            ammoDamage = originalAmmoDamage;
+    }
+
+    private void OnDisable()
+    {
+        ammoDamage = originalAmmoDamage;
+    }
     #region Validation
 #if UNITY_EDITOR
     private void OnValidate()

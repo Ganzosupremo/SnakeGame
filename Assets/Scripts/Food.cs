@@ -8,7 +8,6 @@ public class Food : MonoBehaviour
     // The grid dimensions
     private int gridWidth = 20;
     private int gridHeight = 20;
-    private float timer = 2f;
 
     // The prefab for the food
     public GameObject foodPrefab;
@@ -16,16 +15,6 @@ public class Food : MonoBehaviour
     // The position of the food
     int foodX = 0;
     int foodY = 0;
-
-    private void Update()
-    {
-        timer -= Time.deltaTime;
-
-        if (timer <= 0)
-        {
-            timer = 2f;
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

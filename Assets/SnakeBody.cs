@@ -3,43 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-[RequireComponent(typeof(MovementByVelocityEvent))]
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(Rigidbody2D))]
 public class SnakeBody : MonoBehaviour
 {
-    private Vector3 nextbodyPos;
-    private int waitPreviousParts;
+    private MovementByVelocityEvent movementByVelocityEvent;
+    private float moveSpeed;
     private Snake snake;
 
     private void Awake()
     {
         snake = GameManager.Instance.GetSnake();
+        movementByVelocityEvent = snake.movementByVelocityEvent;
     }
 
     private void Start()
     {
-        nextbodyPos = transform.position;
+
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        transform.position = Vector3.MoveTowards(transform.position, nextbodyPos, snake.snakeControler.GetMoveSpeed() * Time.deltaTime); ;
-    }
-
-    public void WaitHeadUpdateCicle(int value)
-    {
-        waitPreviousParts = value;
-    }
-
-    public void SetTargetPosition(Vector3 position)
-    {
-        if (waitPreviousParts > 0)
-        {
-            waitPreviousParts--;
-            return;
-        }
-
-        nextbodyPos = position;
+        //for (int i = snake.snakeControler.GetSnakeSegmentList().Count - 1; i > 0; i--)
+        //{
+        //    snake.snakeControler.GetSnakeSegmentList()[i].position = snake.snakeControler.GetSnakeSegmentList()[i - 1].position;
+        //    //snake.snakeControler.GetSnakeSegmentList()[i].position *= offset;
+        //    //movementByVelocityEvent.MovementByVelocity(snake.snakeControler.GetSnakeSegmentList()[i].position, moveSpeed);
+        //}
     }
 }

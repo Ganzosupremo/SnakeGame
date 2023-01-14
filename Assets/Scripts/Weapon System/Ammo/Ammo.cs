@@ -157,6 +157,7 @@ public class Ammo : MonoBehaviour, IFireable
 
     private void DisableAmmo()
     {
+        Debug.Log(ammoDetails.ammoDamage);
         gameObject.SetActive(false);
     }
 

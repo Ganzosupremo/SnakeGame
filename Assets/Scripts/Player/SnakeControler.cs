@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 using SnakeInput;
+using UnityEngine.UI;
 /// <summary>
 /// This scripts controls all the input of the player using a unity built-in
 /// Player Input
@@ -12,10 +13,11 @@ using SnakeInput;
 [DisallowMultipleComponent]
 public class SnakeControler : MonoBehaviour
 {
-    [SerializeField] MovementDetailsSO movementDetails;
+    [SerializeField] private MovementDetailsSO movementDetails;
     [SerializeField] private Transform weaponShootPosition;
 
     private Snake snake;
+    private SnakeControl snakeControl;
     private bool fireButtonPressedPreviousFrame = false;
     private int currentWeaponIndex = 1;
     private float moveSpeed;
@@ -27,25 +29,21 @@ public class SnakeControler : MonoBehaviour
     private bool isSnakeDashing = false;
     private float dashCooldownTimer = 0f;
 
-    private List<Transform> snakeBodyList = new();
-
-    private SnakeControl snakeControl;
-    private SnakeBody snakeBody;
+    private List<Transform> snakeBodyList;
 
     private void Awake()
     {
         snakeControl = new();
         snakeControl.Snake.Enable();
+        snakeBodyList = new();
         
         snake = GetComponent<Snake>();
-        //savedDirection = new Vector2(0.01f, 0f);
     }
 
     private void Start()
     {
         waitForFixedUpdate = new();
-        savedDirection = new Vector2(1f, 0f);
-        snakeBody = snake.snakeBody;
+        savedDirection = new Vector2(0f, 0f);
 
         SetInitialWeapon();
 
@@ -59,29 +57,23 @@ public class SnakeControler : MonoBehaviour
 
     private void Update()
     {
-        OnDash();
+        //OnDash();
 
         WeaponInputs();
 
         SnakeDashCooldownTimer();
     }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Food"))
-        {
-            snake.EatFood();
-        }
-    }
-
+    
     private void OnCollisionEnter2D(Collision2D other)
     {
-        StopDashCoroutine();
+        if (other.collider.CompareTag(Settings.CollisionTilemapTag))
+            StopDashCoroutine();
     }
 
     private void OnCollisionStay2D(Collision2D other)
     {
-        StopDashCoroutine();
+        if (other.collider.CompareTag(Settings.CollisionTilemapTag))
+            StopDashCoroutine();
     }
 
     /// <summary>
@@ -116,15 +108,27 @@ public class SnakeControler : MonoBehaviour
         if (isSnakeDashing) return;
 
         moveDirection = snakeControl.Snake.Move.ReadValue<Vector2>();
+        snake.UpdateSnakeSegments();
 
         // Check if the movement is allowed
-        if (IsMovementAllowed(moveDirection))
+        if (CheckMovementDirection(moveDirection))
         {
             savedDirection = moveDirection;
+
+            if (savedDirection.x != 0f && savedDirection.y != 0f) return;
+
             moveSpeed = movementDetails.GetMoveSpeed();
+            #region Test Code
+            //this.transform.position = new(Mathf.Round(transform.position.x) + moveDirection.x,
+            //    Mathf.Round(transform.position.y) + moveDirection.y, 0f);
 
-            SetSnakeBodyTarget();
+            //Vector3 blabla = new(Mathf.Round(transform.position.x) + moveDirection.x,
+            //    Mathf.Round(transform.position.y) + moveDirection.y, 0f);
 
+            //transform.position += moveSpeed * Time.deltaTime * blabla;
+
+            //UpdateSnakeSegmentPosition();
+            #endregion
             snake.movementByVelocityEvent.MovementByVelocity(savedDirection, moveSpeed);
             RotateBody(savedDirection);
         }
@@ -183,10 +187,12 @@ public class SnakeControler : MonoBehaviour
     /// <summary>
     /// Makes the snake dash, while dashing the snake is invincible
     /// and moves faster.
+    /// Current Situation: The snake segments don't update while the snake is dashing.
+    /// And it's kinda buggy, so maybe the dash mechanic will go away.
     /// </summary>
-    public void OnDash()
+    public void OnDash(CallbackContext context)
     {
-        if (snakeControl.Snake.Dash.WasPressedThisFrame() && dashCooldownTimer <= 0f)
+        if (/*snakeControl.Snake.Dash.WasPressedThisFrame() &&*/ dashCooldownTimer <= 0f && context.performed && moveDirection != Vector2.zero)
             SnakeDash((Vector3)savedDirection);
     }
 
@@ -211,7 +217,7 @@ public class SnakeControler : MonoBehaviour
     /// </summary>
     /// <param name="moveDirection"></param>
     /// <returns>Returns true if the given move direction is allowed</returns>
-    private bool IsMovementAllowed(Vector2 moveDirection)
+    private bool CheckMovementDirection(Vector2 moveDirection)
     {
         // If the snake is moving to the right, only allow up or down turns
         if (savedDirection == Vector2.right)
@@ -233,8 +239,19 @@ public class SnakeControler : MonoBehaviour
         {
             return moveDirection == Vector2.left || moveDirection == Vector2.right;
         }
-
+        else if (savedDirection == Vector2.zero)
+        {
+            return true;
+        }
         return false;
+        //if (moveDirection == Vector2.up)
+        //    moveDirection = Vector2.up;
+        //else if (moveDirection == Vector2.down)
+        //    moveDirection = Vector2.down;
+        //else if (moveDirection == Vector2.left)
+        //    moveDirection = Vector2.left;
+        //else if (moveDirection == Vector2.right)
+        //    moveDirection = Vector2.right;
     }
 
     /// <summary>
@@ -285,16 +302,16 @@ public class SnakeControler : MonoBehaviour
 
     private void SnakeDash(Vector3 savedDirection)
     {
-        if (snakeDashCoroutine != null)
-        {
-            StopCoroutine(snakeDashCoroutine);
-        }
+        //if (snakeDashCoroutine != null)
+        //{
+        //    StopCoroutine(snakeDashCoroutine);
+        //}
         snakeDashCoroutine = StartCoroutine(SnakeDashRoutine(savedDirection));
     }
 
     private IEnumerator SnakeDashRoutine(Vector3 savedDirection)
     {
-        float minDistance = 0.2f;
+        float minDistance = 0.4f;
 
         isSnakeDashing = true;
 
@@ -303,7 +320,9 @@ public class SnakeControler : MonoBehaviour
         // Loop until the target position is reached
         while (Vector3.Distance(snake.transform.position, targetPosition) > minDistance)
         {
+            //UpdateSnakeSegmentPosition();
             snake.movementToPositionEvent.CallMovementToPosition(targetPosition, snake.transform.position, savedDirection, movementDetails.dashSpeed, isSnakeDashing);
+            snake.UpdateSnakeSegments();
 
             // Wait for the fixed update
             yield return waitForFixedUpdate;
@@ -337,6 +356,24 @@ public class SnakeControler : MonoBehaviour
             StopCoroutine(snakeDashCoroutine);
             isSnakeDashing = false;
         }
+
+        TeleportSnake();
+    }
+
+    /// <summary>
+    /// Teleports the snake to the center of the room again, when the snake collides
+    /// with the walls.
+    /// </summary>
+    private void TeleportSnake()
+    {
+        //TODO - Substract health and weapon damage when the snake collides
+        Room currentRoom = GameManager.Instance.GetCurrentRoom();
+
+        snake.gameObject.transform.position = new Vector3((currentRoom.worldLowerBounds.x + currentRoom.worldUpperBounds.x) / 2f,
+            (currentRoom.worldLowerBounds.y + currentRoom.worldUpperBounds.y) / 2f, 0f);
+
+        // Get the nearest spawn point position of the room, so the snake doesn't spawn in the walls again
+        snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(snake.gameObject.transform.position);
     }
 
     private void SetWeaponByIndex(int index)
@@ -425,25 +462,29 @@ public class SnakeControler : MonoBehaviour
         SetWeaponByIndex(currentWeaponIndex);
     }
     
+    ///// <summary>
+    ///// Adds a transform to the <see cref="snakeBodyList"/>.
+    ///// This list saves all the segments of the snake.
+    ///// </summary>
+    ///// <param name="TransformToAdd"></param>
+    //public void AddToSegmentList(Transform TransformToAdd)
+    //{
+    //    snakeBodyList.Add(TransformToAdd);
+    //}
 
-    private void SetSnakeBodyTarget()
-    {
-        if (snakeBodyList.Count > 0)
-        {
-            snakeBodyList[0].GetComponent<SnakeBody>().SetTargetPosition(transform.position);
-        }
-        for (int i = snakeBodyList.Count - 1; i > 0; i--)
-        {
-            snakeBodyList[i].GetComponent<SnakeBody>().SetTargetPosition(snakeBodyList[i - 1].position);
-        }
+    ///// <summary>
+    ///// Get the <see cref="snakeBodyList"/>.
+    ///// </summary>
+    ///// <returns>Returns the list</returns>
+    //public List<Transform> GetSnakeSegmentList()
+    //{
+    //    return snakeBodyList;
+    //}
 
-        snake.SetChildList(snakeBodyList);
-    }
-
-    public float GetMoveSpeed()
-    {
-        return moveSpeed;
-    }
+    //public float GetMoveSpeed()
+    //{
+    //    return moveSpeed;
+    //}
     #region Validation
 #if UNITY_EDITOR
     private void OnValidate()

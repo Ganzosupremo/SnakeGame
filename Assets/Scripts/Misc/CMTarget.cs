@@ -38,7 +38,7 @@ public class CMTarget : MonoBehaviour
         CinemachineTargetGroup.Target snakeTarget = new()
         {
             weight = 1.5f,
-            radius = 2.5f,
+            radius = 2f,
             target = GameManager.Instance.GetSnake().transform
         };
 

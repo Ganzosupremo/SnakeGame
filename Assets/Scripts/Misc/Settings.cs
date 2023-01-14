@@ -21,20 +21,24 @@ public static class Settings
     public const float doorUnlockDelay = 1f;
     #endregion
 
+    #region SNAKE GAME SETTINGS
+    public const int maxNumberFoodToSpawn = 300;
+    #endregion
+
     #region ANIMATOR PARAMETERS
     //Animation parameters for the player
-    public static int aimUp = Animator.StringToHash("aimUp");
-    public static int aimDown = Animator.StringToHash("aimDown");
-    public static int aimUpLeft = Animator.StringToHash("aimUpLeft");
-    public static int aimUpRight = Animator.StringToHash("aimUpRight");
-    public static int aimLeft = Animator.StringToHash("aimLeft");
-    public static int aimRight = Animator.StringToHash("aimRight");
-    public static int isIdle = Animator.StringToHash("isIdle");
-    public static int isMoving = Animator.StringToHash("isMoving");
-    public static int rollUp = Animator.StringToHash("rollUp");
-    public static int rollLeft = Animator.StringToHash("rollLeft");
-    public static int rollRight = Animator.StringToHash("rollRight");
-    public static int rollDown = Animator.StringToHash("rollDown");
+    //public static int aimUp = Animator.StringToHash("aimUp");
+    //public static int aimDown = Animator.StringToHash("aimDown");
+    //public static int aimUpLeft = Animator.StringToHash("aimUpLeft");
+    //public static int aimUpRight = Animator.StringToHash("aimUpRight");
+    //public static int aimLeft = Animator.StringToHash("aimLeft");
+    //public static int aimRight = Animator.StringToHash("aimRight");
+    //public static int isIdle = Animator.StringToHash("isIdle");
+    //public static int isMoving = Animator.StringToHash("isMoving");
+    //public static int rollUp = Animator.StringToHash("rollUp");
+    //public static int rollLeft = Animator.StringToHash("rollLeft");
+    //public static int rollRight = Animator.StringToHash("rollRight");
+    //public static int rollDown = Animator.StringToHash("rollDown");
 
     public static float playerAnimationSpeed = 8f;
     public static float enemyAnimationSpeed = 3f;
@@ -59,6 +63,10 @@ public static class Settings
     #region GAMEOBJECTS TAGS
     public const string playerTag = "Player";
     public const string playerWeapon = "playerWeapon";
+    public const string food = "Food";
+    public const string snakeBody = "SnakeSegment";
+
+    public const string CollisionTilemapTag = "Tilemap_Collision";
     #endregion
 
     #region GAME AUDIO
@@ -93,7 +101,7 @@ public static class Settings
     public const float cooldownBtwTouchDamage = 0.5f;
     #endregion
 
-    #region High Scores
+    #region HIGH SCORES
     public const int maxNumberOfHighScoresToSave = 100;
     #endregion
 }

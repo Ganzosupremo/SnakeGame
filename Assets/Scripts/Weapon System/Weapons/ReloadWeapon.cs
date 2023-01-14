@@ -81,13 +81,9 @@ public class ReloadWeapon : MonoBehaviour
             int totalAmmo = weapon.weaponTotalAmmoCapacity + ammoIncrease;
 
             if (totalAmmo > weapon.weaponDetails.totalAmmoCapacity)
-            {
                 weapon.weaponTotalAmmoCapacity = weapon.weaponDetails.totalAmmoCapacity;
-            }
             else
-            {
                 weapon.weaponTotalAmmoCapacity = totalAmmo;
-            }
         }
 
         //If the weapon has infinity ammo, then just refill the mag

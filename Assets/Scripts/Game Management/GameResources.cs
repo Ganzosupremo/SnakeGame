@@ -31,6 +31,20 @@ public class GameResources : MonoBehaviour
     #endregion
     public CurrentPlayerSO currentPlayer;
 
+    #region Snake Mechanics
+    [Space(10)]
+    [Header("SNAKE MECHANICS")]
+    #endregion
+    #region Tooltip
+    [Tooltip("The food that will spawn randomly within the room borders")]
+    #endregion
+    public GameObject foodPrefab;
+
+    #region Tooltip
+    [Tooltip("The snake segement that will grow when the snake eats the food")]
+    #endregion
+    public Transform snakeBodyPrefab;
+
     #region Header Game Audio
     [Space(10)]
     [Header("Game Music")]
