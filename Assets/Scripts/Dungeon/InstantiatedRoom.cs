@@ -49,6 +49,8 @@ public class InstantiatedRoom : MonoBehaviour
 
         BlockOffUnusedDoorways();
 
+        AddObstaclesAndPreferredPaths();
+
         AddDoorsToRooms();
 
         DisableCollisionTilemapRenderer();
@@ -200,6 +202,43 @@ public class InstantiatedRoom : MonoBehaviour
     }
 
     /// <summary>
+    /// Update Obstacles Used In The AStar Pathfinding
+    /// </summary>
+    private void AddObstaclesAndPreferredPaths()
+    {
+        // This array will be populated with wall obstacles
+        aStarMovementPenalty = new int[room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
+            room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1];
+
+        // Loop through all grid squares
+        for (int x = 0; x < (room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1); x++)
+        {
+            for (int y = 0; y < room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1; y++)
+            {
+                aStarMovementPenalty[x, y] = Settings.defaultAStarMovementPenalty;
+
+                TileBase tile = collisionTilemap.GetTile(new Vector3Int(x + room.tilemapLowerBounds.x, y + room.tilemapLowerBounds.y, 0));
+
+                foreach (TileBase collTile in GameResources.Instance.enemyUnwalkableCollisionTilesArray)
+                {
+                    if (tile == collTile)
+                    {
+                        aStarMovementPenalty[x, y] = 0;
+                        break;
+                    }
+                }
+
+                // Add preferred path for enemies, 1 is the preferred path value.
+                // The default value is 69 an is set in the Settings file
+                if (tile == GameResources.Instance.preferredEnemyPathTile)
+                {
+                    aStarMovementPenalty[x, y] = Settings.preferredPathAStarMovementPenalty;
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Adds the doorways to the instantiated room
     /// </summary>
     private void AddDoorsToRooms()
@@ -265,4 +304,32 @@ public class InstantiatedRoom : MonoBehaviour
     {
         collisionTilemap.gameObject.GetComponent<TilemapRenderer>().enabled = false;
     }
+
+    /// <summary>
+    /// Disables the trigger room collider that is used to know when a player has enter a room
+    /// </summary>
+    private void DisableRoomCollider()
+    {
+        boxCollider2D.enabled = false;
+    }
+
+    /// <summary>
+    /// Locks the doors when the player enters a new room
+    /// and this room does not have set to true the bool 'isClearOfEnemies'.
+    /// </summary>
+    public void LockDoors()
+    {
+        Door[] doors = GetComponentsInChildren<Door>();
+
+        // Lock each door
+        foreach (Door door in doors)
+        {
+            door.LockDoor();
+        }
+
+
+        DisableRoomCollider();
+    }
+
+
 }

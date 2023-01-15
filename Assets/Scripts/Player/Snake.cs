@@ -133,6 +133,15 @@ public class Snake : MonoBehaviour
         health.SetStartingHealth(snakeDetails.snakeInitialHealth);
     }
 
+    /// <summary>
+    /// Gets the player position
+    /// </summary>
+    /// <returns>Returns the current player position</returns>
+    public Vector3 GetSnakePosition()
+    {
+        return transform.position;
+    }
+
     public Weapon AddWeaponToPlayer(WeaponDetailsSO weaponDetails)
     {
         Weapon weapon = new()

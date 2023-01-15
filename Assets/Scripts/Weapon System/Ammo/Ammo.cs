@@ -67,6 +67,8 @@ public class Ammo : MonoBehaviour, IFireable
     {
         if (isColliding) return;
 
+        ActivateHitEffect();
+
         DisableAmmo();
     }
 
@@ -144,7 +146,7 @@ public class Ammo : MonoBehaviour, IFireable
         {
             fireDirectionAngle = weaponAimAngle;
         }
-        
+
         // Adjust the bullet fire angle with the random spread
         fireDirectionAngle += spreadRandomToggle * spreadRandomAngle;
 
@@ -153,6 +155,24 @@ public class Ammo : MonoBehaviour, IFireable
 
         //Set the bullet fire direction
         aimDirectionVector = HelperUtilities.GetDirectionVectorFromAngle(fireDirectionAngle);
+    }
+
+    private void ActivateHitEffect()
+    {
+        // Process if there is a hit effect & prefab
+        if (ammoDetails.ammoHitEffect != null && ammoDetails.ammoHitEffect.ammoHitEffectPrefab != null)
+        {
+            // Get ammo hit effect gameobject from the pool with particle system component
+            AmmoHitEffect hitEffect = (AmmoHitEffect)PoolManager.Instance.ReuseComponent
+                (ammoDetails.ammoHitEffect.ammoHitEffectPrefab, transform.position, Quaternion.identity);
+
+            // Set hit effect
+            hitEffect.SetAmmoHitEffect(ammoDetails.ammoHitEffect);
+
+            // Set gameobject active (the particle system is set to automatically disable the
+            // gameobject once finished)
+            hitEffect.gameObject.SetActive(true);
+        }
     }
 
     private void DisableAmmo()

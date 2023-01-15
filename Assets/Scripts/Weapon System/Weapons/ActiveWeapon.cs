@@ -8,9 +8,9 @@ using UnityEngine;
 public class ActiveWeapon : MonoBehaviour
 {
     #region Tooltip
-    [Tooltip("Populate this with the Sprite Renderer on the child weapon gameobject")]
+    //[Tooltip("Populate this with the Sprite Renderer on the child weapon gameobject")]
     #endregion
-    [SerializeField] private SpriteRenderer weaponSpriteRenderer;
+    //[SerializeField] private SpriteRenderer weaponSpriteRenderer;
 
     #region Tooltip
     //[Tooltip("Populate this with the Polygon Collider on the child weapon gameobject")]
@@ -119,7 +119,7 @@ public class ActiveWeapon : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        HelperUtilities.ValidateCheckNullValue(this, nameof(weaponSpriteRenderer), weaponSpriteRenderer);
+        //HelperUtilities.ValidateCheckNullValue(this, nameof(weaponSpriteRenderer), weaponSpriteRenderer);
         //HelperUtilities.ValidateCheckNullValue(this, nameof(weaponPolygonCollider), weaponPolygonCollider);
         HelperUtilities.ValidateCheckNullValue(this, nameof(weaponShootPosition), weaponShootPosition);
         HelperUtilities.ValidateCheckNullValue(this, nameof(weaponEffectPosition), weaponEffectPosition);

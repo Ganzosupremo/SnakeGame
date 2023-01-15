@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Tilemaps;
 
 public class GameResources : MonoBehaviour
 {
@@ -102,6 +101,20 @@ public class GameResources : MonoBehaviour
     #endregion
     public Shader variableLitShader;
 
+    #region Header Special Tilemap Tiles
+    [Space(10)]
+    [Header("Special Tilemap Tiles")]
+    #endregion
+    #region Tooltip
+    [Tooltip("The Collision tiles the enemies can't go to")]
+    #endregion
+    public TileBase[] enemyUnwalkableCollisionTilesArray;
+
+    #region Tooltip
+    [Tooltip("The prefered path tile for the enemy navigation")]
+    #endregion
+    public TileBase preferredEnemyPathTile;
+
     #region Header UI
     [Space(10)]
     [Header("Game UI")]
@@ -129,6 +142,9 @@ public class GameResources : MonoBehaviour
 
         HelperUtilities.ValidateCheckNullValue(this, nameof(soundMasterMixerGroup), soundMasterMixerGroup);
         HelperUtilities.ValidateCheckNullValue(this, nameof(doorSoundEffect), doorSoundEffect);
+
+        HelperUtilities.ValidateCheckEnumerableValues(this, nameof(enemyUnwalkableCollisionTilesArray), enemyUnwalkableCollisionTilesArray);
+        HelperUtilities.ValidateCheckNullValue(this, nameof(preferredEnemyPathTile), preferredEnemyPathTile);
     }
 #endif
     #endregion

@@ -12,9 +12,6 @@ GameObject:
   - component: {fileID: 14488524919998420}
   - component: {fileID: 4594080627970068638}
   - component: {fileID: -9163472271125675726}
-  - component: {fileID: -3084642840239785374}
-  - component: {fileID: 1783848883236075401}
-  - component: {fileID: 336629923388162047}
   m_Layer: 10
   m_Name: SnakeBody
   m_TagString: SnakeSegment
@@ -127,48 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ba864ea9a9fb84685b768f03624b23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-3084642840239785374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5914190275693245931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13740d577f489a94faf9061e78e661ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!50 &1783848883236075401
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5914190275693245931}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 1
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 0
---- !u!114 &336629923388162047
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5914190275693245931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab08d8cb0d78f5d4084ba72b20590198, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  bodySprites:
+  - {fileID: -2057575410, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
+  - {fileID: 2023241499, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
+  - {fileID: -487996340, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}

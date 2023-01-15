@@ -80,7 +80,13 @@ public static class Settings
     #endregion
 
     #region A STAR PATHFINDING PARAMETERS
-    public const int defaultAStarMovementPenalty = 40;
+    /// <summary>
+    /// The default penalty value is 69.
+    /// </summary>
+    public const int defaultAStarMovementPenalty = 69;
+    /// <summary>
+    /// The value is 1
+    /// </summary>
     public const int preferredPathAStarMovementPenalty = 1;
     public const int targetFramesToSpreadPathfindingOver = 60;
 

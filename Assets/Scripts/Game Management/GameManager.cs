@@ -61,6 +61,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void Start()
     {
+        previousGameState = GameState.Started;
         currentGameState = GameState.Started;
     }
 
@@ -189,6 +190,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public Room GetCurrentRoom()
     {
         return currentRoom;
+    }
+
+    /// <summary>
+    /// Gets the current game level
+    /// </summary>
+    /// <returns>Returns the current GameLevelSO</returns>
+    public GameLevelSO GetCurrentDungeonLevel()
+    {
+        return gameLevelList[currentDungeonLevelListIndex];
     }
 
     public Snake GetSnake()

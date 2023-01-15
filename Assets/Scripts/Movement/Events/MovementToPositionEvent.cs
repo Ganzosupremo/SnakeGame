@@ -9,7 +9,7 @@ public class MovementToPositionEvent : MonoBehaviour
 {
     public event Action<MovementToPositionEvent, MovementToPositionEventArgs> OnMovementToPosition;
 
-    public void CallMovementToPosition(Vector3 moveToPosition, Vector3 currentPosition, Vector3 moveDirection, float velocity, bool isDashing)
+    public void CallMovementToPosition(Vector3 moveToPosition, Vector3 currentPosition, Vector3 moveDirection, float velocity, bool isDashing = false)
     {
         OnMovementToPosition?.Invoke(this, new MovementToPositionEventArgs()
         {

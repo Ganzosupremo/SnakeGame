@@ -842,7 +842,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.9150391, y: 1.7119141, z: -1007210.4}
+  m_LocalPosition: {x: -1.9150391, y: 1.7119141, z: -1473950.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -993,7 +993,7 @@ MonoBehaviour:
   - PoolSize: 40
     prefabToUse: {fileID: 2906756793259760893, guid: a9838337f883dea48b2cfde7fda9e005, type: 3}
     componentType: SoundEffect
-  - PoolSize: 50
+  - PoolSize: 200
     prefabToUse: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
     componentType: SnakeBody
   - PoolSize: 20
@@ -1002,6 +1002,12 @@ MonoBehaviour:
   - PoolSize: 20
     prefabToUse: {fileID: 8467163931044552805, guid: 1419577dfb85ed44790b33eaa5be6636, type: 3}
     componentType: WeaponShootEffect
+  - PoolSize: 20
+    prefabToUse: {fileID: 8467163931044552805, guid: 8a3aa985874a6ca40a59199d79763c1b, type: 3}
+    componentType: WeaponShootEffect
+  - PoolSize: 20
+    prefabToUse: {fileID: 8467163931044552805, guid: fdea5c72d8ade9e40834d6c093aa4e29, type: 3}
+    componentType: AmmoHitEffect
 --- !u!4 &589272215
 Transform:
   m_ObjectHideFlags: 0
@@ -1216,6 +1222,50 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &709314386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 709314388}
+  - component: {fileID: 709314387}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &709314387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709314386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff83c93f7a5490a47b3accc7d78889c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &709314388
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709314386}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.420885, y: 4.6302943, z: -0.34009874}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &738335397
 GameObject:
   m_ObjectHideFlags: 0
@@ -1736,7 +1786,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1158775971
 Transform:
   m_ObjectHideFlags: 0
@@ -1971,7 +2021,8 @@ MonoBehaviour:
   previousGameState: 0
   gameLevelList:
   - {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
-  currentDungeonLevelListIndex: 0
+  - {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
+  currentDungeonLevelListIndex: 1
   foodSpawnTimer: 5
 --- !u!4 &1233889721
 Transform:
