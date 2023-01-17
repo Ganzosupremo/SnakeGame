@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 /// <summary>
 /// The AStar algorithm is used for the enemies to find the shortest path posible to the player 
@@ -11,6 +13,7 @@ public static class AStar
     // efficient in terms of looking the lowest FCost of a node,
     // doing so will improve performance, because the most CPU usage is used to sort
     // and find the node with the lowest FCost.
+    static Stopwatch sw = new();
 
     /// <summary>
     /// Builds a path for the room, from the startGridPosition till the endGridPosition, and adds
@@ -21,6 +24,7 @@ public static class AStar
     /// <param name="endGridPosition"></param>
     public static Stack<Vector3> BuildPath(Room room, Vector3Int startGridPosition, Vector3Int endGridPosition)
     {
+        sw.Start();
         // Adjust positions by the lower bounds
         startGridPosition -= (Vector3Int)room.tilemapLowerBounds;
         endGridPosition -= (Vector3Int)room.tilemapLowerBounds;
@@ -28,6 +32,9 @@ public static class AStar
         // Create the open node list and the closed node hashset
         List<AStarNode> openNodeList = new List<AStarNode>();
         HashSet<AStarNode> closedNodeHashset = new HashSet<AStarNode>();
+
+        Heap<AStarNode> openHeapNodeList = new(room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1 *
+            room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1);
 
         // Create the grid nodes for the path finding
         GridNode gridNode = new GridNode(room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
@@ -67,7 +74,12 @@ public static class AStar
 
             //If the currentNode == the end node, then finish
             if (currentNode == endNode)
+            {
+                sw.Stop();
+                Debug.Log("Time it took to find a path: " + sw.ElapsedMilliseconds + " ms");
                 return currentNode;
+            }
+
 
             //Add currentNode to the closed node list
             closedNodeHashset.Add(currentNode);
@@ -109,6 +121,7 @@ public static class AStar
         }
 
         return movementPathStack;
+
     }
 
     /// <summary>
@@ -151,6 +164,7 @@ public static class AStar
                         validNeighbourNode.HCost = GetDistance(validNeighbourNode, endNode);
                         validNeighbourNode.parentNode = currentNode;
 
+                        // Add the neighbour node if is not already in the open list
                         if (!isValidNeighbourNodeInOpenList)
                             openNodeList.Add(validNeighbourNode);
                     }
@@ -199,7 +213,6 @@ public static class AStar
         //int itemObstacleForGridSpace = instantiatedRoom.aStarItemObstacles[neighbourNodeXPos, neighbourNodeYPos];
 
         //If the neighbour node is an obstacle or is already in the closed list, then skip it
-
         if (movementPenaltyForGridSpace == 0 || closedNodeHashset.Contains(neighbourNode))
         {
             return null;

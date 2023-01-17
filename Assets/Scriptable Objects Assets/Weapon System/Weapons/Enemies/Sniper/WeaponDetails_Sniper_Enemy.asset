@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3531d14d43c32a48bc3a9bc14f7951a, type: 3}
+  m_Name: WeaponDetails_Sniper_Enemy
+  m_EditorClassIdentifier: 
+  weaponName: Sniper Rifle
+  weaponSprite: {fileID: 0}
+  weaponCrosshair: {fileID: 0}
+  weaponFirePosition: {x: 0.1, y: 0.15, z: 0}
+  weaponCurrentAmmo: {fileID: 11400000, guid: 22fb492d4b1aea343934d518520e6d0a, type: 2}
+  shootEffect: {fileID: 11400000, guid: dad30e61cb4083b4fad43421fffa1781, type: 2}
+  fireSound: {fileID: 11400000, guid: 35b39c5a27e3b1247b78f1dffaa000a2, type: 2}
+  reloadSound: {fileID: 11400000, guid: da6c36df5ed84534f818b28988788852, type: 2}
+  hasInfiniteAmmo: 1
+  hasInfinityClipCapacity: 0
+  clipMaxCapacity: 4
+  totalAmmoCapacity: 200
+  weaponFireRate: 2
+  weaponPrechargeTime: 0
+  weaponReloadTime: 3

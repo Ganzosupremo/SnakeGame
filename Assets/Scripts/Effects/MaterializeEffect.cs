@@ -16,13 +16,13 @@ public class MaterializeEffect : MonoBehaviour
     /// it has been materialized.</param>
     /// <returns></returns>
     public IEnumerator MaterializeRoutine(Shader materializeShader, Color materializeColor, float materializeTime,
-        SpriteRenderer[] spriteRendererArray, Material defaultMaterial)
+        Material defaultMaterial, params SpriteRenderer[] spriteRendererArray)
     {
         Material materializeMaterial = new(materializeShader);
 
         materializeMaterial.SetColor("_EmissionColor", materializeColor);
 
-        //Set the material for each sprite renderer
+        // Set the material for each sprite renderer
         foreach (SpriteRenderer spriteRenderer in spriteRendererArray)
         {
             spriteRenderer.material = materializeMaterial;
@@ -30,7 +30,7 @@ public class MaterializeEffect : MonoBehaviour
 
         float dissolveAmount = 0f;
 
-        //While the dissolve amount is less than one, but once it is greather than one, we set the default lit material again
+        // While the dissolve amount is less than one, but once it is greather than one, we set the default lit material again
         while (dissolveAmount < 1f)
         {
             dissolveAmount += Time.deltaTime / materializeTime;
@@ -38,7 +38,7 @@ public class MaterializeEffect : MonoBehaviour
             yield return null;
         }
 
-        //Set again the default lit material for the sprites renderes
+        // Set again the default lit material for the sprites renderes
         foreach (SpriteRenderer spriteRenderer in spriteRendererArray)
         {
             spriteRenderer.material = defaultMaterial;

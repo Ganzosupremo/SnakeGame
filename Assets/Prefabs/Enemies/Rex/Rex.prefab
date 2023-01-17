@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 7299302169324717446}
   - component: {fileID: 1104904209614825343}
   m_Layer: 16
-  m_Name: EnemySprite & Weapon
+  m_Name: EnemySprite & WeaponFirePosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,6 +63,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4927824317536328598}
+  - {fileID: 8604933217119376109}
   m_Father: {fileID: 8800488200602857125}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -172,12 +173,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6871562921254584015}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8800488200602857125}
+  m_Father: {fileID: 8014135867868925797}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3470856449098357953
@@ -328,6 +329,7 @@ GameObject:
   - component: {fileID: 4033791898475978348}
   - component: {fileID: 6930524932663728290}
   - component: {fileID: 4896308740447740658}
+  - component: {fileID: 4242148347384459993}
   - component: {fileID: 2361693017524141850}
   - component: {fileID: 9093827139216785612}
   - component: {fileID: 782918922760598002}
@@ -400,7 +402,8 @@ MonoBehaviour:
   movementToPositionEvent: {fileID: 0}
   idleEvent: {fileID: 0}
   enemyMovementAI: {fileID: 0}
-  enemySprite: {fileID: 7299302169324717446}
+  enemyRotateTransform: {fileID: 8014135867868925797}
+  enemyWeaponSprite: {fileID: 7299302169324717446}
 --- !u!114 &4896308740447740658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,6 +419,22 @@ MonoBehaviour:
   movementDetails: {fileID: 11400000, guid: e5663b52f1b3c2e4ba4c4a33a13367f8, type: 2}
   updateFramesNumber: 1
   enemySpeed: 0
+--- !u!114 &4242148347384459993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7249687755293974846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dafd59b74a052148b872e9c473af382, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 33792
+  m_WeaponShootPosition: {fileID: 8014135867868925797}
 --- !u!114 &2361693017524141850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -708,7 +727,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8014135867868925797}
-  - {fileID: 8604933217119376109}
   m_Father: {fileID: 3370419710436442679}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

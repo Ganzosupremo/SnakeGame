@@ -32,6 +32,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(ReloadWeaponEvent))]
 [RequireComponent(typeof(ReloadWeapon))]
 [RequireComponent(typeof(WeaponReloadedEvent))]
+[RequireComponent(typeof(MaterializeEffect))]
 #endregion
 public class Snake : MonoBehaviour
 {
@@ -55,6 +56,7 @@ public class Snake : MonoBehaviour
 
     private List<Transform> snakeSegmentsList = new();
     private int snakeSegmentCount;
+    private MaterializeEffect materializeEffect;
 
     public bool IsSnakeColliding { get; private set; }
 
@@ -75,6 +77,7 @@ public class Snake : MonoBehaviour
         reloadWeapon = GetComponent<ReloadWeapon>();
         weaponReloadedEvent = GetComponent<WeaponReloadedEvent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        materializeEffect = GetComponent<MaterializeEffect>();
     }
 
     private void Start()
@@ -110,9 +113,13 @@ public class Snake : MonoBehaviour
 
         SetPlayerHealth();
 
+        StartCoroutine(MaterializePlayer());
+
         //Initialise the initial weapon for the player
         CreatePlayerInitialWeapon();
     }
+
+
 
     /// <summary>
     /// Sets The Player Initial Weapon 
@@ -128,9 +135,25 @@ public class Snake : MonoBehaviour
         }
     }
 
+    private IEnumerator MaterializePlayer()
+    {
+        // Disable snake while the effect is in progress
+        EnableSnake(false);
+        yield return StartCoroutine(materializeEffect.MaterializeRoutine(snakeDetails.materializeShader,
+            snakeDetails.materializeColor, snakeDetails.materializeTime, snakeDetails.defaultLitMaterial, spriteRenderer));
+
+        // Enable the snake again
+        EnableSnake(true);
+    }
+
     private void SetPlayerHealth()
     {
         health.SetStartingHealth(snakeDetails.snakeInitialHealth);
+
+        for (int i = 0; i < snakeDetails.snakeInitialHealth; i++)
+        {
+            //GrowSnake();
+        }
     }
 
     /// <summary>
@@ -225,9 +248,15 @@ public class Snake : MonoBehaviour
             snakeSegmentsList[i].position = snakeSegmentsList[i - 1].position;
         }
     }
-    // TODO After training, change the update of the snake segments to this script
-    // and just call this new method from the snake controler
-    // add an int to keep track of how many segment the snake currently has
-    // so when the snake collides, the last segment can be removed from the list
-    // and deactivate it, so it returns to the pool.
+    
+    /// <summary>
+    /// Enables/Disables the snake
+    /// </summary>
+    /// <param name="isActive">True to enable the snake, false to disable</param>
+    private void EnableSnake(bool isActive)
+    {
+        snakeControler.enabled = isActive;
+        
+        fireWeapon.enabled = isActive;
+    }
 }

@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 #region Required Components
-//[RequireComponent(typeof(EnemyMovementAI))]
+[RequireComponent(typeof(EnemyMovementAI))]
+[RequireComponent(typeof(EnemyWeaponAI))]
 [RequireComponent(typeof(Health))]
 //[RequireComponent(typeof(HealthEvent))]
 //[RequireComponent(typeof(DestroyEvent))]
@@ -14,7 +15,7 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(IdleEvent))]
 [RequireComponent(typeof(Idle))]
 //[RequireComponent(typeof(AnimateEnemy))]
-//[RequireComponent(typeof(MaterializeEffect))]
+[RequireComponent(typeof(MaterializeEffect))]
 [RequireComponent(typeof(MovementToPositionEvent))]
 [RequireComponent(typeof(MovementToPosition))]
 [RequireComponent(typeof(SetActiveWeaponEvent))]
@@ -45,9 +46,9 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public IdleEvent idleEvent;
     [HideInInspector] public EnemyMovementAI enemyMovementAI;
 
-    [Tooltip("The sprite renderer of the child gameobject 'EnemySprite & Weapon'," +
-        "The enemy sprite will rotate along with the aim angle.")]
-    [SerializeField] private SpriteRenderer enemySprite;
+    [Tooltip("The transform that will rotate with the aimAngle.")]
+    [SerializeField] private Transform enemyRotateTransform;
+    [SerializeField] private SpriteRenderer enemyWeaponSprite;
 
     private MaterializeEffect materializeEffect;
     private CircleCollider2D circleCollider;
@@ -77,20 +78,43 @@ public class Enemy : MonoBehaviour
         spriteRendererArray = GetComponentsInChildren<SpriteRenderer>();
     }
 
+    private void OnEnable()
+    {
+        aimWeaponEvent.OnWeaponAim += AimWeaponEvent_OnWeaponAim;
+    }
+
+    private void OnDisable()
+    {
+        aimWeaponEvent.OnWeaponAim -= AimWeaponEvent_OnWeaponAim;
+    }
+
+    private void AimWeaponEvent_OnWeaponAim(AimWeaponEvent aimWeaponEvent, AimWeaponEventArgs aimWeaponEventArgs)
+    {
+        RotateEnemy(aimWeaponEventArgs.aimAngle);
+    }
+
+    /// <summary>
+    /// Rotates the enemy to face the fire direction
+    /// </summary>
+    /// <param name="aimAngle"></param>
+    private void RotateEnemy(float aimAngle)
+    {
+        enemyRotateTransform.eulerAngles = new(0f, 0f, aimAngle);
+    }
+
     public void InitializeEnemy(EnemyDetailsSO enemyDetails, int enemySpawnNumber, GameLevelSO gameLevel)
     {
         this.enemyDetails = enemyDetails;
 
         SetEnemyMovementUpdateFrame(enemySpawnNumber);
 
+        SetEnemyStartingWeapon();
+
         // Calls the materialize effect class
         StartCoroutine(MaterializeEnemy());
 
-
         SetPolygonColliderShape();
     }
-
-
 
     /// <summary>
     /// Set the enemy movement update frame
@@ -101,12 +125,34 @@ public class Enemy : MonoBehaviour
         enemyMovementAI.UpdateFramesNumber(enemySpawnNumber % Settings.targetFramesToSpreadPathfindingOver);
     }
 
+    /// <summary>
+    /// Set the enemy starting weapon with the weapon details SO
+    /// </summary>
+    private void SetEnemyStartingWeapon()
+    {
+        //Proceed if the enemy has a weapon
+        if (enemyDetails.enemyWeapon != null)
+        {
+            Weapon weapon = new()
+            {
+                weaponDetails = enemyDetails.enemyWeapon,
+                weaponReloadTimer = 0f,
+                weaponClipRemaining = enemyDetails.enemyWeapon.clipMaxCapacity,
+                weaponTotalAmmoCapacity = enemyDetails.enemyWeapon.totalAmmoCapacity,
+                isWeaponReloading = false
+            };
+
+            //Set the weapon for the enemy
+            setActiveWeaponEvent.CallSetActiveWeaponEvent(weapon);
+        }
+    }
+
     private void SetPolygonColliderShape()
     {
         if (polygonCollider != null)
         {
             List<Vector2> polygonVertices = new();
-            enemySprite.sprite.GetPhysicsShape(0, polygonVertices);
+            enemyWeaponSprite.sprite.GetPhysicsShape(0, polygonVertices);
 
             polygonCollider.points = polygonVertices.ToArray();
         }
@@ -118,7 +164,7 @@ public class Enemy : MonoBehaviour
         EnableEnemy(false);
 
         yield return StartCoroutine(materializeEffect.MaterializeRoutine(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
-            enemyDetails.enemyMaterializeTime, spriteRendererArray, enemyDetails.standardEnemyMaterial));
+            enemyDetails.enemyMaterializeTime, enemyDetails.standardEnemyMaterial, spriteRendererArray));
 
         // Enables the enemy again, after it has been materialzed
         EnableEnemy(true);

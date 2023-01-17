@@ -1,9 +1,13 @@
 using System;
 using UnityEngine;
 
-public class AStarNode : IComparable<AStarNode>
+public class AStarNode : IHeapItem<AStarNode>
 {
     public Vector2Int gridPosition;
+    int heapIndex;
+    
+    public int HeapIndex { get { return heapIndex; } set { heapIndex = value; } }
+
     /// <summary>
     /// Distance from the starting node
     /// </summary>
@@ -13,14 +17,17 @@ public class AStarNode : IComparable<AStarNode>
     /// </summary>
     public int HCost { get; set; }
     public AStarNode parentNode;
+    
+    /// <summary>
+    /// The total cost of this node
+    /// </summary>
+    public int FCost { get { return GCost + HCost; } }
 
     public AStarNode(Vector2Int gridPosition)
     {
         this.gridPosition = gridPosition;
         parentNode = null;
     }
-
-    public int FCost { get { return GCost + HCost; } }
 
     public int CompareTo(AStarNode nodeToCompare)
     {
@@ -31,9 +38,7 @@ public class AStarNode : IComparable<AStarNode>
         int compare = FCost.CompareTo(nodeToCompare.FCost);
 
         if (compare == 0)
-        {
             compare = HCost.CompareTo(nodeToCompare.HCost);
-        }
 
         return compare;
     }

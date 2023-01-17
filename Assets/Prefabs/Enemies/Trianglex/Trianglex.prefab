@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 7299302169324717446}
   - component: {fileID: 1104904209614825343}
   m_Layer: 16
-  m_Name: EnemySprite & Weapon
+  m_Name: EnemySprite & WeaponFirePosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -160,6 +160,7 @@ GameObject:
   - component: {fileID: 4033791898475978348}
   - component: {fileID: 6930524932663728290}
   - component: {fileID: -8338609364974670955}
+  - component: {fileID: -8334500676304990584}
   - component: {fileID: 2361693017524141850}
   - component: {fileID: 9093827139216785612}
   - component: {fileID: 782918922760598002}
@@ -232,7 +233,8 @@ MonoBehaviour:
   movementToPositionEvent: {fileID: 0}
   idleEvent: {fileID: 0}
   enemyMovementAI: {fileID: 0}
-  enemySprite: {fileID: 7299302169324717446}
+  enemyRotateTransform: {fileID: 8014135867868925797}
+  enemyWeaponSprite: {fileID: 7299302169324717446}
 --- !u!114 &-8338609364974670955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,6 +250,22 @@ MonoBehaviour:
   movementDetails: {fileID: 11400000, guid: b6a83e2d1448c214da7c2df9851db35b, type: 2}
   updateFramesNumber: 1
   enemySpeed: 0
+--- !u!114 &-8334500676304990584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7249687755293974846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dafd59b74a052148b872e9c473af382, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 33792
+  m_WeaponShootPosition: {fileID: 8014135867868925797}
 --- !u!114 &2361693017524141850
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -74,19 +74,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             currentGameState = GameState.Started;
         }
 
-        foodSpawnTimer -= Time.deltaTime;
-        if (foodSpawnTimer <= 0f)
-        {
-            SpawnFood();
-        }
+        //foodSpawnTimer -= Time.deltaTime;
+        //if (foodSpawnTimer <= 0f)
+        //{
+        //    SpawnFood();
+        //}
     }
 
     private void OnEnable()
     {
         StaticEventHandler.OnRoomChanged += StaticEventHandler_OnRoomChanged;
     }
-
-
 
     private void OnDisable()
     {
@@ -96,7 +94,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
     {
         SetCurrentRoom(roomChangedEventArgs.room);
-        SpawnFood();
+        //SpawnFood();
     }
 
     /// <summary>
@@ -145,16 +143,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // Trigger the room changed event for the first time
         StaticEventHandler.CallRoomChangedEvent(currentRoom);
 
+        //InstantiatePlayer();
+
         // Set the snake position roughly in the middle of the room
         snake.gameObject.transform.position = new Vector3((currentRoom.worldLowerBounds.x + currentRoom.worldUpperBounds.x) / 2f,
             (currentRoom.worldLowerBounds.y + currentRoom.worldUpperBounds.y) / 2f, 0f);
 
         // Get the nearest spawn point position of the room, so the snake doesn't spawn in walls or something
         snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(snake.gameObject.transform.position);
-
-        //foodSpawnedSoFar = 0;
-
-        //testList = snake.snakeControler.GetSnakeSegmentList();
     }
 
     /// <summary>

@@ -63,6 +63,35 @@ public class SnakeDetailsSO : ScriptableObject
     #endregion
     public Sprite snakeMinimapIcon;
 
+
+
+    #region Header Enemy Materialize Settings
+    [Space(10)]
+    [Header("Materialize Player Settings")]
+    #endregion
+
+    #region Tooltip
+    [Tooltip("This is the default lit material, populate it, because after the materialize effect" +
+        "is finished the player material will be reset to this one.")]
+    #endregion
+    public Material defaultLitMaterial;
+
+    #region Tooltip
+    [Tooltip("The it will take for the player to materialize")]
+    #endregion
+    public float materializeTime;
+
+    #region Tooltip
+    [Tooltip("The shader that'll be used when the player materializes")]
+    #endregion
+    public Shader materializeShader;
+
+    #region Tooltip
+    [Tooltip("The color of the materialize effect - it's and HDR, so the intensity can make the color glow")]
+    #endregion
+    [ColorUsage(true, true)]
+    public Color materializeColor;
+
     #region Validation
 #if UNITY_EDITOR
     private void OnValidate()
@@ -74,6 +103,9 @@ public class SnakeDetailsSO : ScriptableObject
 
         HelperUtilities.ValidateCheckNullValue(this, nameof(initialWeapon), initialWeapon);
         HelperUtilities.ValidateCheckEnumerableValues(this, nameof(initialWeaponList), initialWeaponList);
+
+        HelperUtilities.ValidateCheckNullValue(this, nameof(materializeShader), materializeShader);
+        HelperUtilities.ValidateCheckNullValue(this, nameof(defaultLitMaterial), defaultLitMaterial);
 
         if (isImmuneAfterHit)
         {

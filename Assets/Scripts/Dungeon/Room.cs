@@ -31,9 +31,12 @@ public class Room
     public Vector2Int tilemapUpperBounds;
     public Vector2Int[] spawnPositionArray;
 
-    public List<SpawnableObjectByLevel<EnemyDetailsSO>> enemiesByLevelList;
-    public List<RoomEnemySpawnParameters> roomLevelEnemySpawnParametersList;
+    public List<SpawnableObjectByLevel<EnemyDetailsSO>> EnemiesByLevelList { get; set; }
+    public List<RoomItemSpawnParameters> RoomLevelEnemySpawnParametersList { get; set; }
 
+    public List<SpawnableObjectByLevel<FoodSO>> FoodsByLevelList { get; set; }
+    public List<RoomItemSpawnParameters> RoomLevelFoodSpawnParametersList { get; set; }
+    
     public List<string> childRoomIDList;
     public string parentRoomID;
     public List<Doorway> doorwayList;
@@ -50,37 +53,77 @@ public class Room
     }
 
     /// <summary>
-    /// Get the number of enemies that will spawn in this game level.
+    /// Get the total number of items that will spawn on this specific room on this game level.
     /// </summary>
     /// <param name="gameLevel"></param>
-    /// <returns>Returns the total number of enemies to spawn in this level.</returns>
-    public int GetNumberOfEnemiesToSpawn(GameLevelSO gameLevel)
+    /// <param name="index"> 1 to retrieve the total number of enemies that are allowed to spawn on the current room.
+    /// 2 to retrive the total number of foods that are allowed to spawn on that room on that game level.
+    /// The default is set to 1.</param>
+    /// <returns>Returns the total number of items to spawn on the specified room on this current game level.</returns>
+    public int GetNumberOfItemsToSpawns(GameLevelSO gameLevel, int index = 1)
     {
-        foreach (RoomEnemySpawnParameters spawnParameters in roomLevelEnemySpawnParametersList)
+        if (index == 1)
         {
-            if (spawnParameters.gameLevel == gameLevel)
+            foreach (RoomItemSpawnParameters spawnParameters in RoomLevelEnemySpawnParametersList)
             {
-                return Random.Range(spawnParameters.minTotalEnemiesToSpawn, spawnParameters.maxTotalEnemiesToSpawn);
+                if (spawnParameters.gameLevel == gameLevel)
+                {
+                    return Random.Range(spawnParameters.minTotalItemsToSpawn, spawnParameters.maxTotalItemsToSpawn);
+                }
             }
-        }
 
-        return 0;
+            return 0;
+        }
+        else if (index == 2)
+        {
+            foreach (RoomItemSpawnParameters spawnParameters in RoomLevelFoodSpawnParametersList)
+            {
+                if (spawnParameters.gameLevel == gameLevel)
+                {
+                    return Random.Range(spawnParameters.minTotalItemsToSpawn, spawnParameters.maxTotalItemsToSpawn);
+                }
+            }
+
+            return 0;
+        }
+        else
+            return 0;
+
     }
 
     /// <summary>
     /// Get the enemy spawn parameters for this game level.
     /// </summary>
     /// <param name="gameLevel"></param>
+    /// <param name="index">1 to retrieve the EnemySpawnParameters.
+    /// 2 to retrive the FoodSpawnParameters.
+    /// The default is set to 1.</param>
     /// <returns>Returns the enemy spawn parameters, returns null if none has been found.</returns>
-    public RoomEnemySpawnParameters GetRoomEnemySpawnParameters(GameLevelSO gameLevel)
+    public RoomItemSpawnParameters GetRoomItemSpawnParameters(GameLevelSO gameLevel, int index = 1)
     {
-        foreach (RoomEnemySpawnParameters spawnParameters in roomLevelEnemySpawnParametersList)
+        if (index == 1)
         {
-            if (spawnParameters.gameLevel == gameLevel)
+            foreach (RoomItemSpawnParameters spawnParameters in RoomLevelEnemySpawnParametersList)
             {
-                return spawnParameters;
+                if (spawnParameters.gameLevel == gameLevel)
+                {
+                    return spawnParameters;
+                }
             }
+            return null;
         }
-        return null;
+        else if (index == 2)
+        {
+            foreach (RoomItemSpawnParameters spawnParameters in RoomLevelFoodSpawnParametersList)
+            {
+                if (spawnParameters.gameLevel == gameLevel)
+                {
+                    return spawnParameters;
+                }
+            }
+            return null;
+        }
+        else
+            return null;
     }
 }

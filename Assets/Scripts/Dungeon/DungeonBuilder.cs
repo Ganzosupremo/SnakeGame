@@ -518,8 +518,13 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
             worldUpperBounds = roomTemplate.upperBounds,
             spawnPositionArray = roomTemplate.spawnPositionArray,
 
-            enemiesByLevelList = roomTemplate.enemiesByLevelList,
-            roomLevelEnemySpawnParametersList = roomTemplate.roomEnemySpawnParemetersList,
+            // Populate the lists that will spawn the enemies on the current room
+            EnemiesByLevelList = roomTemplate.enemiesByLevelList,
+            RoomLevelEnemySpawnParametersList = roomTemplate.roomEnemySpawnParemetersList,
+
+            // populate the lists that will spawn the different foods on the current room
+            FoodsByLevelList = roomTemplate.foodByLevelList,
+            RoomLevelFoodSpawnParametersList = roomTemplate.roomFoodSpawnParametersList,
 
             tilemapLowerBounds = roomTemplate.lowerBounds,
             tilemapUpperBounds = roomTemplate.upperBounds,
@@ -543,7 +548,7 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
         }
 
         // If there are no enemies to spawn in this room, then default it to be clear of enemies
-        if (room.GetNumberOfEnemiesToSpawn(GameManager.Instance.GetCurrentDungeonLevel()) == 0)
+        if (room.GetNumberOfItemsToSpawns(GameManager.Instance.GetCurrentDungeonLevel(), 1) == 0)
         {
             room.isClearOfEnemies = true;
         }

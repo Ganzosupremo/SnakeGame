@@ -14,7 +14,7 @@ public class EnemySpawner : MonoBehaviour
     private int maxConcurrentNumberOfEnemies;
 
     private Room currentRoom;
-    private RoomEnemySpawnParameters roomEnemySpawnParemeters;
+    private RoomItemSpawnParameters roomEnemySpawnParemeters;
 
     private void OnEnable()
     {
@@ -43,11 +43,11 @@ public class EnemySpawner : MonoBehaviour
         // If the room is already clear of enemies, then return
         if (currentRoom.isClearOfEnemies) return;
 
-        // Get a random nnumber of enemies to spawn for this room
-        enemiesToSpawn = currentRoom.GetNumberOfEnemiesToSpawn(GameManager.Instance.GetCurrentDungeonLevel());
+        // Get a random number of enemies to spawn for this room
+        enemiesToSpawn = currentRoom.GetNumberOfItemsToSpawns(GameManager.Instance.GetCurrentDungeonLevel(), 1);
 
         // Get the enemy spawn parameters for this room
-        roomEnemySpawnParemeters = currentRoom.GetRoomEnemySpawnParameters(GameManager.Instance.GetCurrentDungeonLevel());
+        roomEnemySpawnParemeters = currentRoom.GetRoomItemSpawnParameters(GameManager.Instance.GetCurrentDungeonLevel(), 1);
 
         // If no enemies to spawn, return and mark the room as cleared
         if (enemiesToSpawn == 0)
@@ -94,7 +94,7 @@ public class EnemySpawner : MonoBehaviour
         Grid grid = currentRoom.instantiatedRoom.grid;
 
         // Create an instance of the helper class used to select a random enemy
-        RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new RandomSpawnableObject<EnemyDetailsSO>(currentRoom.enemiesByLevelList);
+        RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new RandomSpawnableObject<EnemyDetailsSO>(currentRoom.EnemiesByLevelList);
 
         // See if we have space to spawn the enemies
         if (currentRoom.spawnPositionArray.Length > 0)
@@ -109,7 +109,7 @@ public class EnemySpawner : MonoBehaviour
 
                 Vector3Int cellPosition = (Vector3Int)currentRoom.spawnPositionArray[Random.Range(0, currentRoom.spawnPositionArray.Length)];
 
-                //Creates the enemy and gets the next one to spawn
+                // Creates the enemy and gets the next one to spawn
                 CreateEnemy(randomSpawnableObject.GetRandomItem(), grid.CellToWorld(cellPosition));
 
                 yield return new WaitForSeconds(GetEnemySpawnInterval());
@@ -130,7 +130,7 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     private int GetConcurrentEnemiesToSpawn()
     {
-        return Random.Range(roomEnemySpawnParemeters.minConcurrentEnemies, roomEnemySpawnParemeters.maxConcurrentEnemies);
+        return Random.Range(roomEnemySpawnParemeters.minConcurrentItems, roomEnemySpawnParemeters.maxConcurrentItems);
     }
 
     /// <summary>

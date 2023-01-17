@@ -51,28 +51,45 @@ public class RoomTemplateSO : ScriptableObject
     public List<Doorway> doorwayList;
 
     #region Tooltip
-    [Tooltip("Each possible spawn position (this is used for enemies and chests) for the room in local coordinates should be added to this array")]
+    [Tooltip("Each possible spawn position used to spawn things on the room in local coordinates should be added to this array")]
     #endregion Tooltip
     public Vector2Int[] spawnPositionArray;
-    #region Tooltip
-    [Tooltip("This array is used to spawn food on the rooms")]
-    #endregion Tooltip
-    public Vector2Int[] foodSpawnPositionArray;
+    //#region Tooltip
+    //[Tooltip("This array is used to spawn food on the rooms")]
+    //#endregion Tooltip
+    //public Vector2Int[] foodSpawnPositionArray;
 
     #region Header Enemy Details
     [Space(10)]
     [Header("Enemy Spawn Details")]
     #endregion
     #region Tooltip
-    [Tooltip("Populate with all the enemies that can be spawned in this room by dungeon level, including the ratio of this enemy type" +
-        " that will be spawned")]
+    [Tooltip("Populate with all the enemies that can be spawned in this room by game level, including the ratio of this enemy type" +
+        " that will be spawned," +
+        " a higher ratio means it will spawn often than the other with lower ratios.")]
     #endregion
     public List<SpawnableObjectByLevel<EnemyDetailsSO>> enemiesByLevelList;
 
     #region Tooltip
     [Tooltip("Populate with the spawn parameters for the enemies")]
     #endregion
-    public List<RoomEnemySpawnParameters> roomEnemySpawnParemetersList;
+    public List<RoomItemSpawnParameters> roomEnemySpawnParemetersList;
+
+    #region Header Food Spawn Details
+    [Space(10)]
+    [Header("Food Spawn Details")]
+    [Space(5)]
+    #endregion
+    #region Tooltip
+    [Tooltip("Populate with all the kinds of differents foods" +
+        " that can be spawned in this room at this game level. Include also the ratio of the different foods," +
+        " a higher ratio, means it will spawn often than the other with lower ratios.")]
+    #endregion
+    public List<SpawnableObjectByLevel<FoodSO>> foodByLevelList;
+    #region Tooltip
+    [Tooltip("Populate with the spawn parameters for the types of food")]
+    #endregion
+    public List<RoomItemSpawnParameters> roomFoodSpawnParametersList;
 
     /// <summary>
     /// Returns the list of Entrances for the room template
@@ -98,23 +115,26 @@ public class RoomTemplateSO : ScriptableObject
         //HelperUtilities.ValidateCheckNullValue(this, nameof(ambientMusic), ambientMusic);
         HelperUtilities.ValidateCheckNullValue(this, nameof(roomNodeType), roomNodeType);
         HelperUtilities.ValidateCheckEnumerableValues(this, nameof(doorwayList), doorwayList);
-
+        
+        #region Check all the parameters for the enemies are defined
+        // Check if enemies are gonna spawn in a room, that really all the necessary details
+        // have been populated.
         if (enemiesByLevelList.Count > 0 || roomEnemySpawnParemetersList.Count > 0)
         {
             HelperUtilities.ValidateCheckEnumerableValues(this, nameof(enemiesByLevelList), enemiesByLevelList);
             HelperUtilities.ValidateCheckEnumerableValues(this, nameof(roomEnemySpawnParemetersList), roomEnemySpawnParemetersList);
 
-            foreach (RoomEnemySpawnParameters enemySpawnParameters in roomEnemySpawnParemetersList)
+            foreach (RoomItemSpawnParameters enemySpawnParameters in roomEnemySpawnParemetersList)
             {
                 HelperUtilities.ValidateCheckNullValue(this, nameof(enemySpawnParameters.gameLevel), enemySpawnParameters.gameLevel);
-                HelperUtilities.ValidateCheckPositiveRange(this, nameof(enemySpawnParameters.minTotalEnemiesToSpawn), enemySpawnParameters.minTotalEnemiesToSpawn,
-                    nameof(enemySpawnParameters.maxTotalEnemiesToSpawn), enemySpawnParameters.maxTotalEnemiesToSpawn, true);
+                HelperUtilities.ValidateCheckPositiveRange(this, nameof(enemySpawnParameters.minTotalItemsToSpawn), enemySpawnParameters.minTotalItemsToSpawn,
+                    nameof(enemySpawnParameters.maxTotalItemsToSpawn), enemySpawnParameters.maxTotalItemsToSpawn, true);
 
-                HelperUtilities.ValidateCheckPositiveRange(this, nameof(enemySpawnParameters.minTotalEnemiesToSpawn), enemySpawnParameters.minTotalEnemiesToSpawn,
-                    nameof(enemySpawnParameters.maxTotalEnemiesToSpawn), enemySpawnParameters.maxTotalEnemiesToSpawn, true);
+                HelperUtilities.ValidateCheckPositiveRange(this, nameof(enemySpawnParameters.minSpawnInterval), enemySpawnParameters.minSpawnInterval,
+                    nameof(enemySpawnParameters.maxSpawnInterval), enemySpawnParameters.maxSpawnInterval, true);
 
-                HelperUtilities.ValidateCheckPositiveRange(this, nameof(enemySpawnParameters.minConcurrentEnemies), enemySpawnParameters.minConcurrentEnemies,
-                    nameof(enemySpawnParameters.maxConcurrentEnemies), enemySpawnParameters.maxConcurrentEnemies, true);
+                HelperUtilities.ValidateCheckPositiveRange(this, nameof(enemySpawnParameters.minConcurrentItems), enemySpawnParameters.minConcurrentItems,
+                    nameof(enemySpawnParameters.maxConcurrentItems), enemySpawnParameters.maxConcurrentItems, true);
 
                 bool isEnemyTypeListForDungeonLevelFound = false;
 
@@ -140,7 +160,54 @@ public class RoomTemplateSO : ScriptableObject
                 }
             }
         }
+        #endregion
 
+        #region Check all the parameters for food are defined
+        // Check if food is gonna spawn in this room at this game level, that everey detail
+        // is populated in the room template.
+        if (foodByLevelList.Count > 0 || roomFoodSpawnParametersList.Count > 0)
+        {
+            HelperUtilities.ValidateCheckEnumerableValues(this, nameof(foodByLevelList), foodByLevelList);
+            HelperUtilities.ValidateCheckEnumerableValues(this, nameof(roomFoodSpawnParametersList), roomFoodSpawnParametersList);
+
+            foreach (RoomItemSpawnParameters foodSpawnParameters in roomFoodSpawnParametersList)
+            {
+                HelperUtilities.ValidateCheckNullValue(this, nameof(foodSpawnParameters.gameLevel), foodSpawnParameters.gameLevel);
+                HelperUtilities.ValidateCheckPositiveRange(this, nameof(foodSpawnParameters.minTotalItemsToSpawn), foodSpawnParameters.minTotalItemsToSpawn,
+                    nameof(foodSpawnParameters.maxTotalItemsToSpawn), foodSpawnParameters.maxTotalItemsToSpawn, true);
+
+                HelperUtilities.ValidateCheckPositiveRange(this, nameof(foodSpawnParameters.minSpawnInterval), foodSpawnParameters.minSpawnInterval,
+                    nameof(foodSpawnParameters.maxSpawnInterval), foodSpawnParameters.maxSpawnInterval, true);
+
+                HelperUtilities.ValidateCheckPositiveRange(this, nameof(foodSpawnParameters.minConcurrentItems), foodSpawnParameters.minConcurrentItems,
+                    nameof(foodSpawnParameters.maxConcurrentItems), foodSpawnParameters.maxConcurrentItems, true);
+
+                bool isFoodTypeListForDungeonLevelFound = false;
+
+                foreach (SpawnableObjectByLevel<FoodSO> spawnableObjectsByLevel in foodByLevelList)
+                {
+                    if (spawnableObjectsByLevel.gameLevel == foodSpawnParameters.gameLevel &&
+                        spawnableObjectsByLevel.spawnableObjectRatioList.Count > 0)
+                        isFoodTypeListForDungeonLevelFound = true;
+
+                    HelperUtilities.ValidateCheckNullValue(this, nameof(spawnableObjectsByLevel.gameLevel), spawnableObjectsByLevel.gameLevel);
+
+                    foreach (SpawnableObjectRatio<FoodSO> spawnableObjectRatio in spawnableObjectsByLevel.spawnableObjectRatioList)
+                    {
+                        HelperUtilities.ValidateCheckNullValue(this, nameof(spawnableObjectRatio.dungeonObject), spawnableObjectRatio.dungeonObject);
+                        HelperUtilities.ValidateCheckPositiveValue(this, nameof(spawnableObjectRatio.spawnRatio), spawnableObjectRatio.spawnRatio, false);
+                    }
+                }
+
+                if (!isFoodTypeListForDungeonLevelFound && foodSpawnParameters.gameLevel != null)
+                {
+                    Debug.Log("No type of food was specified for this game level " + foodSpawnParameters.gameLevel.levelName
+                        + ", located in the gameobject" + this.name.ToString());
+                }
+            }
+        }
+        #endregion
+        
         // Check spawn positions if populated
         HelperUtilities.ValidateCheckEnumerableValues(this, nameof(spawnPositionArray), spawnPositionArray);
     }

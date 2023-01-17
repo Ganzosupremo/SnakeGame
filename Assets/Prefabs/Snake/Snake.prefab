@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 1864397008390884837}
   - component: {fileID: 7636072578492417010}
   - component: {fileID: 5265667881798842875}
+  - component: {fileID: 1651792322507554640}
   m_Layer: 10
   m_Name: Snake
   m_TagString: Player
@@ -423,7 +424,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -604,7 +605,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b01ce2fead2835479424933b96d632b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSpriteRenderer: {fileID: 8182033735335509260}
   weaponShootPosition: {fileID: 7744678937136800536}
   weaponEffectPosition: {fileID: 4535233281347273686}
 --- !u!114 &4760146493644783039
@@ -677,5 +677,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b16d60b380c7d4a44abe3d7cc8e3ef92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1651792322507554640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266277145047211159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d3b8f2f9724e5940a6faa51c69522fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
