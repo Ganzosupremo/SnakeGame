@@ -1,6 +1,6 @@
-using UnityEngine.Audio;
 using System.Collections;
 using UnityEngine;
+using SnakeGame;
 
 /// <summary>
 /// Manages all the SFS's for the game, with the help of <seealso cref="SoundEffect"/> and <seealso cref="SoundEffectSO"/> classes.

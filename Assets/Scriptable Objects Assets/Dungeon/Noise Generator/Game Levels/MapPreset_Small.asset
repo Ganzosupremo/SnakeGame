@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b398ce460825b8347aefee2ab8d636f5, type: 3}
+  m_Name: MapPreset_Small
+  m_EditorClassIdentifier: 
+  levelName: Small Map
+  width: 50
+  height: 50
+  scale: 1
+  offset: {x: 0, y: 0}
+  heightWaves:
+  - seed: 69
+    frequency: 0.05
+    amplitude: 1
+  - seed: 100
+    frequency: 0.1
+    amplitude: 0.5
+  moistureWaves:
+  - seed: 645
+    frequency: 0.03
+    amplitude: 1
+  heatWaves:
+  - seed: 330
+    frequency: 0.04
+    amplitude: 1
+  spawnPositionsList:
+  - {x: 5, y: 5}
+  - {x: 14, y: 6}
+  - {x: 25, y: 35}
+  - {x: 32, y: 15}
+  - {x: 0, y: 29}
+  - {x: 15, y: 18}
+  - {x: 20, y: 20}

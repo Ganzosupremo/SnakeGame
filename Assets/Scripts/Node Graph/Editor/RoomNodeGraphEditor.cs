@@ -31,10 +31,10 @@ public class RoomNodeGraphEditor : EditorWindow
     private const float gridLarge = 200f;
     private const float gridSmall = 50f;
 
-    [MenuItem("Room's Graph Node Editor", menuItem = "Window/Dungeon Editor/Room's Graph Node Editor")]
+    [MenuItem("Graph Editor For Room Nodes", menuItem = "Window/Dungeon Editor/Room Node Graph Editor")]
     private static void OpenWindow()
     {
-        GetWindow<RoomNodeGraphEditor>("Room's Graph Node Editor");
+        GetWindow<RoomNodeGraphEditor>("Room Node Graph Editor");
     }
 
     private void OnEnable()
@@ -42,20 +42,6 @@ public class RoomNodeGraphEditor : EditorWindow
         //Suscribe to the Inspector Selection Changed event
         Selection.selectionChanged += InspectorSelectionChanged;
         m_MyStyles.Initialize();
-
-        //Define The Style Of The Node Layout
-        //roomNodeStyle = new GUIStyle();
-        //roomNodeStyle.normal.background = EditorGUIUtility.Load("node5") as Texture2D;
-        //roomNodeStyle.normal.textColor = Color.white;
-        //roomNodeStyle.padding = new RectOffset(nodePadding, nodePadding, nodePadding, nodePadding);
-        //roomNodeStyle.border = new RectOffset(nodeBorder, nodeBorder, nodeBorder, nodeBorder);
-
-        //Changes the node room Style when a room node is selectd
-        //roomNodeSelectedStyle = new GUIStyle();
-        //roomNodeSelectedStyle.normal.background = EditorGUIUtility.Load("node5 on") as Texture2D;
-        //roomNodeSelectedStyle.normal.textColor = Color.white;
-        //roomNodeSelectedStyle.padding = new RectOffset(nodePadding, nodePadding, nodePadding, nodePadding);
-        //roomNodeSelectedStyle.border = new RectOffset(nodeBorder, nodeBorder, nodeBorder, nodeBorder);
 
         //Load Room Node Types
         roomNodeTypeList = GameResources.Instance.roomNodeTypeList;
@@ -70,7 +56,7 @@ public class RoomNodeGraphEditor : EditorWindow
     /// <summary>
     /// Open The Room Node Graph Editor Window If A Room Node Graph SO Asset Is Double Clicked In The Unity Inspector
     /// </summary>
-    [OnOpenAsset(0)] //Needs The UnityEditor.Callbacks
+    [OnOpenAsset(0)] // Needs The UnityEditor.Callbacks
     public static bool OnDoubleClickAsset(int instanceID, int line)
     {
         RoomNodeGraphSO roomNodeGraph = EditorUtility.InstanceIDToObject(instanceID) as RoomNodeGraphSO;
@@ -266,10 +252,11 @@ public class RoomNodeGraphEditor : EditorWindow
     /// <param name="mousePositionObject"></param>
     private void CreateRoomNode(object mousePositionObject)
     {
-        //If the current node Editor is empty, then add a rooom node of type entrance
+        //If the current node Editor is empty, then add a rooom node of type entrance and exit
         if (currentRoomNodeGraph.roomNodeList.Count == 0)
         {
             CreateRoomNode(new Vector2(200f, 200f), roomNodeTypeList.list.Find(x => x.isEntrance));
+            CreateRoomNode(new Vector2(400f, 400f), roomNodeTypeList.list.Find(x => x.isExit));
         }
 
         CreateRoomNode(mousePositionObject, roomNodeTypeList.list.Find(x => x.isNone));

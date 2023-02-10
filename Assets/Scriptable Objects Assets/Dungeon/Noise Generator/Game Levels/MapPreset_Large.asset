@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b398ce460825b8347aefee2ab8d636f5, type: 3}
+  m_Name: MapPreset_Large
+  m_EditorClassIdentifier: 
+  levelName: Large Map
+  width: 300
+  height: 300
+  scale: 3
+  offset: {x: 0, y: 0}
+  heightWaves:
+  - seed: 100
+    frequency: 0.5
+    amplitude: 1
+  - seed: 65
+    frequency: 0.2
+    amplitude: 0.3
+  - seed: 645
+    frequency: 0.08
+    amplitude: 1
+  - seed: 687
+    frequency: 0.1
+    amplitude: 1
+  moistureWaves:
+  - seed: 659
+    frequency: 0.2
+    amplitude: 0.8
+  - seed: 7899
+    frequency: 0.1
+    amplitude: 0.1
+  heatWaves:
+  - seed: 987
+    frequency: 0.4
+    amplitude: 1
+  - seed: 147
+    frequency: 0.09
+    amplitude: 0.8
+  - seed: 654
+    frequency: 0.65
+    amplitude: 0.3
+  - seed: 593
+    frequency: 0.34
+    amplitude: 0.8
+  spawnPositionsList: []

@@ -4,5 +4,5 @@ using UnityEngine;
 public class CurrentPlayerSO : ScriptableObject
 {
     public SnakeDetailsSO snakeDetails;
-    public string playerName;
+    public string snakeName;
 }

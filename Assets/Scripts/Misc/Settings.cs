@@ -65,6 +65,7 @@ public static class Settings
     public const string playerWeapon = "playerWeapon";
     public const string food = "Food";
     public const string snakeBody = "SnakeSegment";
+    public const string enemyTag = "Enemy";
 
     public const string CollisionTilemapTag = "Tilemap_Collision";
     #endregion
@@ -104,7 +105,7 @@ public static class Settings
     #endregion
 
     #region TOUCH DAMAGE SETTINGS
-    public const float cooldownBtwTouchDamage = 0.5f;
+    public const float touchDamagaCooldown = 0.5f;
     #endregion
 
     #region HIGH SCORES

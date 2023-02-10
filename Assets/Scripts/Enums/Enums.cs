@@ -24,6 +24,7 @@ public enum GameState
     GameWon,
     GameLost,
     Paused,
+    OverviewMap,
     Restarted
 }
 

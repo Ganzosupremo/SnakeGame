@@ -1,86 +1,148 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
-/// <summary>
-/// Defines a <see cref="ChanceBoundaries"/> struct, in which the <see cref="T"/> is the object to spawn
-/// and the 'lowBoundaryValue' and 'highBoundaryValue' are defined for every object to spawn
-/// this creates a table of objects that can be spawn and this table is used to know which
-/// object to spawn randomly.
-/// </summary>
-/// <typeparam name="T">The type of object to add to the table and spawn</typeparam>
-public class RandomSpawnableObject<T>
+namespace SnakeGame.Utilities
 {
-    private struct ChanceBoundaries
-    {
-        public T spawnableObject;
-        public int lowBoundaryValue;
-        public int highBoundaryValue;
-    }
-
-    private int totalValueRatio = 0;
-    private List<ChanceBoundaries> chanceBoundariesList = new();
-    private List<SpawnableObjectByLevel<T>> spawnableObjectByLevelList;
-
-    public RandomSpawnableObject(List<SpawnableObjectByLevel<T>> spawnableObjectByLevelList)
-    {
-        this.spawnableObjectByLevelList = spawnableObjectByLevelList;
-    }
-
     /// <summary>
-    /// Gets a random item to spawn
+    /// Defines a <see cref="ChanceBoundaries"/> struct, in which the <see cref="T"/> is the object to spawn
+    /// and the 'lowBoundaryValue' and 'highBoundaryValue' are defined for every object to spawn
+    /// this creates a table of objects that can be spawn and this table is used to know which
+    /// object to spawn randomly.
     /// </summary>
-    /// <returns>Returns the object T that has been randomly selected</returns>
-    public T GetRandomItem()
+    /// <typeparam name="T">The type of object to add to the table and spawn</typeparam>
+    public class RandomSpawnableObject<T>
     {
-        int upperBoundary = -1;
-        totalValueRatio = 0;
-        chanceBoundariesList.Clear();
-        T spawnableObject = default(T);
-
-        foreach (SpawnableObjectByLevel<T> spawnableObjectByLevel in spawnableObjectByLevelList)
+        private struct ChanceBoundaries
         {
-            // Check if it is the current level
-            if (spawnableObjectByLevel.gameLevel == GameManager.Instance.GetCurrentDungeonLevel())
+            public T spawnableObject;
+            public int lowBoundaryValue;
+            public int highBoundaryValue;
+        }
+
+        private int totalValueRatio = 0;
+        private List<ChanceBoundaries> chanceBoundariesList = new();
+        private List<SpawnableObjectByLevel<T>> spawnableObjectByLevelList;
+        private List<SpawnableObject<T>> spawnableObjects;
+
+        public RandomSpawnableObject(List<SpawnableObjectByLevel<T>> spawnableObjectByLevelList)
+        {
+            this.spawnableObjectByLevelList = spawnableObjectByLevelList;
+        }
+
+        public RandomSpawnableObject(List<SpawnableObject<T>> spawnableObjects)
+        {
+            this.spawnableObjects = spawnableObjects;
+        }
+
+        /// <summary>
+        /// Gets a random item to spawn
+        /// </summary>
+        /// <returns>Returns the object T that has been randomly selected</returns>
+        public T GetRandomItem()
+        {
+            int upperBoundary = -1;
+            totalValueRatio = 0;
+            chanceBoundariesList.Clear();
+            T spawnableObject = default(T);
+
+            foreach (SpawnableObjectByLevel<T> spawnableObjectByLevel in spawnableObjectByLevelList)
             {
-                foreach (SpawnableObjectRatio<T> spawnableObjectRatio in spawnableObjectByLevel.spawnableObjectRatioList)
+                // Check if it is the current level
+                if (spawnableObjectByLevel.gameLevel == GameManager.Instance.GetCurrentDungeonLevel())
                 {
-                    // Calculate lower and upper boundary values
-                    int lowerBoundary = upperBoundary + 1;
-                    upperBoundary = lowerBoundary + spawnableObjectRatio.spawnRatio - 1;
-
-                    // Update the totalValueRatio
-                    totalValueRatio += spawnableObjectRatio.spawnRatio;
-
-                    // Add spawnable object to the list
-                    chanceBoundariesList.Add(new ChanceBoundaries()
+                    foreach (SpawnableObjectRatio<T> spawnableObjectRatio in spawnableObjectByLevel.spawnableObjectRatioList)
                     {
-                        spawnableObject = spawnableObjectRatio.dungeonObject,
-                        lowBoundaryValue = lowerBoundary,
-                        highBoundaryValue = upperBoundary,
-                    });
+                        // Calculate lower and upper boundary values
+                        int lowerBoundary = upperBoundary + 1;
+                        upperBoundary = lowerBoundary + spawnableObjectRatio.spawnRatio - 1;
 
+                        // Update the totalValueRatio
+                        totalValueRatio += spawnableObjectRatio.spawnRatio;
+
+                        // Add spawnable object to the list
+                        chanceBoundariesList.Add(new ChanceBoundaries()
+                        {
+                            spawnableObject = spawnableObjectRatio.dungeonObject,
+                            lowBoundaryValue = lowerBoundary,
+                            highBoundaryValue = upperBoundary,
+                        });
+
+                    }
                 }
             }
+
+            if (chanceBoundariesList.Count == 0) return default;
+
+            // Define a value to look up
+            int lookUpValue = Random.Range(0, totalValueRatio);
+
+            // Loop to get the randomly selected spawnable object details
+            foreach (ChanceBoundaries spawnChance in chanceBoundariesList)
+            {
+                if (lookUpValue >= spawnChance.lowBoundaryValue && lookUpValue <= spawnChance.highBoundaryValue)
+                {
+                    spawnableObject = spawnChance.spawnableObject;
+                    break;
+                }
+            }
+
+            return spawnableObject;
         }
 
-        if (chanceBoundariesList.Count == 0) return default;
-
-        // Define a value to look up
-        int lookUpValue = Random.Range(0, totalValueRatio);
-
-        // Loop to get the randomly selected spawnable object details
-        foreach (ChanceBoundaries spawnChance in chanceBoundariesList)
+        /// <summary>
+        /// Gets a random item to spawn in the current map
+        /// </summary>
+        /// <returns>Returns the object T that has been randomly selected</returns>
+        public T RandomMapItem
         {
-            if (lookUpValue >= spawnChance.lowBoundaryValue && lookUpValue <= spawnChance.highBoundaryValue)
+            get
             {
-                spawnableObject = spawnChance.spawnableObject;
-                break;
+                int upperBoundary = -1;
+                totalValueRatio = 0;
+                chanceBoundariesList.Clear();
+                T spawnableObject = default(T);
+
+                foreach (SpawnableObject<T> spawnableObjects in spawnableObjects)
+                {
+                    // Check if it is the current level
+                    //if (spawnableObjects.gameLevel == GameManager.Instance.GetCurrentDungeonLevel())
+                    //{
+                    foreach (SpawnableObjectRatio<T> spawnableObjectRatio in spawnableObjects.spawnableObjectRatios)
+                    {
+                        // Calculate lower and upper boundary values
+                        int lowerBoundary = upperBoundary + 1;
+                        upperBoundary = lowerBoundary + spawnableObjectRatio.spawnRatio - 1;
+
+                        // Update the totalValueRatio
+                        totalValueRatio += spawnableObjectRatio.spawnRatio;
+
+                        // Add spawnable object to the list
+                        chanceBoundariesList.Add(new ChanceBoundaries()
+                        {
+                            spawnableObject = spawnableObjectRatio.dungeonObject,
+                            lowBoundaryValue = lowerBoundary,
+                            highBoundaryValue = upperBoundary,
+                        });
+                    }
+                    //}
+                }
+
+                if (chanceBoundariesList.Count == 0) return default;
+
+                // Define a value to look up
+                int lookUpValue = Random.Range(0, totalValueRatio);
+
+                // Loop to get the randomly selected spawnable object details
+                foreach (ChanceBoundaries spawnChance in chanceBoundariesList)
+                {
+                    if (lookUpValue >= spawnChance.lowBoundaryValue && lookUpValue <= spawnChance.highBoundaryValue)
+                    {
+                        spawnableObject = spawnChance.spawnableObject;
+                        break;
+                    }
+                }
+                return spawnableObject;
             }
         }
-
-        return spawnableObject;
     }
 }

@@ -7,6 +7,8 @@ public class GridNode
 
     private AStarNode[,] gridNode;
 
+    public int GridSize { get { return gridWidth * gridHeight; } }
+
     public GridNode(int gridWidth, int gridHeight)
     {
         this.gridWidth = gridWidth;

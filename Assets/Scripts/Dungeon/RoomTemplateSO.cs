@@ -1,3 +1,4 @@
+using SnakeGame.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -6,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// This is the template for the room that the dungeon builder will use to build the level
 /// </summary>
-[CreateAssetMenu(fileName = "Room_", menuName = "Scriptable Objects/Dungeon/Room")]
+[CreateAssetMenu(fileName = "RoomTemplate_", menuName = "Scriptable Objects/Dungeon/Room Template")]
 public class RoomTemplateSO : ScriptableObject
 {
     [HideInInspector] public string guid;

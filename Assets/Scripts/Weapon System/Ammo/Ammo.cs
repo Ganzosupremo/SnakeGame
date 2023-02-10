@@ -1,8 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using SnakeGame;
+using SnakeGame.Interfaces;
 
 [DisallowMultipleComponent]
 public class Ammo : MonoBehaviour, IFireable
@@ -63,9 +62,11 @@ public class Ammo : MonoBehaviour, IFireable
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (isColliding) return;
+
+        DealDamage(other);
 
         ActivateHitEffect();
 
@@ -157,6 +158,37 @@ public class Ammo : MonoBehaviour, IFireable
         aimDirectionVector = HelperUtilities.GetDirectionVectorFromAngle(fireDirectionAngle);
     }
 
+
+    private void DealDamage(Collider2D other)
+    {
+        other.TryGetComponent(out Health health);
+
+        //bool enemyHit = false;
+
+        if (health != null)
+        {
+            isColliding = true;
+            health.TakeDamage(ammoDetails.ammoDamage);
+
+            //if (health.enemy != null)
+            //    enemyHit = true;
+        }
+
+        ////If is player ammo then update the multiplier in the UI
+        //if (ammoDetails.isPlayerAmmo)
+        //{
+        //    if (enemyHit)
+        //    {
+        //        //Update the multiplier by 1
+        //        StaticEventHandler.CallMultiplierEvent(true);
+        //    }
+        //    else
+        //    {
+        //        //Reduce the multiplier by 1
+        //        StaticEventHandler.CallMultiplierEvent(false);
+        //    }
+        //}
+    }
     private void ActivateHitEffect()
     {
         // Process if there is a hit effect & prefab

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MaterializeEffect : MonoBehaviour
@@ -30,12 +29,14 @@ public class MaterializeEffect : MonoBehaviour
 
         float dissolveAmount = 0f;
 
-        // While the dissolve amount is less than one, but once it is greather than one, we set the default lit material again
+        // While the dissolve amount is less than one,
+        // but once it is greather than one,
+        // we set the default lit material again
         while (dissolveAmount < 1f)
         {
             dissolveAmount += Time.deltaTime / materializeTime;
             materializeMaterial.SetFloat("_DissolveAmount", dissolveAmount);
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
         // Set again the default lit material for the sprites renderes

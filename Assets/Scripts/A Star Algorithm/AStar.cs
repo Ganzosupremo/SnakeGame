@@ -1,20 +1,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
 
 /// <summary>
 /// The AStar algorithm is used for the enemies to find the shortest path posible to the player 
 /// </summary>
 public static class AStar
 {
-    // TODO - implement a binary heap instead of the openNodeList, the binary heap is more
-    // efficient in terms of looking the lowest FCost of a node,
-    // doing so will improve performance, because the most CPU usage is used to sort
-    // and find the node with the lowest FCost.
-    static Stopwatch sw = new();
-
     /// <summary>
     /// Builds a path for the room, from the startGridPosition till the endGridPosition, and adds
     /// movement steps to the returned stack, returns null if no path has been found
@@ -24,26 +16,22 @@ public static class AStar
     /// <param name="endGridPosition"></param>
     public static Stack<Vector3> BuildPath(Room room, Vector3Int startGridPosition, Vector3Int endGridPosition)
     {
-        sw.Start();
         // Adjust positions by the lower bounds
         startGridPosition -= (Vector3Int)room.tilemapLowerBounds;
         endGridPosition -= (Vector3Int)room.tilemapLowerBounds;
 
-        // Create the open node list and the closed node hashset
-        List<AStarNode> openNodeList = new List<AStarNode>();
-        HashSet<AStarNode> closedNodeHashset = new HashSet<AStarNode>();
-
-        Heap<AStarNode> openHeapNodeList = new(room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1 *
-            room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1);
-
         // Create the grid nodes for the path finding
-        GridNode gridNode = new GridNode(room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
+        GridNode gridNode = new(room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
             room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1);
+
+        // Create the open node list and the closed node hashset
+        Heap<AStarNode> openHeapNodeList = new(gridNode.GridSize);
+        HashSet<AStarNode> closedNodeHashset = new();
 
         AStarNode startNode = gridNode.GetGridNode(startGridPosition.x, startGridPosition.y);
         AStarNode endNode = gridNode.GetGridNode(endGridPosition.x, endGridPosition.y);
 
-        AStarNode endPathNode = FindShortestPath(startNode, endNode, gridNode, openNodeList, closedNodeHashset, room.instantiatedRoom);
+        AStarNode endPathNode = FindShortestPath(startNode, endNode, gridNode, openHeapNodeList, closedNodeHashset, room.instantiatedRoom);
 
         if (endPathNode != null)
         {
@@ -57,35 +45,33 @@ public static class AStar
     /// Find the shortest path to the endNode.
     /// </summary>
     /// <returns>Returns the end node if a path has been found, else returns null</returns>
-    private static AStarNode FindShortestPath(AStarNode startNode, AStarNode endNode, GridNode gridNode, List<AStarNode> openNodeList, HashSet<AStarNode> closedNodeHashset, InstantiatedRoom instantiatedRoom)
+    private static AStarNode FindShortestPath(AStarNode startNode, AStarNode endNode, GridNode gridNode, Heap<AStarNode> openNodeHeap, HashSet<AStarNode> closedNodeHashset, InstantiatedRoom instantiatedRoom)
     {
         //Add start node to the open list
-        openNodeList.Add(startNode);
+        openNodeHeap.Add(startNode);
 
         //Loop until the node list is empty
-        while (openNodeList.Count > 0)
+        while (openNodeHeap.Count > 0)
         {
             //Sort the list
-            openNodeList.Sort();
+            //openNodeList.Sort();
 
-            //Current node = the node with the lowest FCost
-            AStarNode currentNode = openNodeList[0];
-            openNodeList.RemoveAt(0);
+            // Current node = the node with the lowest FCost
+            AStarNode currentNode = openNodeHeap.RemoveFirst();
+            //AStarNode currentNode = openNodeList[0];
+            //openNodeList.RemoveAt(0);
 
             //If the currentNode == the end node, then finish
             if (currentNode == endNode)
             {
-                sw.Stop();
-                Debug.Log("Time it took to find a path: " + sw.ElapsedMilliseconds + " ms");
                 return currentNode;
             }
-
 
             //Add currentNode to the closed node list
             closedNodeHashset.Add(currentNode);
 
             //Evaluate the cost of all neighbour nodes of the current node
-            EvaluateCurrentNodeNeighbours(currentNode, endNode, gridNode, openNodeList, closedNodeHashset, instantiatedRoom);
+            EvaluateCurrentNodeNeighbours(currentNode, endNode, gridNode, openNodeHeap, closedNodeHashset, instantiatedRoom);
         }
 
         return null;
@@ -127,7 +113,7 @@ public static class AStar
     /// <summary>
     /// Evaluates the neighbour nodes of the current node
     /// </summary>
-    private static void EvaluateCurrentNodeNeighbours(AStarNode currentNode, AStarNode endNode, GridNode gridNode, List<AStarNode> openNodeList, HashSet<AStarNode> closedNodeHashset, InstantiatedRoom instantiatedRoom)
+    private static void EvaluateCurrentNodeNeighbours(AStarNode currentNode, AStarNode endNode, GridNode gridNode, Heap<AStarNode> openNodeList, HashSet<AStarNode> closedNodeHashset, InstantiatedRoom instantiatedRoom)
     {
         Vector2Int currentNodeGridPosition = currentNode.gridPosition;
 
@@ -209,11 +195,15 @@ public static class AStar
 
         //Check for obstacles at that position
         int movementPenaltyForGridSpace = instantiatedRoom.aStarMovementPenalty[neighbourNodeXPos, neighbourNodeYPos];
+        int itemObstacleForGridSpace = instantiatedRoom.aStarItemObstacles[neighbourNodeXPos, neighbourNodeYPos];
 
-        //int itemObstacleForGridSpace = instantiatedRoom.aStarItemObstacles[neighbourNodeXPos, neighbourNodeYPos];
+        //int snakeSegmentForGridSpace = instantiatedRoom.aStarSnakeSegmentsObstacles[neighbourNodeXPos, neighbourNodeYPos];
 
         //If the neighbour node is an obstacle or is already in the closed list, then skip it
-        if (movementPenaltyForGridSpace == 0 || closedNodeHashset.Contains(neighbourNode))
+        if (movementPenaltyForGridSpace == 0 || 
+            itemObstacleForGridSpace == 0 ||
+            //snakeSegmentForGridSpace == 0 ||
+            closedNodeHashset.Contains(neighbourNode))
         {
             return null;
         }

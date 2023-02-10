@@ -1,14 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UI;
 using UnityEngine;
 
 [RequireComponent(typeof(MaterializeEffect))]
+[RequireComponent(typeof(Destroy))]
+[RequireComponent(typeof(DestroyEvent))]
 public class Food : MonoBehaviour
 {
     // The grid dimensions
     private int gridWidth = 20;
     private int gridHeight = 20;
+    private long score = 0;
 
     private FoodSO foodSO;
     private MaterializeEffect materializeEffect;
@@ -18,7 +19,7 @@ public class Food : MonoBehaviour
     private CircleCollider2D triggerCollider2D;
     
     // This collider prevents the food for passing trough walls or something
-    private CircleCollider2D solidCollider2D;
+    [SerializeField] private CircleCollider2D solidCollider2D;
 
     // The position of the food
     int foodX = 0;
@@ -43,6 +44,7 @@ public class Food : MonoBehaviour
     public void InitializeFood(FoodSO food, GameLevelSO gameLevel)
     {
         foodSO = food;
+        score++;
 
         StartCoroutine(MaterializeFood());
     }
@@ -72,6 +74,7 @@ public class Food : MonoBehaviour
 
     private void DisableFood()
     {
-        gameObject.SetActive(false);
+        DestroyEvent destroyEvent = GetComponent<DestroyEvent>();
+        destroyEvent.CallOnDestroy(true, score);
     }
 }

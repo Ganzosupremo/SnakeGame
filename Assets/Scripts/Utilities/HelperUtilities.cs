@@ -1,3 +1,4 @@
+using SnakeGame.Dungeon.NoiseGenerator;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -96,6 +97,27 @@ public static class HelperUtilities
         return nearestSpawnPosition;
     }
 
+    //public static Vector3 GetSpawnPosition(Vector3 position)
+    //{
+    //    Grid grid = NoiseMap.Instance.grid;
+
+    //    Vector3 nearestSpawnPosition = new(10000f, 10000f, 0);
+
+    //    foreach (Vector2Int vector in NoiseMap.Instance.mapPreset.spawnPositionsList)
+    //    {
+    //        // Convert the local spawn grid positions to world positions values
+    //        Vector3 worldSpawnPosition = grid.CellToWorld((Vector3Int)vector);
+
+    //        if (Vector3.Distance(worldSpawnPosition, position) < Vector3.Distance(nearestSpawnPosition, position))
+    //        {
+    //            // This is now the nearest spawn position
+    //            nearestSpawnPosition = worldSpawnPosition;
+    //        }
+    //    }
+
+    //    return nearestSpawnPosition;
+    //}
+
     /// <summary>
     /// Gets The AimDirection Enum Value From The Passed angleDegrees Variable
     /// </summary>
@@ -131,33 +153,6 @@ public static class HelperUtilities
 
         return aimDirection;
     }
-
-    /// <summary>
-    /// Get The Nearest Spawn Point To The Player - Implement later
-    /// </summary>
-    //public static Vector3 GetSpawnPointNearestToPlayer(Vector3 playerPosition)
-    //{
-    //    Room currentRoom = GameManager.Instance.GetCurrentRoom();
-
-    //    Grid grid = currentRoom.instantiatedRoom.grid;
-
-    //    Vector3 nearestSpawnPosition = new Vector3(10000f, 10000f, 0);
-
-    //    foreach (Vector2Int spawnPositionGrid in currentRoom.spawnPositionArray)
-    //    {
-    //        //Convert the local spawn grid positions to world positions values
-    //        Vector3 worldSpawnPosition = grid.CellToWorld((Vector3Int)spawnPositionGrid);
-
-    //        //If the distance btw worldSpawnPos and the playerPos is less than the nearesSpawnPos and playerPos, then we have a new spawn position for the player
-    //        if (Vector3.Distance(worldSpawnPosition, playerPosition) < Vector3.Distance(nearestSpawnPosition, playerPosition))
-    //        {
-    //            //This is now the nearest spawn position
-    //            nearestSpawnPosition = worldSpawnPosition;
-    //        }
-    //    }
-
-    //    return nearestSpawnPosition;
-    //}
 
     /// <summary>
     /// Get the camera viewport lower and upper bounds

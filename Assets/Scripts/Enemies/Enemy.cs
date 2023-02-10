@@ -9,9 +9,9 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(EnemyMovementAI))]
 [RequireComponent(typeof(EnemyWeaponAI))]
 [RequireComponent(typeof(Health))]
-//[RequireComponent(typeof(HealthEvent))]
-//[RequireComponent(typeof(DestroyEvent))]
-//[RequireComponent(typeof(Destroy))]
+[RequireComponent(typeof(HealthEvent))]
+[RequireComponent(typeof(DestroyEvent))]
+[RequireComponent(typeof(Destroy))]
 [RequireComponent(typeof(IdleEvent))]
 [RequireComponent(typeof(Idle))]
 //[RequireComponent(typeof(AnimateEnemy))]
@@ -32,7 +32,8 @@ using UnityEngine.Rendering;
 //[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
-//[RequireComponent(typeof(DealTouchDamage))]
+[RequireComponent(typeof(DealDamageOnContact))]
+[RequireComponent(typeof(ReceiveDamageOnContact))]
 #endregion
 public class Enemy : MonoBehaviour
 {
@@ -51,18 +52,18 @@ public class Enemy : MonoBehaviour
     [SerializeField] private SpriteRenderer enemyWeaponSprite;
 
     private MaterializeEffect materializeEffect;
-    private CircleCollider2D circleCollider;
-    private PolygonCollider2D polygonCollider;
+    private CircleCollider2D triggerCollider;
+    private CircleCollider2D solidCollider;
 
 
     private SetActiveWeaponEvent setActiveWeaponEvent;
-    //private HealthEvent healthEvent;
+    private HealthEvent healthEvent;
     private Health health;
 
     private void Awake()
     {
         enemyMovementAI = GetComponent<EnemyMovementAI>();
-        //healthEvent = GetComponent<HealthEvent>();
+        healthEvent = GetComponent<HealthEvent>();
         health = GetComponent<Health>();
         movementToPositionEvent = GetComponent<MovementToPositionEvent>();
 
@@ -73,34 +74,45 @@ public class Enemy : MonoBehaviour
         idleEvent = GetComponent<IdleEvent>();
 
         materializeEffect = GetComponent<MaterializeEffect>();
-        polygonCollider = GetComponentInChildren<PolygonCollider2D>();
-        circleCollider = GetComponent<CircleCollider2D>();
+        solidCollider = GetComponentInChildren<CircleCollider2D>();
+        triggerCollider = GetComponent<CircleCollider2D>();
         spriteRendererArray = GetComponentsInChildren<SpriteRenderer>();
     }
 
     private void OnEnable()
     {
-        aimWeaponEvent.OnWeaponAim += AimWeaponEvent_OnWeaponAim;
+        healthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
+        //aimWeaponEvent.OnWeaponAim += AimWeaponEvent_OnWeaponAim;
     }
+
 
     private void OnDisable()
     {
-        aimWeaponEvent.OnWeaponAim -= AimWeaponEvent_OnWeaponAim;
+        healthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
+        //aimWeaponEvent.OnWeaponAim -= AimWeaponEvent_OnWeaponAim;
     }
 
-    private void AimWeaponEvent_OnWeaponAim(AimWeaponEvent aimWeaponEvent, AimWeaponEventArgs aimWeaponEventArgs)
+    private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
     {
-        RotateEnemy(aimWeaponEventArgs.aimAngle);
+        if (healthEventArgs.healthAmount <= 0f)
+        {
+            EnemyDestroyed();
+        }
     }
 
-    /// <summary>
-    /// Rotates the enemy to face the fire direction
-    /// </summary>
-    /// <param name="aimAngle"></param>
-    private void RotateEnemy(float aimAngle)
-    {
-        enemyRotateTransform.eulerAngles = new(0f, 0f, aimAngle);
-    }
+    //private void AimWeaponEvent_OnWeaponAim(AimWeaponEvent aimWeaponEvent, AimWeaponEventArgs aimWeaponEventArgs)
+    //{
+    //    RotateEnemy(aimWeaponEventArgs.aimAngle);
+    //}
+
+    ///// <summary>
+    ///// Rotates the enemy to face the fire direction
+    ///// </summary>
+    ///// <param name="aimAngle"></param>
+    //private void RotateEnemy(float aimAngle)
+    //{
+    //    enemyRotateTransform.eulerAngles = new(0f, 0f, aimAngle);
+    //}
 
     public void InitializeEnemy(EnemyDetailsSO enemyDetails, int enemySpawnNumber, GameLevelSO gameLevel)
     {
@@ -108,12 +120,14 @@ public class Enemy : MonoBehaviour
 
         SetEnemyMovementUpdateFrame(enemySpawnNumber);
 
+        SetEnemyStartingHealth(gameLevel);
+
         SetEnemyStartingWeapon();
 
         // Calls the materialize effect class
         StartCoroutine(MaterializeEnemy());
 
-        SetPolygonColliderShape();
+        //SetPolygonColliderShape();
     }
 
     /// <summary>
@@ -123,6 +137,24 @@ public class Enemy : MonoBehaviour
     {
         //Set the frame on which the enemy will process it's updates
         enemyMovementAI.UpdateFramesNumber(enemySpawnNumber % Settings.targetFramesToSpreadPathfindingOver);
+    }
+
+    /// <summary>
+    /// Sets the starting health for the enemy on this specific game level
+    /// </summary>
+    /// <param name="gameLevel"></param>
+    private void SetEnemyStartingHealth(GameLevelSO gameLevel)
+    {
+        foreach (ItemHealthDetails itemHealth in enemyDetails.enemyHealthDetailsArray)
+        {
+            if (itemHealth.gameLevel == gameLevel)
+            {
+                health.SetStartingHealth(itemHealth.healthAmount);
+                return;
+            }
+        }
+
+        health.SetStartingHealth(Settings.defaultEnemyHealth);
     }
 
     /// <summary>
@@ -147,16 +179,16 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void SetPolygonColliderShape()
-    {
-        if (polygonCollider != null)
-        {
-            List<Vector2> polygonVertices = new();
-            enemyWeaponSprite.sprite.GetPhysicsShape(0, polygonVertices);
+    //private void SetPolygonColliderShape()
+    //{
+    //    if (solidCollider != null)
+    //    {
+    //        List<Vector2> polygonVertices = new();
+    //        enemyWeaponSprite.sprite.GetPhysicsShape(0, polygonVertices);
 
-            polygonCollider.points = polygonVertices.ToArray();
-        }
-    }
+    //        solidCollider.points = polygonVertices.ToArray();
+    //    }
+    //}
 
     private IEnumerator MaterializeEnemy()
     {
@@ -173,13 +205,19 @@ public class Enemy : MonoBehaviour
     private void EnableEnemy(bool isEnabled)
     {
         // Enable/Disable the colliders
-        circleCollider.enabled = isEnabled;
-        polygonCollider.enabled = isEnabled;
+        triggerCollider.enabled = isEnabled;
+        solidCollider.enabled = isEnabled;
 
         // Enable/Disable the enemy movement AI
         enemyMovementAI.enabled = isEnabled;
 
         // Enable/Disable the fire weapon
         fireWeapon.enabled = isEnabled;
+    }
+
+    private void EnemyDestroyed()
+    {
+        DestroyEvent destroyEvent = GetComponent<DestroyEvent>();
+        destroyEvent.CallOnDestroy(false, 0);
     }
 }

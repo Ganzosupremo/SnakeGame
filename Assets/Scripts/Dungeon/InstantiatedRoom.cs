@@ -1,3 +1,4 @@
+using SnakeGame.Dungeon.NoiseGenerator;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,29 +17,77 @@ public class InstantiatedRoom : MonoBehaviour
     [HideInInspector] public Tilemap frontTilemap;
     [HideInInspector] public Tilemap collisionTilemap;
     [HideInInspector] public Tilemap minimapTilemap;
+
     [HideInInspector] public int[,] aStarMovementPenalty; // This is used to store the movement penalties for the AStar Pathfinding
     [HideInInspector] public int[,] aStarItemObstacles; // Store the position of moveable items which acts as an obstacle
+    // ***** test code
+    [HideInInspector] public int[,] aStarSnakeSegmentsObstacles;
+    // *****
 
     [HideInInspector] public Bounds roomColliderBounds;
+    [HideInInspector] public List<MoveableObstacle> moveableItemsList = new();
+    // ****** test code
+    [HideInInspector] public List<SnakeBody> snakeBodyList = new();
+    // ******
 
     private BoxCollider2D boxCollider2D;
+    private NoiseMap noiseMap;
+    private MapPresetSO mapPreset;
+
+    #region Header References
+    [Header("REFERENCES")]
+    [Tooltip("Populate with the environment child placeholder gameobject")]
+    #endregion
+    [SerializeField] private GameObject environmentGameObject;
 
     private void Awake()
     {
         boxCollider2D = GetComponent<BoxCollider2D>();
-
+        noiseMap = GetComponent<NoiseMap>();
         roomColliderBounds = boxCollider2D.bounds;
+    }
+
+    private void Start()
+    {
+        UpdateMoveableObstacles();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag(Settings.playerTag) && room != GameManager.Instance.GetCurrentRoom())
-        {
-            this.room.isPreviouslyVisited = true;
-
             StaticEventHandler.CallRoomChangedEvent(room);
-        }
     }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag(Settings.playerTag) && room != GameManager.Instance.GetCurrentRoom())
+            this.room.isPreviouslyVisited = true;
+    }
+
+    //private void OnDrawGizmos()
+    //{
+    //    try
+    //    {
+    //        for (int i = 0; i < (room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1); i++)
+    //        {
+    //            for (int j = 0; j < (room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1); j++)
+    //            {
+    //                if (aStarItemObstacles[i, j] == 0)
+    //                {
+    //                    Vector3 worldCellPos = grid.CellToWorld(new Vector3Int(i + room.tilemapLowerBounds.x,
+    //                        j + room.tilemapLowerBounds.y, 0));
+
+    //                    Gizmos.DrawWireCube(new Vector3(worldCellPos.x + 0.5f, worldCellPos.y + 0.5f, 0f), Vector3.one);
+    //                }
+    //            }
+    //        }
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Debug.LogException(e);
+    //        throw;
+    //    }
+    //}
 
     /// <summary>
     /// Initialise The Instantiated Rooms.
@@ -50,6 +99,10 @@ public class InstantiatedRoom : MonoBehaviour
         BlockOffUnusedDoorways();
 
         AddObstaclesAndPreferredPaths();
+
+        CreateObstaclesArray();
+        // test code
+        CreateSegmetsArray();
 
         AddDoorsToRooms();
 
@@ -94,6 +147,12 @@ public class InstantiatedRoom : MonoBehaviour
                 minimapTilemap = tilemap;
             }
         }
+    }
+
+    private void GenerateProceduralMap()
+    {
+        this.mapPreset = noiseMap.mapPreset;
+        noiseMap.GenerateMap(mapPreset);
     }
 
     /// <summary>
@@ -259,13 +318,13 @@ public class InstantiatedRoom : MonoBehaviour
                     case Orientation.North:
                         door = Instantiate(doorway.doorPrefab, gameObject.transform);
                         // Position the door correctly on the map
-                        door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance / 2, 
+                        door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance / 2,
                             doorway.doorPosition.y + tileDistance, 0f);
                         break;
                     case Orientation.East:
                         door = Instantiate(doorway.doorPrefab, gameObject.transform);
                         // Position the door correctly on the map
-                        door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance, 
+                        door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance,
                             doorway.doorPosition.y + tileDistance * 1.25f, 0f);
                         break;
                     case Orientation.South:
@@ -277,7 +336,7 @@ public class InstantiatedRoom : MonoBehaviour
 
                         door = Instantiate(doorway.doorPrefab, gameObject.transform);
                         // Position the door correctly on the map
-                        door.transform.localPosition = new Vector3(doorway.doorPosition.x, 
+                        door.transform.localPosition = new Vector3(doorway.doorPosition.x,
                             doorway.doorPosition.y + tileDistance * 1.25f, 0f);
                         break;
                     default:
@@ -308,9 +367,9 @@ public class InstantiatedRoom : MonoBehaviour
     /// <summary>
     /// Disables the trigger room collider that is used to know when a player has enter a room
     /// </summary>
-    private void DisableRoomCollider()
+    private void DisableRoomCollider(bool isActive)
     {
-        boxCollider2D.enabled = false;
+        boxCollider2D.enabled = isActive;
     }
 
     /// <summary>
@@ -327,9 +386,121 @@ public class InstantiatedRoom : MonoBehaviour
             door.LockDoor();
         }
 
-
-        DisableRoomCollider();
+        DisableRoomCollider(false);
     }
 
+    public void UnlockDoors(float unlockDelay)
+    {
+        StartCoroutine(UnlockDoorsRoutine(unlockDelay));
+    }
 
+    private IEnumerator UnlockDoorsRoutine(float unlockDelay)
+    {
+        if (unlockDelay > 0f)
+            yield return new WaitForSeconds(unlockDelay);
+
+        Door[] doors = GetComponentsInChildren<Door>();
+
+        foreach (Door door in doors)
+        {
+            door.UnlockDoor();
+        }
+
+        DisableRoomCollider(true);
+    }
+
+    private void CreateObstaclesArray()
+    {
+        aStarItemObstacles = new int[room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
+            room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1];
+    }
+
+    /// <summary>
+    /// Set the default A* penalty on the obstacles array
+    /// </summary>
+    private void InitializeObstaclesArray()
+    {
+        for (int x = 0; x < (room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1); x++)
+        {
+            for (int y = 0; y < (room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1); y++)
+            {
+                // Set the default penalty for the grid squares, with higher penalty the enemies will avoid this grid squares
+                aStarItemObstacles[x, y] = Settings.defaultAStarMovementPenalty;
+            }
+        }
+    }
+
+    // test code
+    private void CreateSegmetsArray()
+    {
+        aStarSnakeSegmentsObstacles = new int[room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
+            room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1];
+    }
+
+    private void InitializeSegmentsArray()
+    {
+        // test code
+        for (int x = 0; x < (room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1); x++)
+        {
+            for (int y = 0; y < (room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1); y++)
+            {
+                // Set the default penalty for the grid squares, with higher penalty the enemies will avoid this grid squares
+                aStarSnakeSegmentsObstacles[x, y] = Settings.defaultAStarMovementPenalty;
+            }
+        }
+    }
+
+    // test code
+    public void UpdateSnakeSegmenstObstacles()
+    {
+        // Test code
+        InitializeSegmentsArray();
+
+        foreach (SnakeBody snakeBody in snakeBodyList)
+        {
+            Vector3Int minColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.min);
+            Vector3Int maxColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.max);
+
+            // Loop through and add the snake body collider bounds to the snake segments array
+            for (int i = minColliderBounds.x; i <= maxColliderBounds.x; i++)
+            {
+                for (int j = minColliderBounds.y; j <= maxColliderBounds.y; j++)
+                {
+                    aStarSnakeSegmentsObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Updates the array of moveable obstacles
+    /// </summary>
+    public void UpdateMoveableObstacles()
+    {
+        InitializeObstaclesArray();
+
+        foreach (MoveableObstacle moveable in moveableItemsList)
+        {
+            Vector3Int minColliderBounds = grid.WorldToCell(moveable.boxCollider2D.bounds.min);
+            Vector3Int maxColliderBounds = grid.WorldToCell(moveable.boxCollider2D.bounds.max);
+
+            //Loop through and add moveable item colliders bounds to the obstacle array
+            for (int i = minColliderBounds.x; i <= maxColliderBounds.x; i++)
+            {
+                for (int j = minColliderBounds.y; j <= maxColliderBounds.y; j++)
+                {
+                    aStarItemObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
+                }
+            }
+        }
+    }
+
+    #region Validation
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        HelperUtilities.ValidateCheckNullValue(this, nameof(environmentGameObject), environmentGameObject);
+    }
+#endif
+    #endregion
 }

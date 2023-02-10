@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using SnakeGame.Utilities;
 
 public class Room
 {
@@ -60,7 +61,7 @@ public class Room
     /// 2 to retrive the total number of foods that are allowed to spawn on that room on that game level.
     /// The default is set to 1.</param>
     /// <returns>Returns the total number of items to spawn on the specified room on this current game level.</returns>
-    public int GetNumberOfItemsToSpawns(GameLevelSO gameLevel, int index = 1)
+    public int GetNumberOfItemsToSpawn(GameLevelSO gameLevel, int index = 1)
     {
         if (index == 1)
         {

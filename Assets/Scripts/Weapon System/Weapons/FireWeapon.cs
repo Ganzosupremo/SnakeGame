@@ -1,7 +1,8 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using SnakeGame;
+using SnakeGame.Interfaces;
 
 [RequireComponent(typeof(FireWeaponEvent))]
 [RequireComponent(typeof(ActiveWeapon))]

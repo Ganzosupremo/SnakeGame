@@ -1,45 +1,53 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+using SnakeGame;
+using SnakeGame.Utilities;
 
 [DisallowMultipleComponent]
 public class FoodSpawner : MonoBehaviour
 {
     private int foodToSpawn;
     private int currentFoodCount;
-    private int foodSpawnedSoFar;
+    
+    public int FoodSpawnedSoFar { get; set; }
     private int foodEatenSoFar;
     private int maxConcurrentNumberOfFood;
+    
+    private bool shouldSpawnFood = true;
 
     private Room currentRoom;
     private RoomItemSpawnParameters foodSpawnParameters;
 
     private void OnEnable()
     {
-        StaticEventHandler.OnRoomChanged += StaticEventHandler_OnRoomChanged;
+        StaticEventHandler.OnRoomEnemiesDefeated += StaticEventHandler_OnRoomEnemiesDefeated;
     }
 
     private void OnDisable()
     {
-        StaticEventHandler.OnRoomChanged -= StaticEventHandler_OnRoomChanged;
+        StaticEventHandler.OnRoomEnemiesDefeated -= StaticEventHandler_OnRoomEnemiesDefeated;
     }
 
-    private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
+    private void StaticEventHandler_OnRoomEnemiesDefeated(RoomEnemiesDefeatedArgs roomEnemiesDefeatedArgs)
     {
-        foodEatenSoFar = 0;
+        FoodSpawnedSoFar = 0;
         currentFoodCount = 0;
+        shouldSpawnFood = true;
 
-        currentRoom = roomChangedEventArgs.room;
+        currentRoom = roomEnemiesDefeatedArgs.room;
 
-        // Don't spawn any food on the entrance or any type of corridor
-        if (currentRoom.roomNodeType.isCorridorEW || currentRoom.roomNodeType.isCorridorNS || currentRoom.roomNodeType.isEntrance)
+        // Don't spawn food on corridors, entrances or chest rooms
+        if (currentRoom.roomNodeType.isCorridorEW || 
+            currentRoom.roomNodeType.isCorridorNS || 
+            currentRoom.roomNodeType.isEntrance ||
+            currentRoom.roomNodeType.isChestRoom)
             return;
 
+        if (!currentRoom.isClearOfEnemies || currentRoom.isPreviouslyVisited || !shouldSpawnFood) return;
+
         // Get a random number of foods to spawn for this room
-        foodToSpawn = currentRoom.GetNumberOfItemsToSpawns(GameManager.Instance.GetCurrentDungeonLevel(), 2); ;
+        foodToSpawn = currentRoom.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel(), 2); ;
 
         // Get the food spawn parameters for this room
         foodSpawnParameters = currentRoom.GetRoomItemSpawnParameters(GameManager.Instance.GetCurrentDungeonLevel(), 2);
@@ -48,9 +56,8 @@ public class FoodSpawner : MonoBehaviour
 
         // Get the number of concurrent foods to be spawn in this room
         maxConcurrentNumberOfFood = GetNumberOfFoodToExist();
-
-        // Just spawn food when the room is cleared - add code later
-        // when everything as been tested and works properly
+        
+        // Finally spawn the food on the world
         SpawnFood();
     }
 
@@ -71,6 +78,7 @@ public class FoodSpawner : MonoBehaviour
         {
             for (int i = 0; i < foodToSpawn; i++)
             {
+                // Wait until the food count is less than the max concurrent foods
                 while (currentFoodCount >= maxConcurrentNumberOfFood)
                 {
                     yield return null;
@@ -88,16 +96,38 @@ public class FoodSpawner : MonoBehaviour
 
     private void CreateFood(FoodSO foodSO, Vector3 position)
     {
-        foodSpawnedSoFar++;
+        FoodSpawnedSoFar++;
+        //Debug.Log("Plus 1 - Food Spawned till now: " + FoodSpawnedSoFar);
         currentFoodCount++;
+        //Debug.Log("Plus 1 - Current food count: " + currentFoodCount);
 
         // Get current dungeon level
         GameLevelSO gameLevel = GameManager.Instance.GetCurrentDungeonLevel();
 
-        // Instantiate the food
-        GameObject food = Instantiate(foodSO.prefab, position, Quaternion.identity, transform);
+        // Instantiate the food from the pool
+        Food food = (Food)PoolManager.Instance.ReuseComponent(foodSO.prefab, position, Quaternion.identity);
+        food.gameObject.SetActive(true);
+        food.InitializeFood(foodSO, gameLevel);
 
-        food.GetComponent<Food>().InitializeFood(foodSO, gameLevel);
+        food.GetComponent<DestroyEvent>().OnDestroy += FoodSpawner_OnDestroy;
+    }
+
+    private void FoodSpawner_OnDestroy(DestroyEvent destroyEvent, DestroyedEventArgs destroyedEventArgs)
+    {
+        destroyEvent.OnDestroy -= FoodSpawner_OnDestroy;
+
+        // Reduce the food count
+        currentFoodCount--;
+        //Debug.Log("Minus 1 - Current food count: " + currentFoodCount);
+        foodEatenSoFar++;
+
+        // Score points
+        StaticEventHandler.CallPointsScoredEvent(destroyedEventArgs.points);
+
+        if (currentFoodCount <= 0 && FoodSpawnedSoFar == foodToSpawn)
+        {
+            shouldSpawnFood = false;
+        }
     }
 
     private float GetFoodSpawnInterval()

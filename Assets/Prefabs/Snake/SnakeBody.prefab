@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 14488524919998420}
   - component: {fileID: 4594080627970068638}
   - component: {fileID: -9163472271125675726}
+  - component: {fileID: 8226377472549618707}
   m_Layer: 10
   m_Name: SnakeBody
   m_TagString: SnakeSegment
@@ -110,7 +111,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.6, y: 0.6}
   m_EdgeRadius: 0
 --- !u!114 &-9163472271125675726
 MonoBehaviour:
@@ -128,3 +129,19 @@ MonoBehaviour:
   - {fileID: -2057575410, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
   - {fileID: 2023241499, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
   - {fileID: -487996340, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
+--- !u!114 &8226377472549618707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5914190275693245931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a0b0f0aa9dd37448ac3569030e5823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageOnContact: 100
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 65536

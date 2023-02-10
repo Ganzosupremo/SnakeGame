@@ -103,9 +103,9 @@ public class EnemyDetailsSO : ScriptableObject
     #endregion
 
     #region Tooltip
-    //[Tooltip("The Enemy Health for each individual level")]
+    [Tooltip("The Enemy Health for each individual level")]
     #endregion
-    //public EnemyHealthDetails[] enemyHealthDetailsArray;
+    public ItemHealthDetails[] enemyHealthDetailsArray;
 
     #region Tooltip
     [Tooltip("Select if the enemy will have immunity after hit - if so, select the immunity time under this field")]

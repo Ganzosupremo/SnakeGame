@@ -1,15 +1,14 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using System;
+using SnakeGame.Utilities;
 
 [DisallowMultipleComponent]
 public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
 {
     public Dictionary<string, Room> dungeonBuilderRoomDictionary = new();
 
-    private Dictionary<string, RoomTemplateSO> roomTemplateDictionary = new();
+    private readonly Dictionary<string, RoomTemplateSO> roomTemplateDictionary = new();
     private List<RoomTemplateSO> roomTemplateList = null;
     private RoomNodeTypeListSO roomNodeTypeList;
     private bool dungeonBuildedSuccesfully;
@@ -46,9 +45,9 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
     /// Generates the random dungeon.
     /// </summary>
     /// <returns>Returns true if succeded, false if failed to generate the dungeon</returns>
-    public bool GenerateDungeon(GameLevelSO currentGameLevel)
+    public bool GenerateDungeon(GameLevelSO currentDungeonLevel)
     {
-        roomTemplateList = currentGameLevel.roomTemplatesList;
+        roomTemplateList = currentDungeonLevel.roomTemplatesList;
 
         //Load the room template SO into the dictionary
         LoadRoomTemplateIntoDictionary();
@@ -60,7 +59,7 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
             dungeonBuildAttemps++;
 
             //Select a random room node graph from the node graph list 
-            RoomNodeGraphSO roomNodeGraph = SelectRandomRoomNodeGraph(currentGameLevel.roomNodeGraphsList);
+            RoomNodeGraphSO roomNodeGraph = SelectRandomRoomNodeGraph(currentDungeonLevel.roomNodeGraphsList);
 
             int dungeonRebuildAttemptsForNodeGraph = 0;
             dungeonBuildedSuccesfully = false;
@@ -75,13 +74,15 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
 
                 //Here is where we try to build a random dungeon from the selected node graph
                 dungeonBuildedSuccesfully = AttemptToBuildRandomDungeon(roomNodeGraph);
+
+                //Put Outside the while loop if it doesn't work
+                if (dungeonBuildedSuccesfully)
+                {
+                    //Instantiate room gameobjects
+                    InstantiateRoomGameobjects();
+                }
             }
-            //Put Outside the while loop if it doesn't work
-            if (dungeonBuildedSuccesfully)
-            {
-                //Instantiate room gameobjects
-                InstantiateRoomGameobjects();
-            }
+
         }
 
         return dungeonBuildedSuccesfully;
@@ -399,12 +400,12 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
     /// <returns>Returns the Room if there are no overlaps, Returns Null otherwise</returns>
     private Room CheckForRoomOverlap(Room roomToTest)
     {
-        //Iterate through all rooms
+        //Iterate throug all rooms
         foreach (KeyValuePair<string, Room> keyValuePair in dungeonBuilderRoomDictionary)
         {
             Room room = keyValuePair.Value;
 
-            //Skip if is the same room as roomToTest or the room hasn't been positioned
+            //Skip if is the same room as roomToTest or the room hasn't been positiones
             if (room.id == roomToTest.id || !room.isPositioned)
                 continue;
 
@@ -548,7 +549,7 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
         }
 
         // If there are no enemies to spawn in this room, then default it to be clear of enemies
-        if (room.GetNumberOfItemsToSpawns(GameManager.Instance.GetCurrentDungeonLevel(), 1) == 0)
+        if (room.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel(), 1) == 0)
         {
             room.isClearOfEnemies = true;
         }
@@ -573,7 +574,6 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
         }
     }
 
-
     /// <summary>
     /// Creates a deep copy of the old doorway list
     /// </summary>
@@ -581,7 +581,7 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
     /// <returns>A new doorway list with new entries</returns>
     private List<Doorway> CopyDoorwayList(List<Doorway> oldDoorwayList)
     {
-        List<Doorway> newDoorwayList = new List<Doorway>();
+        List<Doorway> newDoorwayList = new();
 
         foreach (Doorway doorway in oldDoorwayList)
         {
@@ -610,7 +610,7 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
     /// <returns>A new list with new entries</returns>
     private List<string> CopyStringList(List<string> oldStringList)
     {
-        List<string> newStringList = new List<string>();
+        List<string> newStringList = new();
 
         foreach (string stringValue in oldStringList)
         {
@@ -630,7 +630,7 @@ public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
             Room room = keyValuePair.Value;
 
             //Calculate room position (remember the room instantiation position needs to be adjusted by the room template (tilemap) lower bounds)
-            Vector3 roomPosition = new Vector3(room.worldLowerBounds.x - room.tilemapLowerBounds.x,
+            Vector3 roomPosition = new(room.worldLowerBounds.x - room.tilemapLowerBounds.x,
                 room.worldLowerBounds.y - room.tilemapLowerBounds.y, 0f);
 
             //Instantiate room

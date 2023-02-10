@@ -28,7 +28,7 @@ public class GameResources : MonoBehaviour
     #region Tooltip
     [Tooltip("The current player Scriptable object - this is used to reference the current player between scenes")]
     #endregion
-    public CurrentPlayerSO currentPlayer;
+    public CurrentPlayerSO currentSnake;
 
     #region Snake Mechanics
     [Space(10)]
@@ -123,13 +123,18 @@ public class GameResources : MonoBehaviour
     [Tooltip("Populate with the AmmoIcon prefab")]
     #endregion
     public GameObject ammoIconPrefab;
+    
+    #region Tooltip
+    [Tooltip("Populate with the Health prefab")]
+    #endregion
+    public GameObject healthPrefab;
 
     #region Validation
 #if UNITY_EDITOR
     private void OnValidate()
     {
         HelperUtilities.ValidateCheckNullValue(this, nameof(roomNodeTypeList), roomNodeTypeList);
-        HelperUtilities.ValidateCheckNullValue(this, nameof(currentPlayer), currentPlayer);
+        HelperUtilities.ValidateCheckNullValue(this, nameof(currentSnake), currentSnake);
         HelperUtilities.ValidateCheckNullValue(this, nameof(dimmedMaterial), dimmedMaterial);
         HelperUtilities.ValidateCheckNullValue(this, nameof(litMaterial), litMaterial);
         HelperUtilities.ValidateCheckNullValue(this, nameof(variableLitShader), variableLitShader);

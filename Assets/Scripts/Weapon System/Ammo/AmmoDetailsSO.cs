@@ -177,10 +177,9 @@ public class AmmoDetailsSO : ScriptableObject
     public void IncreaseDamage(int PercentageToIncrease)
     {
         int damageIncrease = Mathf.RoundToInt(ammoDamage * PercentageToIncrease / 100);
-        int totalDamageIncrease = ammoDamage + damageIncrease;
         
-        if (totalDamageIncrease < maxAmmoDamage)
-            ammoDamage = totalDamageIncrease;
+        if (damageIncrease < maxAmmoDamage)
+            ammoDamage = damageIncrease;
         else
             ammoDamage = maxAmmoDamage;
     }

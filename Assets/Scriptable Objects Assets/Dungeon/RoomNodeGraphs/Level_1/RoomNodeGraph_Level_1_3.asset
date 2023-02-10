@@ -22,8 +22,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 413
-    y: 548
+    x: 130
+    y: 431
     width: 125
     height: 75
   isLeftClickDragging: 0
@@ -117,8 +117,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 1481
-    y: 571
+    x: 1198
+    y: 439
     width: 125
     height: 75
   isLeftClickDragging: 0
@@ -212,8 +212,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 603
-    y: 554
+    x: 320
+    y: 437
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -302,14 +302,13 @@ MonoBehaviour:
   - 88dda241-e6f5-4627-8e73-bc69204943cc
   childRoomNodeIDList:
   - 4a4f677a-1f84-4bd5-8d16-66ddfa434e40
-  - a8682772-7cb6-4e5f-b427-a6154b043bc1
   roomNodeGraph: {fileID: 11400000}
   roomNodeType: {fileID: 11400000, guid: bbe5babe8a7cec64483186664b4cdff1, type: 2}
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 944
-    y: 553
+    x: 661
+    y: 434
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -396,14 +395,15 @@ MonoBehaviour:
   id: 76e82601-b8ef-407f-90ee-78d3fd159854
   parentRoomNodeIDList:
   - a8682772-7cb6-4e5f-b427-a6154b043bc1
-  childRoomNodeIDList: []
+  childRoomNodeIDList:
+  - 54d624d5-e8fb-4f0d-a54b-2093fc4bfed0
   roomNodeGraph: {fileID: 11400000}
-  roomNodeType: {fileID: 11400000, guid: d06698c63491bf14c8b89fcbe1d44588, type: 2}
+  roomNodeType: {fileID: 11400000, guid: 0f280553dd5924b4eafa074fa9feabdb, type: 2}
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 965
-    y: 322
+    x: 1347
+    y: 231
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -411,7 +411,7 @@ MonoBehaviour:
   style:
     m_Name: 
     m_Normal:
-      m_Background: {fileID: 5187313171064290998, guid: 0000000000000000d000000000000000, type: 0}
+      m_Background: {fileID: -4248255156046489956, guid: 0000000000000000d000000000000000, type: 0}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
@@ -500,6 +500,8 @@ MonoBehaviour:
   - {fileID: 5666480217765791806}
   - {fileID: 7510834419321250086}
   - {fileID: -141933495128205873}
+  - {fileID: 8722767006810877001}
+  - {fileID: 4764186182083548210}
   roomNodeToDrawLineFrom: {fileID: 0}
   linePosition: {x: 0, y: 0}
 --- !u!114 &3348767217491563461
@@ -524,8 +526,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 782
-    y: 555
+    x: 499
+    y: 438
     width: 125
     height: 75
   isLeftClickDragging: 0
@@ -618,8 +620,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 158
-    y: 544
+    x: -125
+    y: 427
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -713,8 +715,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 1137
-    y: 553
+    x: 854
+    y: 436
     width: 125
     height: 75
   isLeftClickDragging: 0
@@ -723,6 +725,100 @@ MonoBehaviour:
     m_Name: 
     m_Normal:
       m_Background: {fileID: -8879322592709600312, guid: 0000000000000000d000000000000000, type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 12
+      m_Right: 12
+      m_Top: 12
+      m_Bottom: 12
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 20
+      m_Right: 20
+      m_Top: 20
+      m_Bottom: 20
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+--- !u!114 &4764186182083548210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388ee1bef43b06a47ba147f38c6c4cdc, type: 3}
+  m_Name: RoomNode
+  m_EditorClassIdentifier: 
+  id: d137653e-27d8-4951-8682-fb8c2000df99
+  parentRoomNodeIDList:
+  - 54d624d5-e8fb-4f0d-a54b-2093fc4bfed0
+  childRoomNodeIDList: []
+  roomNodeGraph: {fileID: 11400000}
+  roomNodeType: {fileID: 11400000, guid: a77d9c73852d5194b808bc236f87f3ec, type: 2}
+  roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
+  rect:
+    serializedVersion: 2
+    x: 1343
+    y: 5
+    width: 160
+    height: 75
+  isLeftClickDragging: 0
+  isSelected: 0
+  style:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 5202992452772842320, guid: 0000000000000000d000000000000000, type: 0}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 1, g: 1, b: 1, a: 1}
     m_Hover:
@@ -808,8 +904,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 1289
-    y: 560
+    x: 1006
+    y: 443
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -896,14 +992,15 @@ MonoBehaviour:
   id: f70e352f-26cf-421e-8794-4e798a857b4f
   parentRoomNodeIDList:
   - 91c5eca7-d043-4223-8eb7-503b6d2fc332
-  childRoomNodeIDList: []
+  childRoomNodeIDList:
+  - a8682772-7cb6-4e5f-b427-a6154b043bc1
   roomNodeGraph: {fileID: 11400000}
   roomNodeType: {fileID: 11400000, guid: dca9bd245cd463e4d98da2cc5a9a2676, type: 2}
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 1655
-    y: 571
+    x: 1372
+    y: 445
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -989,7 +1086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: a8682772-7cb6-4e5f-b427-a6154b043bc1
   parentRoomNodeIDList:
-  - 46c27eb6-d3fe-40ba-913e-2adb8e96f2b5
+  - f70e352f-26cf-421e-8794-4e798a857b4f
   childRoomNodeIDList:
   - 76e82601-b8ef-407f-90ee-78d3fd159854
   roomNodeGraph: {fileID: 11400000}
@@ -997,8 +1094,103 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 968
-    y: 437
+    x: 1383
+    y: 346
+    width: 125
+    height: 75
+  isLeftClickDragging: 0
+  isSelected: 0
+  style:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: -8879322592709600312, guid: 0000000000000000d000000000000000, type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 12
+      m_Right: 12
+      m_Top: 12
+      m_Bottom: 12
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 20
+      m_Right: 20
+      m_Top: 20
+      m_Bottom: 20
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+--- !u!114 &8722767006810877001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388ee1bef43b06a47ba147f38c6c4cdc, type: 3}
+  m_Name: RoomNode
+  m_EditorClassIdentifier: 
+  id: 54d624d5-e8fb-4f0d-a54b-2093fc4bfed0
+  parentRoomNodeIDList:
+  - 76e82601-b8ef-407f-90ee-78d3fd159854
+  childRoomNodeIDList:
+  - d137653e-27d8-4951-8682-fb8c2000df99
+  roomNodeGraph: {fileID: 11400000}
+  roomNodeType: {fileID: 11400000, guid: 8ea8d393d5ce9a14384d427dcf611f8a, type: 2}
+  roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
+  rect:
+    serializedVersion: 2
+    x: 1364
+    y: 128
     width: 125
     height: 75
   isLeftClickDragging: 0

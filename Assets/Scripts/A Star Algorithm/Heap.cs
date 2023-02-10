@@ -10,7 +10,7 @@ using UnityEngine;
 /// <typeparam name="T"></typeparam>
 public class Heap<T> where T : IHeapItem<T>
 {
-    private T[] items;
+    private readonly T[] items;
 
     private int currentItemCount;
 
@@ -38,7 +38,7 @@ public class Heap<T> where T : IHeapItem<T>
     /// Adds new items to the heap
     /// </summary>
     /// <param name="item">The new item to add</param>
-    public void AddItem(T item)
+    public void Add(T item)
     {
         item.HeapIndex = currentItemCount;
         items[currentItemCount] = item;
@@ -47,7 +47,7 @@ public class Heap<T> where T : IHeapItem<T>
     }
 
     /// <summary>
-    /// Update an item if another item with a lowe cost is found.
+    /// Update an item if another item with a lower cost was found.
     /// </summary>
     /// <param name="item"></param>
     public void UpdateItem(T item)
@@ -60,7 +60,7 @@ public class Heap<T> where T : IHeapItem<T>
     /// </summary>
     /// <param name="item"></param>
     /// <returns>True if the item is in the heap, false otherwise</returns>
-    public bool ContainsItem(T item)
+    public bool Contains(T item)
     {
         return Equals(items[item.HeapIndex], item);
     }
@@ -69,7 +69,7 @@ public class Heap<T> where T : IHeapItem<T>
     /// Removes the first item of the array
     /// </summary>
     /// <returns>Returns the first item of the array</returns>
-    public T RemoveFirstItem()
+    public T RemoveFirst()
     {
         // Retrieve the first item of the array
         T firstItem = items[0];
@@ -155,12 +155,13 @@ public class Heap<T> where T : IHeapItem<T>
             // 0 is it has the same priority
             // and -1 if it has lower priority
             if (item.CompareTo(parentItem) > 0)
+            {
                 SwapItems(item, parentItem);
+            }
             else
                 // break out of the loop once we child node is no longer has a
                 // higher priority than it's parent
                 break;
-
             // else just keep recalculating the priority until we break out of the loop
             parentIndex = (item.HeapIndex - 1) / 2;
         }
@@ -176,13 +177,9 @@ public class Heap<T> where T : IHeapItem<T>
         // Swap the itemA und itemB
         items[itemA.HeapIndex] = itemB;
         items[itemB.HeapIndex] = itemA;
-        
-        // Create an int to store the heap index of item A
-        int itemAIndex = itemB.HeapIndex;
 
-        // Swap also both of the item's index
-        itemA.HeapIndex = itemB.HeapIndex;
-        itemB.HeapIndex = itemAIndex;
+        // Swap also the indexes
+        (itemB.HeapIndex, itemA.HeapIndex) = (itemA.HeapIndex, itemB.HeapIndex);
     }
 }
 

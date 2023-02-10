@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Random = UnityEngine.Random;
+using SnakeGame;
 
 /// <summary>
 /// This class acts like an interface for other scripts
@@ -12,16 +11,20 @@ using Random = UnityEngine.Random;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(BoxCollider2D))]
-[RequireComponent(typeof(PolygonCollider2D))]
+//[RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(SnakeControler))]
 [RequireComponent(typeof(Health))]
+[RequireComponent(typeof(HealthEvent))]
+[RequireComponent(typeof(Destroy))]
+[RequireComponent(typeof(DestroyEvent))]
 [RequireComponent(typeof(MovementByVelocity))]
 [RequireComponent(typeof(MovementByVelocityEvent))]
 [RequireComponent(typeof(MovementToPositionEvent))]
 [RequireComponent(typeof(MovementToPosition))]
+[RequireComponent(typeof(Idle))]
+[RequireComponent(typeof(IdleEvent))]
 [RequireComponent(typeof(AimWeaponEvent))]
 [RequireComponent(typeof(AimWeapon))]
 [RequireComponent(typeof(SetActiveWeaponEvent))]
@@ -36,12 +39,18 @@ using Random = UnityEngine.Random;
 #endregion
 public class Snake : MonoBehaviour
 {
+    #region Components
     [HideInInspector] public Animator animator;
     [HideInInspector] public SnakeDetailsSO snakeDetails;
     [HideInInspector] public SnakeControler snakeControler;
     [HideInInspector] public Health health;
+    [HideInInspector] public HealthEvent healthEvent;
+    [HideInInspector] public Destroy destroy;
+    [HideInInspector] public DestroyEvent destroyEvent;
     [HideInInspector] public MovementByVelocityEvent movementByVelocityEvent;
     [HideInInspector] public MovementToPositionEvent movementToPositionEvent;
+    [HideInInspector] public Idle idle;
+    [HideInInspector] public IdleEvent idleEvent;
     [HideInInspector] public AimWeaponEvent aimWeaponEvent;
     [HideInInspector] public SetActiveWeaponEvent setActiveWeaponEvent;
     [HideInInspector] public ActiveWeapon activeWeapon;
@@ -53,6 +62,8 @@ public class Snake : MonoBehaviour
     [HideInInspector] public WeaponReloadedEvent weaponReloadedEvent;
     [HideInInspector] public SpriteRenderer spriteRenderer;
     [HideInInspector] public List<Weapon> weaponList = new();
+    [HideInInspector] public SnakeBody snakeBody;
+    #endregion
 
     private List<Transform> snakeSegmentsList = new();
     private int snakeSegmentCount;
@@ -64,10 +75,15 @@ public class Snake : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         health = GetComponent<Health>();
+        healthEvent = GetComponent<HealthEvent>();
+        destroy = GetComponent<Destroy>();
+        destroyEvent = GetComponent<DestroyEvent>();
         aimWeaponEvent = GetComponent<AimWeaponEvent>();
         snakeControler = GetComponent<SnakeControler>();
         movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
         movementToPositionEvent = GetComponent<MovementToPositionEvent>();
+        idle = GetComponent<Idle>();
+        idleEvent = GetComponent<IdleEvent>();
         setActiveWeaponEvent = GetComponent<SetActiveWeaponEvent>();
         activeWeapon = GetComponent<ActiveWeapon>();
         fireWeaponEvent = GetComponent<FireWeaponEvent>();
@@ -78,12 +94,36 @@ public class Snake : MonoBehaviour
         weaponReloadedEvent = GetComponent<WeaponReloadedEvent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         materializeEffect = GetComponent<MaterializeEffect>();
+
+        //ResetSnakeSegments(false);
     }
 
     private void Start()
     {
-        snakeSegmentsList.Add(this.transform);
-        snakeSegmentCount = 0;
+        //snakeSegmentsList.Add(this.transform);
+        //snakeSegmentCount = 0;
+        ResetSnakeSegments(false);
+    }
+
+    private void OnEnable()
+    {
+        healthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
+    }
+
+    private void OnDisable()
+    {
+        healthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
+    }
+
+    private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
+    {
+        Debug.Log("Health remaining: " + healthEventArgs.healthAmount);
+
+        if (healthEventArgs.healthAmount <= 0f)
+        {
+            destroyEvent.CallOnDestroy(true, 0);
+            ResetSnakeSegments(true);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -97,7 +137,7 @@ public class Snake : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.collider.CompareTag(Settings.CollisionTilemapTag))
+        if (other.collider.CompareTag(Settings.CollisionTilemapTag) || other.collider.CompareTag(Settings.enemyTag))
             SubstractSegmentFromSnake();
     }
 
@@ -109,17 +149,20 @@ public class Snake : MonoBehaviour
     {
         this.snakeDetails = snakeDetails;
 
+        snakeSegmentsList.Add(this.transform);
+        snakeSegmentCount = 0;
+
         IsSnakeColliding = false;
 
         SetPlayerHealth();
 
-        StartCoroutine(MaterializePlayer());
+        //ResetSnakeSegments(false);
 
-        //Initialise the initial weapon for the player
+        // Initialise the initial weapon for the player
         CreatePlayerInitialWeapon();
+
+        StartCoroutine(MaterializeSnake());
     }
-
-
 
     /// <summary>
     /// Sets The Player Initial Weapon 
@@ -135,25 +178,19 @@ public class Snake : MonoBehaviour
         }
     }
 
-    private IEnumerator MaterializePlayer()
+    private IEnumerator MaterializeSnake()
     {
         // Disable snake while the effect is in progress
         EnableSnake(false);
         yield return StartCoroutine(materializeEffect.MaterializeRoutine(snakeDetails.materializeShader,
             snakeDetails.materializeColor, snakeDetails.materializeTime, snakeDetails.defaultLitMaterial, spriteRenderer));
-
         // Enable the snake again
-        EnableSnake(true);
+        EnableSnake(false);
     }
 
     private void SetPlayerHealth()
     {
         health.SetStartingHealth(snakeDetails.snakeInitialHealth);
-
-        for (int i = 0; i < snakeDetails.snakeInitialHealth; i++)
-        {
-            //GrowSnake();
-        }
     }
 
     /// <summary>
@@ -189,8 +226,7 @@ public class Snake : MonoBehaviour
     private void GrowSnake()
     {
         // TODO - Add More health and weapon damage when the snake grows
-
-        SnakeBody snakeBody = (SnakeBody)PoolManager.Instance.ReuseComponent(GameResources.Instance.snakeBodyPrefab.gameObject,
+        snakeBody = (SnakeBody)PoolManager.Instance.ReuseComponent(GameResources.Instance.snakeBodyPrefab.gameObject,
             this.transform.position, Quaternion.identity);
         snakeBody.gameObject.SetActive(true);
         
@@ -199,27 +235,67 @@ public class Snake : MonoBehaviour
         snakeSegmentsList.Add(segment);
         snakeSegmentCount++;
 
+        health.IncreaseHealth(1);
+
         IncreaseWeaponDamage();
     }
 
+    public void UpdateSnakeSegments()
+    {
+        for (int i = snakeSegmentsList.Count - 1; i > 0; i--)
+        {
+            snakeSegmentsList[i].position = snakeSegmentsList[i - 1].position;
+        }
+    }
 
     private void SubstractSegmentFromSnake()
     {
         if (snakeSegmentsList.Count > 0 && snakeSegmentCount > 0)
         {
-            bool bodyFound = snakeSegmentsList[snakeSegmentCount].TryGetComponent(out SnakeBody body);
-            if (bodyFound)
-            {
-                body.gameObject.SetActive(false);
-                snakeSegmentsList.RemoveAt(snakeSegmentCount);
-                snakeSegmentCount--;
+            if (!health.IsDamageable) return;
 
-                DecreaseWeaponDamage();
-            }
+            //snakeSegmentsList[snakeSegmentCount].TryGetComponent(out SnakeBody snakeBody);
+
+            snakeBody.gameObject.SetActive(false);
+            snakeSegmentsList.RemoveAt(snakeSegmentCount);
+            snakeSegmentCount--;
+
+            health.TakeDamage(1);
+            // Reduce the multiplier when the player gets hit,
+            // because the player at some point will run out of ammo
+            // we do it here, so the multiplier can still be updated
+            StaticEventHandler.CallMultiplierEvent(false);
+            DecreaseWeaponDamage();
         }
         else
         {
-            Debug.Log("No more lives left");
+            destroyEvent.CallOnDestroy(true, 0);
+        }
+    }
+
+    private void ResetSnakeSegments(bool dead)
+    {
+        for (int i = 1; i < snakeSegmentsList.Count; i++)
+        {
+            snakeSegmentsList[i].gameObject.SetActive(false);
+        }
+
+        snakeSegmentsList.Clear();
+        snakeSegmentsList.Add(this.transform);
+
+        if (dead) return;
+
+        // We add more segments to the snake on the beginning
+        for (int i = 1; i < health.CurrentHealth; i++)
+        {
+            snakeBody = (SnakeBody)PoolManager.Instance.ReuseComponent(GameResources.Instance.snakeBodyPrefab.gameObject,
+            this.transform.position, Quaternion.identity);
+            snakeBody.gameObject.SetActive(true);
+
+            Transform segment = snakeBody.transform;
+            segment.position = snakeSegmentsList[snakeSegmentCount].position;
+            snakeSegmentsList.Add(segment);
+            snakeSegmentCount++;
         }
     }
 
@@ -241,22 +317,9 @@ public class Snake : MonoBehaviour
         currentWeapon.weaponDetails.weaponCurrentAmmo.IncreaseDamage(20);
     }
 
-    public void UpdateSnakeSegments()
-    {
-        for (int i = snakeSegmentsList.Count - 1; i > 0; i--)
-        {
-            snakeSegmentsList[i].position = snakeSegmentsList[i - 1].position;
-        }
-    }
-    
-    /// <summary>
-    /// Enables/Disables the snake
-    /// </summary>
-    /// <param name="isActive">True to enable the snake, false to disable</param>
     private void EnableSnake(bool isActive)
     {
         snakeControler.enabled = isActive;
-        
         fireWeapon.enabled = isActive;
     }
 }

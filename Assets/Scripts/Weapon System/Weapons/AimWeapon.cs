@@ -42,6 +42,7 @@ public class AimWeapon : MonoBehaviour
     {
         weaponRotationPointTransform.eulerAngles = new Vector3(0f, 0f, aimAngle);
 
+        // Flips the weapon depending on direction
         switch (aimDirection)
         {
             case AimDirection.UpLeft:
