@@ -1,6 +1,5 @@
-using SnakeGame.Dungeon.NoiseGenerator;
 using System.Collections;
-using System.Collections.Generic;
+using SnakeGame;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

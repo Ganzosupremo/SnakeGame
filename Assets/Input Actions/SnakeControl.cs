@@ -91,6 +91,24 @@ namespace SnakeInput
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""e5d275b5-beca-4989-acf0-6867d5669783"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""DisplayMap"",
+                    ""type"": ""Button"",
+                    ""id"": ""2f33df8e-dbb6-426f-b3e3-9310f953834f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -313,6 +331,76 @@ namespace SnakeInput
                     ""action"": ""SetWeaponAtFirstPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""03a5d5c7-5585-4f31-9ce7-1f0e79d09412"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9a38b54e-d6af-49e8-81e9-3ff41d4d5cf9"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DisplayMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""OverviewMap"",
+            ""id"": ""50251abe-494d-4a40-a680-9e22c189874f"",
+            ""actions"": [
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""897a9337-28bb-4171-8c3d-f604b769db46"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""dda698e0-93cb-4c08-9e60-f3652678c406"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e1458e1f-435d-4c61-96b7-5b06bded7519"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da7b5124-9e65-40ac-81a9-e1e70624414a"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -356,6 +444,12 @@ namespace SnakeInput
             m_Snake_Reload = m_Snake.FindAction("Reload", throwIfNotFound: true);
             m_Snake_SwitchWeapons = m_Snake.FindAction("SwitchWeapons", throwIfNotFound: true);
             m_Snake_SetWeaponAtFirstPos = m_Snake.FindAction("SetWeaponAtFirstPos", throwIfNotFound: true);
+            m_Snake_Pause = m_Snake.FindAction("Pause", throwIfNotFound: true);
+            m_Snake_DisplayMap = m_Snake.FindAction("DisplayMap", throwIfNotFound: true);
+            // OverviewMap
+            m_OverviewMap = asset.FindActionMap("OverviewMap", throwIfNotFound: true);
+            m_OverviewMap_Click = m_OverviewMap.FindAction("Click", throwIfNotFound: true);
+            m_OverviewMap_MousePosition = m_OverviewMap.FindAction("MousePosition", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -422,6 +516,8 @@ namespace SnakeInput
         private readonly InputAction m_Snake_Reload;
         private readonly InputAction m_Snake_SwitchWeapons;
         private readonly InputAction m_Snake_SetWeaponAtFirstPos;
+        private readonly InputAction m_Snake_Pause;
+        private readonly InputAction m_Snake_DisplayMap;
         public struct SnakeActions
         {
             private @SnakeControl m_Wrapper;
@@ -433,6 +529,8 @@ namespace SnakeInput
             public InputAction @Reload => m_Wrapper.m_Snake_Reload;
             public InputAction @SwitchWeapons => m_Wrapper.m_Snake_SwitchWeapons;
             public InputAction @SetWeaponAtFirstPos => m_Wrapper.m_Snake_SetWeaponAtFirstPos;
+            public InputAction @Pause => m_Wrapper.m_Snake_Pause;
+            public InputAction @DisplayMap => m_Wrapper.m_Snake_DisplayMap;
             public InputActionMap Get() { return m_Wrapper.m_Snake; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -463,6 +561,12 @@ namespace SnakeInput
                     @SetWeaponAtFirstPos.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSetWeaponAtFirstPos;
                     @SetWeaponAtFirstPos.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSetWeaponAtFirstPos;
                     @SetWeaponAtFirstPos.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSetWeaponAtFirstPos;
+                    @Pause.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnPause;
+                    @Pause.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnPause;
+                    @Pause.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnPause;
+                    @DisplayMap.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnDisplayMap;
+                    @DisplayMap.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnDisplayMap;
+                    @DisplayMap.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnDisplayMap;
                 }
                 m_Wrapper.m_SnakeActionsCallbackInterface = instance;
                 if (instance != null)
@@ -488,10 +592,57 @@ namespace SnakeInput
                     @SetWeaponAtFirstPos.started += instance.OnSetWeaponAtFirstPos;
                     @SetWeaponAtFirstPos.performed += instance.OnSetWeaponAtFirstPos;
                     @SetWeaponAtFirstPos.canceled += instance.OnSetWeaponAtFirstPos;
+                    @Pause.started += instance.OnPause;
+                    @Pause.performed += instance.OnPause;
+                    @Pause.canceled += instance.OnPause;
+                    @DisplayMap.started += instance.OnDisplayMap;
+                    @DisplayMap.performed += instance.OnDisplayMap;
+                    @DisplayMap.canceled += instance.OnDisplayMap;
                 }
             }
         }
         public SnakeActions @Snake => new SnakeActions(this);
+
+        // OverviewMap
+        private readonly InputActionMap m_OverviewMap;
+        private IOverviewMapActions m_OverviewMapActionsCallbackInterface;
+        private readonly InputAction m_OverviewMap_Click;
+        private readonly InputAction m_OverviewMap_MousePosition;
+        public struct OverviewMapActions
+        {
+            private @SnakeControl m_Wrapper;
+            public OverviewMapActions(@SnakeControl wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Click => m_Wrapper.m_OverviewMap_Click;
+            public InputAction @MousePosition => m_Wrapper.m_OverviewMap_MousePosition;
+            public InputActionMap Get() { return m_Wrapper.m_OverviewMap; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(OverviewMapActions set) { return set.Get(); }
+            public void SetCallbacks(IOverviewMapActions instance)
+            {
+                if (m_Wrapper.m_OverviewMapActionsCallbackInterface != null)
+                {
+                    @Click.started -= m_Wrapper.m_OverviewMapActionsCallbackInterface.OnClick;
+                    @Click.performed -= m_Wrapper.m_OverviewMapActionsCallbackInterface.OnClick;
+                    @Click.canceled -= m_Wrapper.m_OverviewMapActionsCallbackInterface.OnClick;
+                    @MousePosition.started -= m_Wrapper.m_OverviewMapActionsCallbackInterface.OnMousePosition;
+                    @MousePosition.performed -= m_Wrapper.m_OverviewMapActionsCallbackInterface.OnMousePosition;
+                    @MousePosition.canceled -= m_Wrapper.m_OverviewMapActionsCallbackInterface.OnMousePosition;
+                }
+                m_Wrapper.m_OverviewMapActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Click.started += instance.OnClick;
+                    @Click.performed += instance.OnClick;
+                    @Click.canceled += instance.OnClick;
+                    @MousePosition.started += instance.OnMousePosition;
+                    @MousePosition.performed += instance.OnMousePosition;
+                    @MousePosition.canceled += instance.OnMousePosition;
+                }
+            }
+        }
+        public OverviewMapActions @OverviewMap => new OverviewMapActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
@@ -519,6 +670,13 @@ namespace SnakeInput
             void OnReload(InputAction.CallbackContext context);
             void OnSwitchWeapons(InputAction.CallbackContext context);
             void OnSetWeaponAtFirstPos(InputAction.CallbackContext context);
+            void OnPause(InputAction.CallbackContext context);
+            void OnDisplayMap(InputAction.CallbackContext context);
+        }
+        public interface IOverviewMapActions
+        {
+            void OnClick(InputAction.CallbackContext context);
+            void OnMousePosition(InputAction.CallbackContext context);
         }
     }
 }

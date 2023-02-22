@@ -1,12 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using SnakeGame;
+using SnakeGame.VisualEffects;
+using SnakeGame.SoundsSystem;
 
 [RequireComponent(typeof(MaterializeEffect))]
 [RequireComponent(typeof(Destroy))]
 [RequireComponent(typeof(DestroyEvent))]
 public class Food : MonoBehaviour
 {
-    // The grid dimensions
+    // The grid dimensions - deprecated
     private int gridWidth = 20;
     private int gridHeight = 20;
     private long score = 0;
@@ -21,7 +24,7 @@ public class Food : MonoBehaviour
     // This collider prevents the food for passing trough walls or something
     [SerializeField] private CircleCollider2D solidCollider2D;
 
-    // The position of the food
+    // The position of the food - deprecated
     int foodX = 0;
     int foodY = 0;
 
@@ -30,21 +33,23 @@ public class Food : MonoBehaviour
         materializeEffect = GetComponent<MaterializeEffect>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         triggerCollider2D = GetComponent<CircleCollider2D>();
-        solidCollider2D = GetComponent<CircleCollider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag(Settings.playerTag))
         {
+            PlaySoundEffect();
+
             DisableFood();
         }
     }
 
-    public void InitializeFood(FoodSO food, GameLevelSO gameLevel)
+    public void InitializeFood(FoodSO foodSO, GameLevelSO gameLevel)
     {
-        foodSO = food;
-        score++;
+        this.foodSO = foodSO;
+        score = foodSO.score;
+        score += Random.Range(1, 452);
 
         StartCoroutine(MaterializeFood());
     }
@@ -53,12 +58,17 @@ public class Food : MonoBehaviour
     {
         EnableFood(false);
 
-        yield return StartCoroutine(materializeEffect.MaterializeRoutine(foodSO.materializeShader, foodSO.materiliazeColor, foodSO.materializeTime, foodSO.defaultLitMaterial,
-            spriteRenderer));
+        yield return StartCoroutine(materializeEffect.MaterializeRoutine(foodSO.materializeShader, foodSO.materiliazeColor,
+            foodSO.materializeTime, foodSO.defaultLitMaterial, spriteRenderer));
 
         EnableFood(true);
     }
 
+    /// <summary>
+    /// Was used in a previous scipt, 
+    /// however this method is no longer used.
+    /// </summary>
+    /// <returns></returns>
     public GameObject GenerateFood()
     {
         foodX = Random.Range(0, gridWidth);
@@ -70,6 +80,12 @@ public class Food : MonoBehaviour
     {
         triggerCollider2D.enabled = isActive;
         solidCollider2D.enabled = isActive;
+    }
+
+    private void PlaySoundEffect()
+    {
+        if (foodSO.soundEffect == null) return;
+        SoundEffectManager.Instance.PlaySoundEffect(foodSO.soundEffect);
     }
 
     private void DisableFood()

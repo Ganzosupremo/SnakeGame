@@ -4,109 +4,112 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class StaticEventHandler
+namespace SnakeGame
 {
-    #region ON ROOM CHANGED EVENT
-    public static event Action<RoomChangedEventArgs> OnRoomChanged;
-
-    public static void CallRoomChangedEvent(Room room)
+    public static class StaticEventHandler
     {
-        OnRoomChanged?.Invoke(new RoomChangedEventArgs() { room = room });
-    }
-    #endregion
+        #region ON ROOM CHANGED EVENT
+        public static event Action<RoomChangedEventArgs> OnRoomChanged;
 
-    #region ON MAP GENERATED
-    public static event Action<MapGeneratedEventArgs> OnMapGenerated;
-
-    public static void CallMapGeneratedEvent(int gridSize, int width, int height, MapPresetSO mapPreset)
-    {
-        OnMapGenerated?.Invoke(new MapGeneratedEventArgs()
+        public static void CallRoomChangedEvent(Room room)
         {
-            gridSize = gridSize,
-            width = width,
-            height = height,
-            mapPreset = mapPreset
-        });
-    }
-    #endregion
+            OnRoomChanged?.Invoke(new RoomChangedEventArgs() { room = room });
+        }
+        #endregion
 
-    #region ON ROOM ENEMIES DEFEATED EVENT
-    public static event Action<RoomEnemiesDefeatedArgs> OnRoomEnemiesDefeated;
+        #region ON MAP GENERATED
+        public static event Action<MapGeneratedEventArgs> OnMapGenerated;
 
-    public static void CallRoomEnemiesDefeatedEvent(Room room)
-    {
-        OnRoomEnemiesDefeated?.Invoke(new RoomEnemiesDefeatedArgs() { room = room });
-    }
-    #endregion
-
-    #region ON POINTS SCORED EVENT
-    public static event Action<PointsScoredArgs> OnPointsScored;
-
-    public static void CallPointsScoredEvent(long points)
-    {
-        OnPointsScored?.Invoke(new PointsScoredArgs()
+        public static void CallMapGeneratedEvent(int gridSize, int width, int height, MapPresetSO mapPreset)
         {
-            score = points
-        });
-    }
-    #endregion
+            OnMapGenerated?.Invoke(new MapGeneratedEventArgs()
+            {
+                gridSize = gridSize,
+                width = width,
+                height = height,
+                mapPreset = mapPreset
+            });
+        }
+        #endregion
 
-    #region ON SCORE CHANGED EVENT
-    public static event Action<ScoreChangedArgs> OnScoreChanged;
+        #region ON ROOM ENEMIES DEFEATED EVENT
+        public static event Action<RoomEnemiesDefeatedArgs> OnRoomEnemiesDefeated;
 
-    public static void CallScoreChangedEvent(long score, int multiplier)
-    {
-        OnScoreChanged?.Invoke(new ScoreChangedArgs()
+        public static void CallRoomEnemiesDefeatedEvent(Room room)
         {
-            score = score,
-            multiplier = multiplier
-        });
-    }
-    #endregion
+            OnRoomEnemiesDefeated?.Invoke(new RoomEnemiesDefeatedArgs() { room = room });
+        }
+        #endregion
 
-    #region ON MULTIPLIER EVENT
-    public static event Action<MultiplierArgs> OnMultiplier;
+        #region ON POINTS SCORED EVENT
+        public static event Action<PointsScoredArgs> OnPointsScored;
 
-    public static void CallMultiplierEvent(bool shouldMultiply)
-    {
-        OnMultiplier?.Invoke(new MultiplierArgs()
+        public static void CallPointsScoredEvent(long points)
         {
-            multiplier = shouldMultiply
-        });
+            OnPointsScored?.Invoke(new PointsScoredArgs()
+            {
+                score = points
+            });
+        }
+        #endregion
+
+        #region ON SCORE CHANGED EVENT
+        public static event Action<ScoreChangedArgs> OnScoreChanged;
+
+        public static void CallScoreChangedEvent(long score, int multiplier)
+        {
+            OnScoreChanged?.Invoke(new ScoreChangedArgs()
+            {
+                score = score,
+                multiplier = multiplier
+            });
+        }
+        #endregion
+
+        #region ON MULTIPLIER EVENT
+        public static event Action<MultiplierArgs> OnMultiplier;
+
+        public static void CallMultiplierEvent(bool shouldMultiply)
+        {
+            OnMultiplier?.Invoke(new MultiplierArgs()
+            {
+                multiplier = shouldMultiply
+            });
+        }
+        #endregion
     }
-    #endregion
-}
 
-public class RoomChangedEventArgs : EventArgs
-{
-    public Room room;
-}
+    public class RoomChangedEventArgs : EventArgs
+    {
+        public Room room;
+    }
 
-public class MapGeneratedEventArgs : EventArgs
-{
-    public int gridSize;
-    public int width;
-    public int height;
-    public MapPresetSO mapPreset;
-}
+    public class MapGeneratedEventArgs : EventArgs
+    {
+        public int gridSize;
+        public int width;
+        public int height;
+        public MapPresetSO mapPreset;
+    }
 
-public class RoomEnemiesDefeatedArgs : EventArgs
-{
-    public Room room;
-}
+    public class RoomEnemiesDefeatedArgs : EventArgs
+    {
+        public Room room;
+    }
 
-public class PointsScoredArgs : EventArgs
-{
-    public long score;
-}
+    public class PointsScoredArgs : EventArgs
+    {
+        public long score;
+    }
 
-public class ScoreChangedArgs : EventArgs
-{
-    public long score;
-    public int multiplier;
-}
+    public class ScoreChangedArgs : EventArgs
+    {
+        public long score;
+        public int multiplier;
+    }
 
-public class MultiplierArgs : EventArgs
-{
-    public bool multiplier;
+    public class MultiplierArgs : EventArgs
+    {
+        public bool multiplier;
+    }
 }

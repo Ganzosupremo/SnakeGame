@@ -12,7 +12,7 @@ public class DealDamageOnContact : MonoBehaviour
     #region Tooltip
     [Tooltip("the damage to deal (can be overridden by the receiver)")]
     #endregion
-    [SerializeField] private int damageOnContact;
+    [SerializeField] private int dealDamageOnContact;
 
     #region Tooltip
     [Tooltip("Specify which layers should be affected by the touch damage")]
@@ -42,14 +42,14 @@ public class DealDamageOnContact : MonoBehaviour
         if ((layerMask.value & collisionLayerMask) == 0) return;
 
         
-        if (other.gameObject.TryGetComponent<ReceiveDamageOnContact>(out ReceiveDamageOnContact receiveTouchDamage))
+        if (other.gameObject.TryGetComponent(out ReceiveDamageOnContact receiveTouchDamage))
         {
             isColliding = true;
 
-            //Reset the touch collision after the time specified
+            // Reset the touch collision after the cooldown
             Invoke(nameof(ResetTouchCollider), Settings.touchDamagaCooldown);
 
-            receiveTouchDamage.TakeDamageOnContact(damageOnContact);
+            receiveTouchDamage.TakeDamageOnContact(dealDamageOnContact);
         }
     }
 
@@ -62,7 +62,7 @@ public class DealDamageOnContact : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        HelperUtilities.ValidateCheckPositiveValue(this, nameof(damageOnContact), damageOnContact, true);
+        HelperUtilities.ValidateCheckPositiveValue(this, nameof(dealDamageOnContact), dealDamageOnContact, true);
     }
 #endif
     #endregion

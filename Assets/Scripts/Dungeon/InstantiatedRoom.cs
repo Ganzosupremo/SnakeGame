@@ -1,9 +1,10 @@
 using SnakeGame.Dungeon.NoiseGenerator;
-using System;
+using SnakeGame.Decorations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using SnakeGame;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(BoxCollider2D))]
@@ -11,12 +12,13 @@ public class InstantiatedRoom : MonoBehaviour
 {
     [HideInInspector] public Room room;
     [HideInInspector] public Grid grid;
-    [HideInInspector] public Tilemap groundtilemap;
-    [HideInInspector] public Tilemap decorations1Tilemap;
-    [HideInInspector] public Tilemap decorations2Tilemap;
-    [HideInInspector] public Tilemap frontTilemap;
-    [HideInInspector] public Tilemap collisionTilemap;
-    [HideInInspector] public Tilemap minimapTilemap;
+
+    public Tilemap Groundtilemap { get; private set; }
+    public Tilemap Decorations1Tilemap { get; private set; }
+    public Tilemap Decorations2Tilemap { get; private set; }
+    public Tilemap FrontTilemap { get; private set; }
+    public Tilemap CollisionTilemap { get; private set; }
+    public Tilemap MinimapTilemap { get; private set; }
 
     [HideInInspector] public int[,] aStarMovementPenalty; // This is used to store the movement penalties for the AStar Pathfinding
     [HideInInspector] public int[,] aStarItemObstacles; // Store the position of moveable items which acts as an obstacle
@@ -39,6 +41,7 @@ public class InstantiatedRoom : MonoBehaviour
     [Tooltip("Populate with the environment child placeholder gameobject")]
     #endregion
     [SerializeField] private GameObject environmentGameObject;
+    public PolygonCollider2D cameraConfinerCollider;
 
     private void Awake()
     {
@@ -50,6 +53,7 @@ public class InstantiatedRoom : MonoBehaviour
     private void Start()
     {
         UpdateMoveableObstacles();
+        //UpdateSnakeSegmenstObstacles();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -124,27 +128,27 @@ public class InstantiatedRoom : MonoBehaviour
         {
             if (tilemap.gameObject.CompareTag("Tilemap_Ground"))
             {
-                groundtilemap = tilemap;
+                Groundtilemap = tilemap;
             }
             else if (tilemap.gameObject.CompareTag("Tilemap_Decorations1"))
             {
-                decorations1Tilemap = tilemap;
+                Decorations1Tilemap = tilemap;
             }
             else if (tilemap.gameObject.CompareTag("Tilemap_Decorations2"))
             {
-                decorations2Tilemap = tilemap;
+                Decorations2Tilemap = tilemap;
             }
             else if (tilemap.gameObject.CompareTag("Tilemap_Front"))
             {
-                frontTilemap = tilemap;
+                FrontTilemap = tilemap;
             }
             else if (tilemap.gameObject.CompareTag("Tilemap_Collision"))
             {
-                collisionTilemap = tilemap;
+                CollisionTilemap = tilemap;
             }
             else if (tilemap.gameObject.CompareTag("Tilemap_Minimap"))
             {
-                minimapTilemap = tilemap;
+                MinimapTilemap = tilemap;
             }
         }
     }
@@ -165,18 +169,18 @@ public class InstantiatedRoom : MonoBehaviour
             if (doorway.isConnected)
                 continue;
 
-            if (groundtilemap != null)
-                BlockADoorwayOnTilemap(groundtilemap, doorway);
-            if (decorations1Tilemap != null)
-                BlockADoorwayOnTilemap(decorations1Tilemap, doorway);
-            if (decorations2Tilemap != null)
-                BlockADoorwayOnTilemap(decorations2Tilemap, doorway);
-            if (frontTilemap != null)
-                BlockADoorwayOnTilemap(frontTilemap, doorway);
-            if (collisionTilemap != null)
-                BlockADoorwayOnTilemap(collisionTilemap, doorway);
-            if (minimapTilemap != null)
-                BlockADoorwayOnTilemap(minimapTilemap, doorway);
+            if (Groundtilemap != null)
+                BlockADoorwayOnTilemap(Groundtilemap, doorway);
+            if (Decorations1Tilemap != null)
+                BlockADoorwayOnTilemap(Decorations1Tilemap, doorway);
+            if (Decorations2Tilemap != null)
+                BlockADoorwayOnTilemap(Decorations2Tilemap, doorway);
+            if (FrontTilemap != null)
+                BlockADoorwayOnTilemap(FrontTilemap, doorway);
+            if (CollisionTilemap != null)
+                BlockADoorwayOnTilemap(CollisionTilemap, doorway);
+            if (MinimapTilemap != null)
+                BlockADoorwayOnTilemap(MinimapTilemap, doorway);
         }
     }
 
@@ -276,7 +280,7 @@ public class InstantiatedRoom : MonoBehaviour
             {
                 aStarMovementPenalty[x, y] = Settings.defaultAStarMovementPenalty;
 
-                TileBase tile = collisionTilemap.GetTile(new Vector3Int(x + room.tilemapLowerBounds.x, y + room.tilemapLowerBounds.y, 0));
+                TileBase tile = CollisionTilemap.GetTile(new Vector3Int(x + room.tilemapLowerBounds.x, y + room.tilemapLowerBounds.y, 0));
 
                 foreach (TileBase collTile in GameResources.Instance.enemyUnwalkableCollisionTilesArray)
                 {
@@ -351,6 +355,9 @@ public class InstantiatedRoom : MonoBehaviour
 
                     // Prevent access until all enemies in the other rooms have been cleared
                     doorComponent.LockDoor();
+
+                    GameObject bossRoomCue = Instantiate(GameResources.Instance.bossRoomCuePrefab, gameObject.transform);
+                    bossRoomCue.transform.localPosition = door.transform.localPosition;
                 }
             }
         }
@@ -361,7 +368,15 @@ public class InstantiatedRoom : MonoBehaviour
     /// </summary>
     private void DisableCollisionTilemapRenderer()
     {
-        collisionTilemap.gameObject.GetComponent<TilemapRenderer>().enabled = false;
+        CollisionTilemap.gameObject.GetComponent<TilemapRenderer>().enabled = false;
+    }
+
+    public void DeactivateEnvironmentObjects()
+    {
+        if (environmentGameObject != null)
+        {
+            environmentGameObject.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -370,6 +385,14 @@ public class InstantiatedRoom : MonoBehaviour
     private void DisableRoomCollider(bool isActive)
     {
         boxCollider2D.enabled = isActive;
+    }
+
+    public void ActivateEnvironmentObjects()
+    {
+        if (environmentGameObject != null)
+        {
+            environmentGameObject.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -456,7 +479,7 @@ public class InstantiatedRoom : MonoBehaviour
         // Test code
         InitializeSegmentsArray();
 
-        foreach (SnakeBody snakeBody in snakeBodyList)
+        foreach (SnakeBody snakeBody in GameManager.Instance.GetSnake().SnakeBodyList)
         {
             Vector3Int minColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.min);
             Vector3Int maxColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.max);

@@ -1,5 +1,6 @@
 using UnityEngine;
-using Random = UnityEngine.Random;
+using SnakeGame;
+using SnakeGame.SoundsSystem;
 
 [RequireComponent(typeof(Animator))]
 [DisallowMultipleComponent]
@@ -16,14 +17,15 @@ public class Door : MonoBehaviour
 
     [HideInInspector] public bool isBossRoomDoor = false;
     [SerializeField] private BoxCollider2D doorTrigger;
+    [SerializeField] private ParticleSystem doorEffect;
+
     private bool isOpen = false;
     private bool previouslyOpened = false;
     private Animator doorAnimator;
 
     private void Awake()
     {
-        //Disable the collider by default
-        doorCollider.enabled = false;
+        doorCollider.enabled = true;
 
         doorAnimator = GetComponent<Animator>();
         doorTrigger = GetComponent<BoxCollider2D>();
@@ -60,7 +62,13 @@ public class Door : MonoBehaviour
             //Set the 'open' parameter in the animator
             doorAnimator.SetBool(Settings.openDoor, true);
 
-            //Play one random sound effect from the array
+            if (doorEffect != null)
+            {
+                doorEffect.Play();
+            }
+
+            // Play one random sound effect from the array
+            // In the future every door will have it's unique open sound effect
             SoundEffectManager.Instance.PlaySoundEffect(GameResources.Instance.doorSoundEffect);
         }
     }

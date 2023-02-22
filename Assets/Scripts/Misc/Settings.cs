@@ -64,6 +64,8 @@ public static class Settings
     public const string playerTag = "Player";
     public const string playerWeapon = "playerWeapon";
     public const string food = "Food";
+    public const string goldenFood = "GoldenFood";
+    public const string voidFood = "VoidFood";
     public const string snakeBody = "SnakeSegment";
     public const string enemyTag = "Enemy";
 
@@ -71,8 +73,8 @@ public static class Settings
     #endregion
 
     #region GAME AUDIO
-    public const float musicFadeInTime = 1.1f;
-    public const float musicFadeOutTime = 0.9f;
+    public const float musicFadeInTime = 0.8f;
+    public const float musicFadeOutTime = 0.6f;
     #endregion
 
     #region FIRING CONTROL

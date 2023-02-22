@@ -6,8 +6,8 @@ using UnityEngine;
 public class WeaponShootEffectSO : ScriptableObject
 {
     #region Header Shoot Effect Details
+    [Header("Shoot Effect Settings")]
     [Space(10)]
-    [Header("Weapon Shoot Effect Details")]
     #endregion
 
     #region Tooltip
@@ -17,50 +17,61 @@ public class WeaponShootEffectSO : ScriptableObject
 
     #region Tooltip
     [Tooltip("The length of time the particle system is emitting particles")]
+    [Range(0f, 10f)]
     #endregion Tooltip
     public float particleDuration = 0.5f;
 
     #region Tooltip
     [Tooltip("The start particle size for the particle effect")]
+    [Range(0f, 10f)]
     #endregion Tooltip
     public float startParticleSize = 0.2f;
 
     #region Tooltip
     [Tooltip("The start particle speed for the particle effect")]
+    [Range(0f, 20f)]
     #endregion Tooltip
     public float startParticleSpeed = 3f;
 
     #region Tooltip
     [Tooltip("The particle lifetime for the particle effect")]
+    [Range(0f, 20f)]
     #endregion Tooltip
     public float startLifetime = 0.5f;
 
     #region Tooltip
     [Tooltip("The maximum number of particles to be emitted")]
+    [Range(0, 500)]
     #endregion Tooltip
     public int maxParticles = 100;
 
     #region Tooltip
     [Tooltip("The number of particles emitted per second. If zero it will just be the burst number")]
+    [Range(0, 500)]
     #endregion Tooltip
     public int emissionRate = 100;
 
     #region Tooltip
     [Tooltip("How many particles should be emmitted in the particle effect burst")]
+    [Range(0, 500)]
     #endregion Tooltip
     public int burstNumber = 30;
 
     #region Tooltip
     [Tooltip("The gravity on the particles - a small negative number will make them float up")]
+    [Range(-10f, 10f)]
     #endregion
     public float gravityEffect = -0.5f;
 
     #region Tooltip
+    [Header("Particle Sprites")]
     [Tooltip("The sprite array for the particle effect. If none is specified then the default particle sprite will be used")]
+    [Space(10)]
     #endregion Tooltip
     public Sprite[] sprites;
 
     #region Tooltip
+    [Space(5)]
     [Tooltip("The min velocity for the particle over its lifetime. A random value between min and max will be generated.")]
     #endregion Tooltip
     public Vector3 minVelocityOverLifetime;
@@ -76,8 +87,8 @@ public class WeaponShootEffectSO : ScriptableObject
     public GameObject shootEffectPrefab;
 
     #region Camera Shake
-    [Space(10)]
     [Header("Camera Shake")]
+    [Space(10)]
     #endregion
 
     #region Tooltip

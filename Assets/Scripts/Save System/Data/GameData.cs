@@ -1,13 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using SnakeGame.UI;
 
-public class GameData
+namespace SnakeGame.SaveAndLoadSystem
 {
-    public long lastUpdated;
-
-    public GameData()
+    public class GameData
     {
+        public long lastUpdated;
 
+        public int soundsVolume;
+        public int minigunVolume;
+        public int musicVolume;
+
+        public Difficulty savedDifficulty;
+        public DayCicle savedTime;
+        public int test;
+
+        public GameData()
+        {
+            savedDifficulty = Difficulty.Noob;
+            savedTime = DayCicle.Morning;
+            test = 126554;
+
+            soundsVolume= 6;
+            minigunVolume= 6;
+            musicVolume= 9;
+        }
     }
 }

@@ -14,23 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Noob
   enemyPrefab: {fileID: 7249687755293974846, guid: 31709380fbee31f468c18a86ef328392, type: 3}
-  enemyChaseDistance: 10
+  hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
+  enemyColor: {r: 0, g: 0.7411765, b: 1, a: 1}
+  enemyChaseDistance: 100
   standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   enemyMaterializeTime: 1.5
   enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
   enemyMaterializeColor: {r: 0, g: 5.656854, b: 1.8060511, a: 1}
   enemyWeapon: {fileID: 0}
   firingMinDelay: 0.1
-  firingMaxDelay: 1
-  firingMinDuration: 1
-  firingMaxDuration: 2
+  firingMaxDelay: 0.2
+  firingMinDuration: 5
+  firingMaxDuration: 8
   lineOfSightRequired: 1
   enemyHealthDetailsArray:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    healthAmount: 300
+    originalHealthAmount: 50
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
-    healthAmount: 50
+    healthAmount: 350
+    originalHealthAmount: 100
   - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-    healthAmount: 100
-  immuneAfterHit: 0
-  immunityTime: 0
+    healthAmount: 400
+    originalHealthAmount: 150
+  immuneAfterHit: 1
+  immunityTime: 2
   startDazeTime: 0
   isHealthBarDisplayed: 1

@@ -2,12 +2,10 @@ using UnityEngine;
 using UnityEditor.Callbacks;
 using UnityEditor;
 using System.Collections.Generic;
-using System;
+using SnakeGame;
 
 public class RoomNodeGraphEditor : EditorWindow
 {
-    private GUIStyle roomNodeStyle;
-    private GUIStyle roomNodeSelectedStyle;
     private MyGUIStyles m_MyStyles = new();
     private static RoomNodeGraphSO currentRoomNodeGraph;
 
@@ -20,8 +18,6 @@ public class RoomNodeGraphEditor : EditorWindow
     //The Values of the Node Layout
     private const float nodeWidth = 160f;
     private const float nodeHeight = 75f;
-    private const int nodePadding = 25;
-    private const int nodeBorder = 12;
 
     //The Values For The Connecting Line
     private const float connectingLineWidth = 4f;

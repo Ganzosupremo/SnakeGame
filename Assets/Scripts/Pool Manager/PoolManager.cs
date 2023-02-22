@@ -15,9 +15,10 @@ namespace SnakeGame
 
         private readonly Dictionary<int, Queue<Component>> poolDictionary = new();
 
-        [System.Serializable]
+        [Serializable]
         public struct Pool
         {
+            public string name;
             [Tooltip("The pool size this object will have, the number of gameobjects created in the pool" +
                 " will be defined by the pool size")]
             public int PoolSize;

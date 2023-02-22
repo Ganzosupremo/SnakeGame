@@ -16,6 +16,7 @@ public class FoodSpawner : MonoBehaviour
     
     private bool shouldSpawnFood = true;
 
+    private Room previousRoom;
     private Room currentRoom;
     private RoomItemSpawnParameters foodSpawnParameters;
 
@@ -36,6 +37,7 @@ public class FoodSpawner : MonoBehaviour
         shouldSpawnFood = true;
 
         currentRoom = roomEnemiesDefeatedArgs.room;
+        //previousRoom = currentRoom;
 
         // Don't spawn food on corridors, entrances or chest rooms
         if (currentRoom.roomNodeType.isCorridorEW || 
@@ -68,6 +70,9 @@ public class FoodSpawner : MonoBehaviour
 
     private IEnumerator SpawnFoodCoroutine()
     {
+        //if (currentRoom != previousRoom) yield break;
+        previousRoom = currentRoom;
+
         Grid grid = currentRoom.instantiatedRoom.grid;
 
         // Create an instance of the helper class used to select a random food
@@ -97,9 +102,7 @@ public class FoodSpawner : MonoBehaviour
     private void CreateFood(FoodSO foodSO, Vector3 position)
     {
         FoodSpawnedSoFar++;
-        //Debug.Log("Plus 1 - Food Spawned till now: " + FoodSpawnedSoFar);
         currentFoodCount++;
-        //Debug.Log("Plus 1 - Current food count: " + currentFoodCount);
 
         // Get current dungeon level
         GameLevelSO gameLevel = GameManager.Instance.GetCurrentDungeonLevel();

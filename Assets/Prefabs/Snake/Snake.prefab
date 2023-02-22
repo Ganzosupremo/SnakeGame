@@ -214,7 +214,6 @@ GameObject:
   - component: {fileID: 6249318246613980576}
   - component: {fileID: 6257962923513368462}
   - component: {fileID: 5768502037801227110}
-  - component: {fileID: -6289685999435675448}
   - component: {fileID: 6547395350463839873}
   - component: {fileID: 1300770162827080869}
   - component: {fileID: 1183575574409627718}
@@ -640,22 +639,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb410fc89c837c48914fa28dd9f317b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-6289685999435675448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8266277145047211159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6a0b0f0aa9dd37448ac3569030e5823, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageOnContact: 5
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 262144
 --- !u!114 &6547395350463839873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -668,7 +651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f886560691b8d241885701a4d95b256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 0
+  damageOnContact: 1
 --- !u!114 &1300770162827080869
 MonoBehaviour:
   m_ObjectHideFlags: 0

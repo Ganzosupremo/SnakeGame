@@ -1,34 +1,38 @@
 using TMPro;
 using UnityEngine;
+using SnakeGame;
 
-public class ScoreUI : MonoBehaviour
+namespace SnakeGame.UI
 {
-    private TextMeshProUGUI scoreText;
-
-    private void Awake()
+    public class ScoreUI : MonoBehaviour
     {
-        scoreText = GetComponentInChildren<TextMeshProUGUI>();
-    }
+        private TextMeshProUGUI scoreText;
 
-    private void OnEnable()
-    {
-        //Suscribe to the points scored event
-        StaticEventHandler.OnScoreChanged += StaticEventHandler_OnScoreChanged;
-    }
+        private void Awake()
+        {
+            scoreText = GetComponentInChildren<TextMeshProUGUI>();
+        }
 
-    private void OnDisable()
-    {
-        //unsuscribe to the points scored event
-        StaticEventHandler.OnScoreChanged -= StaticEventHandler_OnScoreChanged;
-    }
+        private void OnEnable()
+        {
+            //Suscribe to the points scored event
+            StaticEventHandler.OnScoreChanged += StaticEventHandler_OnScoreChanged;
+        }
 
-    /// <summary>
-    /// Handle the score changed event
-    /// </summary>
-    private void StaticEventHandler_OnScoreChanged(ScoreChangedArgs scoreChangedArgs)
-    {
-        //Update the UI
-        scoreText.text = "SCORE: " + scoreChangedArgs.score.ToString("###0")
-            + "\nMULTIPLIER: x" + scoreChangedArgs.multiplier;
+        private void OnDisable()
+        {
+            //unsuscribe to the points scored event
+            StaticEventHandler.OnScoreChanged -= StaticEventHandler_OnScoreChanged;
+        }
+
+        /// <summary>
+        /// Handle the score changed event
+        /// </summary>
+        private void StaticEventHandler_OnScoreChanged(ScoreChangedArgs scoreChangedArgs)
+        {
+            //Update the UI
+            scoreText.text = "SCORE: " + scoreChangedArgs.score.ToString("###0")
+                + "\nMULTIPLIER: x" + scoreChangedArgs.multiplier;
+        }
     }
 }

@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using SnakeGame;
 
 [RequireComponent(typeof(Health))]
 [DisallowMultipleComponent]
 public class ReceiveDamageOnContact : MonoBehaviour
 {
     #region Tooltip
-    [Tooltip("The amount of damage to receive")]
+    [Tooltip("The amount of damage to receive, this can override the damage receive" +
+        " from the contact damage dealer")]
     #endregion
     [SerializeField] private int damageOnContact;
 

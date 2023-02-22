@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine.Tilemaps;
 using UnityEngine;
-using System;
+using SnakeGame.Decorations;
+using SnakeGame;
 
 [RequireComponent(typeof(InstantiatedRoom))]
 [DisallowMultipleComponent]
@@ -36,10 +37,10 @@ public class RoomLightningControl : MonoBehaviour
             //Fade in the lightning on the rooms
             FadeInRoomLightning();
 
-            //instantiatedRoom.ActivateEnvironmentObjects();
+            instantiatedRoom.ActivateEnvironmentObjects();
 
             //Fade in the environment objects alongside the rooms
-            //FadeInEnvironmentLights();
+            FadeInEnvironmentLights();
 
             //Fade in the lightning also on the doors
             FadeInDoors();
@@ -59,13 +60,14 @@ public class RoomLightningControl : MonoBehaviour
 
     private IEnumerator FadeInRoomLightningCoroutine(InstantiatedRoom instantiatedRoom)
     {
-        Material material = new Material(GameResources.Instance.variableLitShader);
+        Material material = new(GameResources.Instance.variableLitShader);
 
-        instantiatedRoom.groundtilemap.GetComponent<TilemapRenderer>().material = material;
-        instantiatedRoom.decorations1Tilemap.GetComponent<TilemapRenderer>().material = material;
-        instantiatedRoom.decorations2Tilemap.GetComponent<TilemapRenderer>().material = material;
-        instantiatedRoom.frontTilemap.GetComponent<TilemapRenderer>().material = material;
-        instantiatedRoom.minimapTilemap.GetComponent<TilemapRenderer>().material = material;
+        //instantiatedRoom.BackgroundTilemap.GetComponent<TilemapRenderer>().material = material;
+        instantiatedRoom.Groundtilemap.GetComponent<TilemapRenderer>().material = material;
+        instantiatedRoom.Decorations1Tilemap.GetComponent<TilemapRenderer>().material = material;
+        instantiatedRoom.Decorations2Tilemap.GetComponent<TilemapRenderer>().material = material;
+        instantiatedRoom.FrontTilemap.GetComponent<TilemapRenderer>().material = material;
+        instantiatedRoom.MinimapTilemap.GetComponent<TilemapRenderer>().material = material;
 
         for (float i = 0.05f; i <= 1f; i += Time.deltaTime / Settings.fadeInTime)
         {
@@ -75,51 +77,52 @@ public class RoomLightningControl : MonoBehaviour
         }
 
         //Set the material back to the lit material
-        instantiatedRoom.groundtilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
-        instantiatedRoom.decorations1Tilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
-        instantiatedRoom.decorations2Tilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
-        instantiatedRoom.frontTilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
-        instantiatedRoom.minimapTilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
+        //instantiatedRoom.BackgroundTilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
+        instantiatedRoom.Groundtilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
+        instantiatedRoom.Decorations1Tilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
+        instantiatedRoom.Decorations2Tilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
+        instantiatedRoom.FrontTilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
+        instantiatedRoom.MinimapTilemap.GetComponent<TilemapRenderer>().material = GameResources.Instance.litMaterial;
     }
 
     ///// <summary>
     ///// Fades in the environment decoration objects 
     ///// </summary>
-    //private void FadeInEnvironmentLights()
-    //{
-    //    Material material = new(GameResources.Instance.variableLitShader);
+    private void FadeInEnvironmentLights()
+    {
+        Material material = new(GameResources.Instance.variableLitShader);
 
-    //    Environment[] environmentComponents = GetComponentsInChildren<Environment>();
+        Decoration[] environmentComponents = GetComponentsInChildren<Decoration>();
 
-    //    foreach (Environment environment in environmentComponents)
-    //    {
-    //        if (environment.spriteRenderer != null)
-    //        {
-    //            environment.spriteRenderer.material = material;
-    //        }
-    //    }
+        foreach (Decoration environment in environmentComponents)
+        {
+            if (environment.spriteRenderer != null)
+            {
+                environment.spriteRenderer.material = material;
+            }
+        }
 
-    //    StartCoroutine(FadeInEnvironmentRoutine(material, environmentComponents));
-    //}
+        StartCoroutine(FadeInEnvironmentRoutine(material, environmentComponents));
+    }
 
-    //private IEnumerator FadeInEnvironmentRoutine(Material material, Environment[] environmentComponents)
-    //{
-    //    //Gradually fade in the lighting
-    //    for (float i = 0.05f; i <= 1f; i += Time.deltaTime / Settings.fadeInTime)
-    //    {
-    //        material.SetFloat("Alpha_Slider", i);
-    //        yield return null;
-    //    }
+    private IEnumerator FadeInEnvironmentRoutine(Material material, Decoration[] environmentComponents)
+    {
+        //Gradually fade in the lighting
+        for (float i = 0.05f; i <= 1f; i += Time.deltaTime / Settings.fadeInTime)
+        {
+            material.SetFloat("Alpha_Slider", i);
+            yield return null;
+        }
 
-    //    //Set the material to the lit default one
-    //    foreach (Environment environment in environmentComponents)
-    //    {
-    //        if (environment.spriteRenderer != null)
-    //        {
-    //            environment.spriteRenderer.material = GameResources.Instance.litMaterial;
-    //        }
-    //    }
-    //}
+        //Set the material to the lit default one
+        foreach (Decoration environment in environmentComponents)
+        {
+            if (environment.spriteRenderer != null)
+            {
+                environment.spriteRenderer.material = GameResources.Instance.litMaterial;
+            }
+        }
+    }
 
     /// <summary>
     /// Fade In The Doors

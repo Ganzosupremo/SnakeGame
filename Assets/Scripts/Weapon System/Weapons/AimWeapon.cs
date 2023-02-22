@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SnakeGame;
 
 /// <summary>
 /// The subscriber to the <seealso cref="AimWeaponEvent"/>.

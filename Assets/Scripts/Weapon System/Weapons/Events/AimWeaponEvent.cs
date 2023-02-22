@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SnakeGame;
 
 /// <summary>
 /// This class defines <seealso cref="OnWeaponAim"/> event to aim the weapon at target position

@@ -275,13 +275,13 @@ GameObject:
   - component: {fileID: 4435491823800631854}
   - component: {fileID: 3552482841924262182}
   - component: {fileID: 7679069525907762754}
-  - component: {fileID: 9013576800247289636}
   - component: {fileID: 8729584209867398364}
   - component: {fileID: 4780448892745266139}
   - component: {fileID: 3921832357414078541}
   - component: {fileID: 6266735031561671143}
   - component: {fileID: 2036257457731307195}
   - component: {fileID: 8402388839801729055}
+  - component: {fileID: 7163555741490442966}
   m_Layer: 16
   m_Name: Vortex
   m_TagString: Enemy
@@ -389,8 +389,7 @@ MonoBehaviour:
   movementToPositionEvent: {fileID: 0}
   idleEvent: {fileID: 0}
   enemyMovementAI: {fileID: 0}
-  enemyRotateTransform: {fileID: 8014135867868925797}
-  enemyWeaponSprite: {fileID: 0}
+  enemySpriteRenderer: {fileID: 8390712985732608499}
 --- !u!114 &-5540712930645483248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -627,22 +626,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16d60b380c7d4a44abe3d7cc8e3ef92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!58 &9013576800247289636
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7249687755293974846}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.01}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!114 &8729584209867398364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -703,7 +686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a0b0f0aa9dd37448ac3569030e5823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 2
+  dealDamageOnContact: 1
   layerMask:
     serializedVersion: 2
     m_Bits: 263168
@@ -720,6 +703,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageOnContact: 0
+--- !u!60 &7163555741490442966
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7249687755293974846}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.5, y: 0.5}
+      - {x: -0.5, y: -0.5}
+      - {x: 0.375, y: -0.5}
+      - {x: 0.5, y: -0.3125}
+      - {x: 0.5, y: 0.3125}
+      - {x: 0.375, y: 0.5}
 --- !u!1 &8666032275487336328
 GameObject:
   m_ObjectHideFlags: 0

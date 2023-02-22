@@ -3,6 +3,8 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using SnakeGame;
 using SnakeGame.Interfaces;
+using SnakeGame.AbwehrSystem.Ammo;
+using SnakeGame.SoundsSystem;
 
 [RequireComponent(typeof(FireWeaponEvent))]
 [RequireComponent(typeof(ActiveWeapon))]

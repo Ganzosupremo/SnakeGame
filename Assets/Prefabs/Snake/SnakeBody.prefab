@@ -129,6 +129,10 @@ MonoBehaviour:
   - {fileID: -2057575410, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
   - {fileID: 2023241499, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
   - {fileID: -487996340, guid: 9efd9534e41d9884cacbcc2bfeb31e1d, type: 3}
+  boxCollider2D: {fileID: 4594080627970068638}
+  segmentBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!114 &8226377472549618707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a0b0f0aa9dd37448ac3569030e5823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 100
+  dealDamageOnContact: 100
   layerMask:
     serializedVersion: 2
     m_Bits: 65536

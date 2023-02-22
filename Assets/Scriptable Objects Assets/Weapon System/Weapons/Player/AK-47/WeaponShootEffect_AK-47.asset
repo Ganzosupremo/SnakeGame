@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 0.609981, b: 0.12156862, a: 0.7764706}
-    key2: {r: 1, g: 0.92892253, b: 0, a: 0.5019608}
-    key3: {r: 1, g: 0, b: 0, a: 0}
-    key4: {r: 0.36657774, g: 0.0110222325, b: 0.0110222325, a: 0}
-    key5: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 0}
+    key0: {r: 1, g: 0.609981, b: 0.12156862, a: 1}
+    key1: {r: 1, g: 0.92892253, b: 0, a: 1}
+    key2: {r: 1, g: 0, b: 0, a: 0.38039216}
+    key3: {r: 0.36657774, g: 0.0110222325, b: 0.0110222325, a: 0}
+    key4: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 0}
+    key5: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 0}
     key6: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 0}
     key7: {r: 1, g: 1, b: 1, a: 0}
     ctime0: 0
-    ctime1: 4048
-    ctime2: 7325
-    ctime3: 11565
-    ctime4: 21974
-    ctime5: 33539
+    ctime1: 10409
+    ctime2: 20432
+    ctime3: 33539
+    ctime4: 44525
+    ctime5: 65535
     ctime6: 65535
     ctime7: 65535
     atime0: 0
@@ -39,22 +39,22 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 7
+    m_NumColorKeys: 6
     m_NumAlphaKeys: 3
   particleDuration: 0.2
-  startParticleSize: 0.6
-  startParticleSpeed: 7
-  startLifetime: 0.2
+  startParticleSize: 0.35
+  startParticleSpeed: 10
+  startLifetime: 0.15
   maxParticles: 200
-  emissionRate: 50
-  burstNumber: 50
-  gravityEffect: -1
+  emissionRate: 0
+  burstNumber: 200
+  gravityEffect: -4.5
   sprites:
   - {fileID: 21300000, guid: e7a5002c97b7d2a47a940ff150d4de0c, type: 3}
   - {fileID: 21300000, guid: 80c9bacebcd02e84cb0b7962cc37a5d1, type: 3}
   - {fileID: 21300000, guid: 043c9a5d94f0a9440abc9282340c7856, type: 3}
   minVelocityOverLifetime: {x: 0, y: 0, z: 0}
-  maxVelocityOverLifetime: {x: 0.5, y: 0.5, z: 0}
+  maxVelocityOverLifetime: {x: 2, y: 2, z: 0}
   shootEffectPrefab: {fileID: 8467163931044552805, guid: 0ee6cd7c7d4fa8540a7640543bc9a282, type: 3}
   enableShake: 0
   amplitud: 0.5

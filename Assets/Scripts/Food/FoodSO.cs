@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using Unity.VisualScripting;
+using SnakeGame.SoundsSystem;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Food_", menuName = "Scriptable Objects/Food/Snake Food")]
@@ -17,42 +14,8 @@ public class FoodSO : ScriptableObject
         " the food script")]
     #endregion
     public GameObject prefab;
-    
-    #region Tooltip
-    [Tooltip("The amount of damage that the current weapon will increase, when the " +
-        "player eats this food.")]
-    #endregion
-    public int increaseDamageBy;
-    
-    #region Tooltip
-    [Tooltip("The amount of health that will increase when the player eats" +
-        " this food.")]
-    #endregion
-    public int increaseHealthBy;
-    
-    #region Tooltip
-    [Tooltip("The minimum food of this type that will spawn for this level.")]
-    #endregion
-    public int minFoodToSpawn;
 
-    #region Tooltip
-    [Tooltip("The maximum food of this type that will spawn for this level.")]
-    #endregion
-    public int maxFoodToSpawn;
-
-    #region Tooltip
-    [Tooltip("the min number of this type of food that can exist on the current room.")]
-    #endregion
-    public int minNumberOfFoodToExist;
-
-    #region Tooltip
-    [Tooltip("the max number of this type of food that can exist on the current room.")]
-    #endregion
-    public int maxNumberOfFoodToExist;
-
-    // This are used to delay the spawn of every food
-    [HideInInspector] public float minSpawnInterval = 5f;
-    [HideInInspector] public float maxSpawnInterval = 6f;
+    public SoundEffectSO soundEffect;
 
     #region Materialize Effect
     [Header("Materialize Effect")]
@@ -67,4 +30,13 @@ public class FoodSO : ScriptableObject
 
     [ColorUsage(true, true)]
     public Color materiliazeColor;
+
+    #region Game Scoring
+    [Header("Game Scoring")]
+    [Space(10)]
+    [Range(1, 2000)]
+    [Tooltip("The points this type of food will give to the player when eaten. " +
+        "Up to 2000 points")]
+    #endregion
+    public long score;
 }

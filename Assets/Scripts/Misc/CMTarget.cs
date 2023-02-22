@@ -1,56 +1,64 @@
 using Cinemachine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CinemachineTargetGroup))]
-public class CMTarget : MonoBehaviour
+namespace SnakeGame.Miscelaneous
 {
-    private CinemachineTargetGroup m_TargetGroup;
-
-    #region Tooltip
-    [Tooltip("Populate with the gameobject called MouseTarget")]
-    #endregion
-    [SerializeField] private Transform cursorTarget;
-
-    private void Awake()
+    [RequireComponent(typeof(CinemachineTargetGroup))]
+    public class CMTarget : MonoBehaviour
     {
-        m_TargetGroup = GetComponent<CinemachineTargetGroup>();
-    }
+        private CinemachineTargetGroup m_TargetGroup;
 
-    private void Start()
-    {
-        SetCinemachineTarget();
-    }
+        #region Tooltip
+        [Tooltip("Populate with the gameobject called MouseTarget")]
+        #endregion
+        [SerializeField] private Transform cursorTarget;
 
-    private void Update()
-    {
-        cursorTarget.position = HelperUtilities.GetMouseWorldPosition();
-    }
-
-    /// <summary>
-    /// Set The Cinemachine Camera Target Group.
-    /// Creates a target group that will follow both the snake and the mouse.
-    /// </summary>
-    private void SetCinemachineTarget()
-    {
-        CinemachineTargetGroup.Target snakeTarget = new()
+        private void Awake()
         {
-            weight = 1.5f,
-            radius = 2f,
-            target = GameManager.Instance.GetSnake().transform
-        };
+            m_TargetGroup = GetComponent<CinemachineTargetGroup>();
+        }
 
-        CinemachineTargetGroup.Target CMCursorTarget = new()
+        private void Start()
         {
-            weight = 1f,
-            radius = 1f,
-            target = cursorTarget
-        };
+            SetCinemachineTarget();
+        }
 
-        CinemachineTargetGroup.Target[] cmTargetArray = new CinemachineTargetGroup.Target[] { snakeTarget, CMCursorTarget };
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("CameraBounds"))
+            {
+                BoxCollider2D cameraBoundsCollider = other.GetComponent<BoxCollider2D>();
+            }
+        }
 
-        m_TargetGroup.m_Targets = cmTargetArray;
+        private void Update()
+        {
+            cursorTarget.position = HelperUtilities.GetMouseWorldPosition();
+        }
+
+        /// <summary>
+        /// Set The Cinemachine Camera Target Group.
+        /// Creates a target group that will follow both the snake and the mouse.
+        /// </summary>
+        private void SetCinemachineTarget()
+        {
+            CinemachineTargetGroup.Target snakeTarget = new()
+            {
+                weight = 1.5f,
+                radius = 2f,
+                target = GameManager.Instance.GetSnake().transform
+            };
+
+            CinemachineTargetGroup.Target CMCursorTarget = new()
+            {
+                weight = 1f,
+                radius = 1f,
+                target = cursorTarget
+            };
+
+            CinemachineTargetGroup.Target[] cmTargetArray = new CinemachineTargetGroup.Target[] { snakeTarget, CMCursorTarget };
+
+            m_TargetGroup.m_Targets = cmTargetArray;
+        }
     }
 }

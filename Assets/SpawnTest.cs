@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SnakeGame.Utilities;
+using SnakeGame;
 
 public class SpawnTest : MonoBehaviour
 {

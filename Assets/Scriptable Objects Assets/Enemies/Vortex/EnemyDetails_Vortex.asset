@@ -14,23 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Vortex
   enemyPrefab: {fileID: 7249687755293974846, guid: 1653c98523a992c4a8f2e82922f27e1b, type: 3}
-  enemyChaseDistance: 30
+  hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
+  enemyColor: {r: 0.76862746, g: 1, b: 0.38039216, a: 1}
+  enemyChaseDistance: 100
   standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   enemyMaterializeTime: 1.5
   enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
   enemyMaterializeColor: {r: 1.1313709, g: 4.237095, b: 0.35493988, a: 1}
   enemyWeapon: {fileID: 11400000, guid: 272163f608861be41b5bee2b6495b679, type: 2}
-  firingMinDelay: 0.1
+  firingMinDelay: 0.5
   firingMaxDelay: 1
-  firingMinDuration: 1
-  firingMaxDuration: 2
+  firingMinDuration: 2
+  firingMaxDuration: 4
   lineOfSightRequired: 1
   enemyHealthDetailsArray:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    healthAmount: 350
+    originalHealthAmount: 100
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
-    healthAmount: 50
+    healthAmount: 400
+    originalHealthAmount: 150
   - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-    healthAmount: 100
-  immuneAfterHit: 0
-  immunityTime: 0
+    healthAmount: 450
+    originalHealthAmount: 200
+  immuneAfterHit: 1
+  immunityTime: 2
   startDazeTime: 0
   isHealthBarDisplayed: 1

@@ -1,11 +1,14 @@
 using UnityEngine;
+using SnakeGame.AbwehrSystem.Ammo;
+using SnakeGame.SoundsSystem;
+using SnakeGame;
 
 [CreateAssetMenu(fileName = "WeaponDetails_", menuName = "Scriptable Objects/Weapon System/Weapon Details")]
 public class WeaponDetailsSO : ScriptableObject
 {
     #region Header Base Weapon Details
     [Space(10)]
-    [Header("Base Weapon Details")]
+    [Header("Base Weapon Settings")]
     #endregion
 
     public string weaponName;
@@ -88,6 +91,14 @@ public class WeaponDetailsSO : ScriptableObject
     [Tooltip("The time the weapons takes to reload a magazine")]
     #endregion 
     public float weaponReloadTime = 0f;
+
+    [ContextMenu("Refill Ammo")]
+    private void RefillAmmo()
+    {
+        GameManager.Instance.GetSnake().activeWeapon.GetCurrentWeapon().weaponTotalAmmoCapacity = totalAmmoCapacity;
+        GameManager.Instance.GetSnake().activeWeapon.GetCurrentWeapon().weaponClipRemaining = clipMaxCapacity;
+        }
+
 
     #region Validation
 #if UNITY_EDITOR
