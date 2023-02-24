@@ -1,5 +1,6 @@
 using System.Collections;
 using SnakeGame;
+using SnakeGame.Debuging;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -96,27 +97,6 @@ public static class HelperUtilities
         return nearestSpawnPosition;
     }
 
-    //public static Vector3 GetSpawnPosition(Vector3 position)
-    //{
-    //    Grid grid = NoiseMap.Instance.grid;
-
-    //    Vector3 nearestSpawnPosition = new(10000f, 10000f, 0);
-
-    //    foreach (Vector2Int vector in NoiseMap.Instance.mapPreset.spawnPositionsList)
-    //    {
-    //        // Convert the local spawn grid positions to world positions values
-    //        Vector3 worldSpawnPosition = grid.CellToWorld((Vector3Int)vector);
-
-    //        if (Vector3.Distance(worldSpawnPosition, position) < Vector3.Distance(nearestSpawnPosition, position))
-    //        {
-    //            // This is now the nearest spawn position
-    //            nearestSpawnPosition = worldSpawnPosition;
-    //        }
-    //    }
-
-    //    return nearestSpawnPosition;
-    //}
-
     /// <summary>
     /// Gets The AimDirection Enum Value From The Passed angleDegrees Variable
     /// </summary>
@@ -186,7 +166,7 @@ public static class HelperUtilities
     {
         if (stringToCheck == "")
         {
-            Debug.Log(fieldName + " Is Empty And Must Contain A Value In Object " + thisObject.name.ToString());
+            Debuger.Log(fieldName + " Is Empty and Must Contain a Value in Object " + thisObject.name.ToString());
             return true;
         }
         return false;
@@ -199,7 +179,7 @@ public static class HelperUtilities
     {
         if (objectToCheck == null)
         {
-            Debug.Log(fieldName + " is null and must contain a value in object " + thisObject.name.ToString());
+            Debuger.Log(fieldName + " Is Null and Must Contain a Value in Object " + thisObject.name.ToString());
             return true;
         }
 
@@ -207,8 +187,9 @@ public static class HelperUtilities
     }
 
     ///<summary>
-    ///List Empty Or Contains Null Value Check - Returns True If There's An Error
+    ///List Empty Or Contains Null Value Check
     ///</summary>
+    ///<returns>Returns true if the object is null, has null values or has no values at all.</returns>
     public static bool ValidateCheckEnumerableValues(Object thisObject, string fieldName, IEnumerable enumerableObjectToCheck)
     {
         bool error = false;
@@ -216,7 +197,7 @@ public static class HelperUtilities
 
         if (enumerableObjectToCheck == null)
         {
-            Debug.Log(fieldName + " is null in object " + thisObject.name.ToString());
+            Debuger.Log(fieldName + " Is Null in Object " + thisObject.name.ToString());
             return true;
         }
 
@@ -225,7 +206,7 @@ public static class HelperUtilities
         {
             if (item == null)
             {
-                Debug.Log(fieldName + " Has Null Values In Object " + thisObject.name.ToString());
+                Debuger.Log(fieldName + " Has Null Values In Object " + thisObject.name.ToString());
                 error = true;
             }
             else
@@ -236,7 +217,7 @@ public static class HelperUtilities
 
         if (count == 0)
         {
-            Debug.Log(fieldName + " Has No Values In Object " + thisObject.name.ToString());
+            Debuger.Log(fieldName + " Has No Values In Object " + thisObject.name.ToString());
             error = true;
         }
 
@@ -244,8 +225,10 @@ public static class HelperUtilities
     }
 
     /// <summary>
-    /// Positive Value Debug Check - If Zero Is Allowed Set The bool isZeroAllowed To True. Returns True If there's An Error
+    /// Positive Value Debug Check - If Zero Is Allowed Set The bool isZeroAllowed To True.
     /// </summary>
+    /// <returns>Returns false if the value to check is less than zero when zero is not allowed.
+    ///  Or returns false if zero is allowed but the value to check is less than zero</returns>
     public static bool ValidateCheckPositiveValue(Object thisObject, string fieldName, int valueToCheck, bool isZeroAllowed)
     {
         bool error = false;
@@ -254,7 +237,7 @@ public static class HelperUtilities
         {
             if (valueToCheck < 0)
             {
-                Debug.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
+                Debuger.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -262,7 +245,7 @@ public static class HelperUtilities
         {
             if (valueToCheck <= 0)
             {
-                Debug.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
+                Debuger.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -280,7 +263,7 @@ public static class HelperUtilities
         {
             if (valueToCheck < 0)
             {
-                Debug.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
+                Debuger.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -288,7 +271,7 @@ public static class HelperUtilities
         {
             if (valueToCheck <= 0)
             {
-                Debug.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
+                Debuger.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -306,7 +289,7 @@ public static class HelperUtilities
         {
             if (valueToCheck < 0)
             {
-                Debug.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
+                Debuger.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -314,7 +297,7 @@ public static class HelperUtilities
         {
             if (valueToCheck <= 0)
             {
-                Debug.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
+                Debuger.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -330,7 +313,7 @@ public static class HelperUtilities
         bool error = false;
         if (valueToCheckMin > valueToCheckMax)
         {
-            Debug.Log(fieldNameMin + "must be less or equal than " + fieldNameMax + " in Object " + thisObject.name.ToString());
+            Debuger.Log(fieldNameMin + "must be less or equal than " + fieldNameMax + " in Object " + thisObject.name.ToString());
         }
 
         if (ValidateCheckPositiveValue(thisObject, fieldNameMin, valueToCheckMin, isZeroAllowed)) error = true;
@@ -349,7 +332,7 @@ public static class HelperUtilities
         bool error = false;
         if (valueToCheckMin > valueToCheckMax)
         {
-            Debug.Log(fieldNameMin + "must be less or equal than " + fieldNameMax + " in Object " + thisObject.name.ToString());
+            Debuger.Log(fieldNameMin + "must be less or equal than " + fieldNameMax + " in Object " + thisObject.name.ToString());
         }
 
         if (ValidateCheckPositiveValue(thisObject, fieldNameMin, (float)valueToCheckMin, isZeroAllowed)) error = true;
@@ -357,17 +340,5 @@ public static class HelperUtilities
         if (ValidateCheckPositiveValue(thisObject, fieldNameMax, (float)valueToCheckMax, isZeroAllowed)) error = true;
 
         return error;
-    }
-
-    /// <summary>
-    /// Calculates the reminder of a division
-    /// </summary>
-    /// <param name="dividend">The dividend</param>
-    /// <param name="divisor">The divisor</param>
-    /// <returns></returns>
-    public static double CalculateReminder(double dividend, double divisor)
-    {
-        double result = dividend % divisor;
-        return result;
     }
 }

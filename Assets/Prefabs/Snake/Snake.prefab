@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 8266277145047211158}
   - component: {fileID: 8266277145047211156}
   - component: {fileID: 8266277145047211176}
+  - component: {fileID: 4681100516434717293}
   - component: {fileID: 4336066559190943374}
   - component: {fileID: 8266277145047211177}
   - component: {fileID: 8266277145047211178}
@@ -306,7 +307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   snakeDetails: {fileID: 0}
-  snakeControler: {fileID: 0}
+  snakeSpecialAbility: {fileID: 0}
   health: {fileID: 0}
   healthEvent: {fileID: 0}
   destroy: {fileID: 0}
@@ -340,6 +341,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementDetails: {fileID: 11400000, guid: 3576e84ed1951f4498c3d3e04eb852d7, type: 2}
   weaponShootPosition: {fileID: 7744678937136800536}
+--- !u!114 &4681100516434717293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266277145047211159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d955dfe292905547b20c2f68846fdba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4336066559190943374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,6 +366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 0}
+  enemy: {fileID: 0}
 --- !u!50 &8266277145047211177
 Rigidbody2D:
   serializedVersion: 4

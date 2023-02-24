@@ -1,5 +1,6 @@
 using SnakeGame.SoundsSystem;
 using SnakeGame.Utilities;
+using SnakeGame.Enemies;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.Rendering.Universal;
 using TMPro;
 using SnakeGame.UI;
-using Unity.VisualScripting;
 using SnakeGame.Minimap;
+using SnakeGame.Enemies;
+using SnakeGame.PlayerSystem;
 
 namespace SnakeGame
 {
@@ -29,7 +29,7 @@ namespace SnakeGame
         public int LevelCount { get { return gameLevelList.Count; } }
         public bool IsFading { get; private set; } = false;
 
-        #region Header Dungeon Levels
+        #region Header REFERENCES
         [Space(10)]
         [Header("OBJECT REFERENCES")]
         #endregion
@@ -37,23 +37,26 @@ namespace SnakeGame
         [Tooltip("Populate with all the game level for this game")]
         #endregion
         [SerializeField] private List<GameLevelSO> gameLevelList;
-
         #region Tooltip
         [Tooltip("Populate with the starting dungeon level for testing, first dungeon level = 0")]
         #endregion
         [SerializeField] private int currentDungeonLevelListIndex = 0;
-
         #region Tooltip
         [Tooltip("Populate with the text component that is in the LoadScreenUI")]
         #endregion
-        [SerializeField] private TextMeshProUGUI messageText;
-
+        [SerializeField] private TextMeshProUGUI loadScreenText;
         #region Tooltip
         [Tooltip("Populate with the canvas group component in the FadeScreen UI")]
         #endregion
         [SerializeField] private CanvasGroup canvasGroup;
-
+        #region Tooltip
+        [Tooltip("Populate with the pause menu prefab.")]
+        #endregion
         [SerializeField] private GameObject pauseMenuUI;
+        #region Tooltip
+        [Tooltip("This text will give feedback about different things to the player.")]
+        #endregion
+        [SerializeField] private TextMeshProUGUI feedbackText;
 
         private Room currentRoom;
         private Room previousRoom;
@@ -63,7 +66,6 @@ namespace SnakeGame
         private Snake snake;
         private long gameScore;
         private int scoreMultiplier;
-
         protected override void Awake()
         {
             base.Awake();
@@ -310,8 +312,8 @@ namespace SnakeGame
         /// <returns>Whatever a Coroutine returns</returns>
         private IEnumerator DisplayMessageRoutine(string levelName, Color textColor, float timeSeconds)
         {
-            messageText.SetText(levelName);
-            messageText.color = textColor;
+            loadScreenText.SetText(levelName);
+            loadScreenText.color = textColor;
 
             //Display the text for a given period of time
             if (timeSeconds > 0f)
@@ -335,7 +337,7 @@ namespace SnakeGame
             yield return null;
 
             //Clear the text
-            messageText.SetText("");
+            loadScreenText.SetText("");
         }
 
         /// <summary>
@@ -409,6 +411,15 @@ namespace SnakeGame
             }
 
             IsFading = false;
+        }
+
+        public IEnumerator ShowMessage(string messageToDisplay, float time)
+        {
+            if (IsFading) yield break;
+
+            feedbackText.text = messageToDisplay;
+            yield return new WaitForSeconds(time);
+            feedbackText.text = "";
         }
 
         #region Different Game States
@@ -594,7 +605,7 @@ namespace SnakeGame
         {
             HelperUtilities.ValidateCheckEnumerableValues(this, nameof(gameLevelList), gameLevelList);
             HelperUtilities.ValidateCheckNullValue(this, nameof(canvasGroup), canvasGroup);
-            HelperUtilities.ValidateCheckNullValue(this, nameof(messageText), messageText);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(loadScreenText), loadScreenText);
         }
 #endif
         #endregion

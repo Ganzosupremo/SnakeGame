@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 using SnakeGame.VisualEffects;
 using SnakeGame.SoundsSystem;
 
-namespace SnakeGame
+namespace SnakeGame.Enemies
 {
     #region Required Components
     [RequireComponent(typeof(EnemyMovementAI))]
@@ -54,7 +54,7 @@ namespace SnakeGame
 
         private MaterializeEffect materializeEffect;
         private PolygonCollider2D triggerCollider;
-        private CircleCollider2D solidCollider;
+        //private CircleCollider2D solidCollider;
 
 
         private SetActiveWeaponEvent setActiveWeaponEvent;
@@ -76,7 +76,7 @@ namespace SnakeGame
 
             enemySpriteRenderer = GetComponent<SpriteRenderer>();
             materializeEffect = GetComponent<MaterializeEffect>();
-            solidCollider = GetComponentInChildren<CircleCollider2D>();
+            //solidCollider = GetComponentInChildren<CircleCollider2D>();
             triggerCollider = GetComponent<PolygonCollider2D>();
             spriteRendererArray = GetComponentsInChildren<SpriteRenderer>();
         }
@@ -215,7 +215,7 @@ namespace SnakeGame
         {
             // Enable/Disable the colliders
             triggerCollider.enabled = isEnabled;
-            solidCollider.enabled = isEnabled;
+            //solidCollider.enabled = isEnabled;
 
             // Enable/Disable the enemy movement AI
             enemyMovementAI.enabled = isEnabled;

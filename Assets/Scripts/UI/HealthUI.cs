@@ -20,10 +20,10 @@ namespace SnakeGame.UI
 
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
         {
-            SetHealthBar(healthEventArgs);
+            SpawnHeart(healthEventArgs);
         }
 
-        private void ClearHealthBar()
+        private void ClearHearth()
         {
             foreach (GameObject heartIcon in healthHeartsList)
             {
@@ -33,16 +33,17 @@ namespace SnakeGame.UI
             healthHeartsList.Clear();
         }
 
-        private void SetHealthBar(HealthEventArgs healthEventArgs)
+        private void SpawnHeart(HealthEventArgs healthEventArgs)
         {
-            ClearHealthBar();
+            ClearHearth();
 
             // Display the health as n%
-            int healthHearts = Mathf.CeilToInt(healthEventArgs.healthPercent * 100f);
+            int healthPercent = Mathf.CeilToInt(healthEventArgs.healthPercent * 100f);
 
             GameObject heart = Instantiate(GameResources.Instance.healthPrefab, transform);
+            heart.transform.localPosition = new Vector3(6f, 0f, 0f);
 
-            heart.GetComponentInChildren<TextMeshProUGUI>().text = healthHearts + "%";
+            heart.GetComponentInChildren<TextMeshProUGUI>().text = healthPercent + "%";
             healthHeartsList.Add(heart);
 
             //for (int i = 0; i < healthHearts; i++)

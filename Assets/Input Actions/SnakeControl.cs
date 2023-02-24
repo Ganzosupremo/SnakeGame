@@ -109,6 +109,15 @@ namespace SnakeInput
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SlowTime"",
+                    ""type"": ""Button"",
+                    ""id"": ""eee81ec2-2308-4f59-a048-6d8b12d2faf2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -353,6 +362,17 @@ namespace SnakeInput
                     ""action"": ""DisplayMap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96883df1-23fe-4bf9-b900-fa194a8a9635"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SlowTime"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -446,6 +466,7 @@ namespace SnakeInput
             m_Snake_SetWeaponAtFirstPos = m_Snake.FindAction("SetWeaponAtFirstPos", throwIfNotFound: true);
             m_Snake_Pause = m_Snake.FindAction("Pause", throwIfNotFound: true);
             m_Snake_DisplayMap = m_Snake.FindAction("DisplayMap", throwIfNotFound: true);
+            m_Snake_SlowTime = m_Snake.FindAction("SlowTime", throwIfNotFound: true);
             // OverviewMap
             m_OverviewMap = asset.FindActionMap("OverviewMap", throwIfNotFound: true);
             m_OverviewMap_Click = m_OverviewMap.FindAction("Click", throwIfNotFound: true);
@@ -518,6 +539,7 @@ namespace SnakeInput
         private readonly InputAction m_Snake_SetWeaponAtFirstPos;
         private readonly InputAction m_Snake_Pause;
         private readonly InputAction m_Snake_DisplayMap;
+        private readonly InputAction m_Snake_SlowTime;
         public struct SnakeActions
         {
             private @SnakeControl m_Wrapper;
@@ -531,6 +553,7 @@ namespace SnakeInput
             public InputAction @SetWeaponAtFirstPos => m_Wrapper.m_Snake_SetWeaponAtFirstPos;
             public InputAction @Pause => m_Wrapper.m_Snake_Pause;
             public InputAction @DisplayMap => m_Wrapper.m_Snake_DisplayMap;
+            public InputAction @SlowTime => m_Wrapper.m_Snake_SlowTime;
             public InputActionMap Get() { return m_Wrapper.m_Snake; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -567,6 +590,9 @@ namespace SnakeInput
                     @DisplayMap.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnDisplayMap;
                     @DisplayMap.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnDisplayMap;
                     @DisplayMap.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnDisplayMap;
+                    @SlowTime.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSlowTime;
+                    @SlowTime.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSlowTime;
+                    @SlowTime.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSlowTime;
                 }
                 m_Wrapper.m_SnakeActionsCallbackInterface = instance;
                 if (instance != null)
@@ -598,6 +624,9 @@ namespace SnakeInput
                     @DisplayMap.started += instance.OnDisplayMap;
                     @DisplayMap.performed += instance.OnDisplayMap;
                     @DisplayMap.canceled += instance.OnDisplayMap;
+                    @SlowTime.started += instance.OnSlowTime;
+                    @SlowTime.performed += instance.OnSlowTime;
+                    @SlowTime.canceled += instance.OnSlowTime;
                 }
             }
         }
@@ -672,6 +701,7 @@ namespace SnakeInput
             void OnSetWeaponAtFirstPos(InputAction.CallbackContext context);
             void OnPause(InputAction.CallbackContext context);
             void OnDisplayMap(InputAction.CallbackContext context);
+            void OnSlowTime(InputAction.CallbackContext context);
         }
         public interface IOverviewMapActions
         {

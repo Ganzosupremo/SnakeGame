@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace SnakeGame.UI
 {
-    public class PauseMenuUI : SingletonMonoBehaviour<PauseMenuUI>//, IPersistenceData
+    public class PauseMenuUI : SingletonMonoBehaviour<PauseMenuUI>, IPersistenceData
     {
         public DayCicle CurrentTime { get { return selectedTime; } }
 
@@ -24,13 +24,13 @@ namespace SnakeGame.UI
         {
             base.Awake();
             globalLight = Instantiate(GameResources.Instance.globalLight, GameManager.Instance.transform);
-            dayCicleDropdown.value = (int)selectedTime;
+            //dayCicleDropdown.value = (int)selectedTime;
 
-            if (PlayerPrefs.HasKey("CurrentTime"))
-            {
-                selectedTime = (DayCicle)PlayerPrefs.GetInt("CurrentTime");
-                dayCicleDropdown.value = PlayerPrefs.GetInt("CurrentTime");
-            }
+            //if (PlayerPrefs.HasKey("CurrentTime"))
+            //{
+            //    selectedTime = (DayCicle)PlayerPrefs.GetInt("CurrentTime");
+            //    dayCicleDropdown.value = PlayerPrefs.GetInt("CurrentTime");
+            //}
         }
 
         // Start is called before the first frame update
@@ -54,7 +54,8 @@ namespace SnakeGame.UI
         private void OnDisable()
         {
             Time.timeScale = 1f;
-            PlayerPrefs.SetInt("CurrentTime", (int)selectedTime);
+            SaveDataManager.Instance.SaveGame();
+            //PlayerPrefs.SetInt("CurrentTime", (int)selectedTime);
         }
 
         private void OnValueChanged(TMP_Dropdown dayCicleDropdown)
@@ -155,15 +156,16 @@ namespace SnakeGame.UI
             minigunFireVolume.SetText(SoundEffectManager.Instance.minigunFireVolume.ToString());
         }
 
-        //public void Load(GameData data)
-        //{
-        //    selectedTime = data.savedTime;
-        //}
+        public void Load(GameData data)
+        {
+            selectedTime = data.savedTime;
+            dayCicleDropdown.value = (int)selectedTime;
+        }
 
-        //public void Save(GameData data)
-        //{
-        //    data.savedTime = CurrentTime;
-        //}
+        public void Save(GameData data)
+        {
+            data.savedTime = selectedTime;
+        }
 
         #region Validation
 #if UNITY_EDITOR

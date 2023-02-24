@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SnakeGame.Utilities;
 using SnakeGame;
+using SnakeGame.Enemies;
 
 public class SpawnTest : MonoBehaviour
 {

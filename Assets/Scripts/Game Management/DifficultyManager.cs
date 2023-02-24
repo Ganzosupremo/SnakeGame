@@ -1,11 +1,11 @@
-using UnityEngine;
-using UnityEngine.UI;
+using SnakeGame.Enemies;
+using SnakeGame.PlayerSystem;
 
 namespace SnakeGame
 {
-    public class DifficultyManager : SingletonMonoBehaviour<DifficultyManager>
+    public static class DifficultyManager
     {
-        public void ChangeDifficulty(Difficulty selectedDifficulty)
+        public static void ChangeDifficulty(Difficulty selectedDifficulty)
         {
             #region A Fricking Big Chunk of Code
             switch (selectedDifficulty)
@@ -40,7 +40,6 @@ namespace SnakeGame
                         snake.snakeInitialHealth = 10;
                     }
 
-                    //GameResources.Instance.SetLightIntensity(1f);
                     break;
 
                 case Difficulty.Easy:
@@ -74,8 +73,7 @@ namespace SnakeGame
                     {
                         snake.snakeInitialHealth = 8;
                     }
-                    
-                    //GameResources.Instance.SetLightIntensity(0.9f);
+
                     break;
 
                 case Difficulty.Medium:
@@ -109,8 +107,7 @@ namespace SnakeGame
                     {
                         snake.snakeInitialHealth = 6;
                     }
-                    //GameResources.Instance.currentSnake.snakeDetails.snakeInitialHealth = 6;
-                    //GameResources.Instance.SetLightIntensity(0.75f);
+
                     break;
 
                 case Difficulty.Hard:
@@ -145,8 +142,7 @@ namespace SnakeGame
                     {
                         snake.snakeInitialHealth = 4;
                     }
-                    //GameResources.Instance.currentSnake.snakeDetails.snakeInitialHealth = 4;
-                    //GameResources.Instance.SetLightIntensity(0.55f);
+
                     break;
 
                 case Difficulty.DarkSouls:
@@ -184,8 +180,7 @@ namespace SnakeGame
                     {
                         snake.snakeInitialHealth = 3;
                     }
-                    //GameResources.Instance.currentSnake.snakeDetails.snakeInitialHealth = 3;
-                    //GameResources.Instance.SetLightIntensity(0.4f);
+
                     break;
 
                 case Difficulty.EmotionalDamage:
@@ -223,8 +218,7 @@ namespace SnakeGame
                     {
                         snake.snakeInitialHealth = 1;
                     }
-                    //GameResources.Instance.currentSnake.snakeDetails.snakeInitialHealth = 1;
-                    //GameResources.Instance.SetLightIntensity(0.3f);
+
                     break;
 
                 default:

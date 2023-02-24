@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using SnakeGame.PlayerSystem;
 
 namespace SnakeGame.UI
 {
@@ -75,7 +76,7 @@ namespace SnakeGame.UI
 
         private void OnDisable()
         {
-            // Suscribe to four diferent events: Active Weapon, Weapon Fired Event, Reloading Weapon And Weapon Reloaded 
+            // Unsuscribe to four diferent events: Active Weapon, Weapon Fired Event, Reloading Weapon And Weapon Reloaded 
             snake.setActiveWeaponEvent.OnSetActiveWeapon -= ActiveWeaponEvent_OnSetActiveWeapon;
 
             snake.weaponFiredEvent.OnWeaponFired -= WeaponFiredEvent_AfterWeaponFired;
@@ -309,9 +310,6 @@ namespace SnakeGame.UI
                 float barFill = currentWeapon.weaponReloadTimer / currentWeapon.weaponDetails.weaponReloadTime;
 
                 reloadBar.transform.localScale = new Vector3(barFill, 1f, 1f);
-
-                // Lean Tween to animate the reload weapon bar
-                //LeanTween.scaleX(reloadBarGameObject, barFill * 1.009f, barFill).setEaseInBounce();
 
                 yield return null;
             }

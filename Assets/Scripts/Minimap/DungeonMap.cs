@@ -22,21 +22,22 @@ namespace SnakeGame.Minimap
 
         private Camera dungeonMapCamera;
         private Camera mainCamera;
-        private Snake snake;
+        //private Snake snake;
 
         private float waitBeforeTeleporting = 0.7f;
-        private float counter = 0.7f;
+        private readonly float counter = 0.7f;
 
         protected override void Awake()
         {
             base.Awake();
-            snake = GameManager.Instance.GetSnake();
         }
 
         private void Start()
         {
             mainCamera = Camera.main;
             Transform playerTransform = GameManager.Instance.GetSnake().transform;
+
+            GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Enable();
 
             // Populate the cinemachine camera target with the player
             CinemachineVirtualCamera cinemachineVirtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
@@ -54,16 +55,10 @@ namespace SnakeGame.Minimap
                 GameManager.Instance.currentGameState == GameState.OverviewMap && 
                 waitBeforeTeleporting <= 0f)
             {
+                Debug.Log("Room Cliked");
                 GetRoomClicked();
+                waitBeforeTeleporting = counter;
             }
-        }
-
-        private void OnDrawGizmos()
-        {
-            Vector3 worldPosition = dungeonMapCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            worldPosition = new Vector3(worldPosition.x, worldPosition.y, 0f);
-            Gizmos.DrawSphere(worldPosition, 2f);
-            Gizmos.color= Color.yellow;
         }
 
         /// <summary>
@@ -98,7 +93,7 @@ namespace SnakeGame.Minimap
         {
             //characterInput.OverviewMap.Disable();
             //characterInput.Disable();
-            GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Disable();
+            //GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Disable();
 
             // Restore the game states
             GameManager.Instance.currentGameState = GameManager.Instance.previousGameState;
@@ -131,6 +126,7 @@ namespace SnakeGame.Minimap
                 if (collider.GetComponent<InstantiatedRoom>() != null)
                 {
                     InstantiatedRoom instantiatedRoom = collider.GetComponent<InstantiatedRoom>();
+                    Debug.Log("Room Found");
 
                     // If the room has been cleared of enemies an has been previously visited, the player can be teleported there
                     if (instantiatedRoom.room.isClearOfEnemies && instantiatedRoom.room.isPreviouslyVisited)

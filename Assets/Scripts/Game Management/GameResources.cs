@@ -1,10 +1,12 @@
-using SnakeGame;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Tilemaps;
-using SnakeGame.SoundsSystem;
 using UnityEngine.Rendering.Universal;
+using SnakeGame.SoundsSystem;
+using SnakeGame.Enemies;
+using SnakeGame.PlayerSystem;
+using UnityEngine.Rendering;
 
 namespace SnakeGame
 {
@@ -35,6 +37,8 @@ namespace SnakeGame
         [Tooltip("The current player Scriptable object - this is used to reference the current player between scenes")]
         #endregion
         public CurrentPlayerSO currentSnake;
+
+        public VolumeProfile mainGameData;
 
         #region Snake Mechanics
         [Header("SNAKE MECHANICS")]
@@ -169,6 +173,7 @@ namespace SnakeGame
             HelperUtilities.ValidateCheckNullValue(this, nameof(variableLitShader), variableLitShader);
             HelperUtilities.ValidateCheckNullValue(this, nameof(ammoIconPrefab), ammoIconPrefab);
             HelperUtilities.ValidateCheckNullValue(this, nameof(bossRoomCuePrefab), bossRoomCuePrefab);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(globalLight), globalLight);
 
             HelperUtilities.ValidateCheckNullValue(this, nameof(musicMasterMixerGroup), musicMasterMixerGroup);
             HelperUtilities.ValidateCheckNullValue(this, nameof(musicOnFull), musicOnFull);

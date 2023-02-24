@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SnakeGame.Utilities;
 using SnakeGame.SoundsSystem;
+using SnakeGame.Enemies;
 
 namespace SnakeGame
 {

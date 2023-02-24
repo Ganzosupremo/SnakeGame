@@ -141,13 +141,13 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
         #region Tooltip
         [Tooltip("The ammo spawn interval between them so they don't appear all at once. It is randomly calculated with the min and max values")]
-        [Range(0f, 1f)]
+        [Range(0f, 0.1f)]
         #endregion
         public float minSpawnInterval = 0f;
 
         #region Tooltip
         [Tooltip("The ammo spawn interval between them so they don't appear all at once. It is randomly calculated with the min and max values")]
-        [Range(0f, 1f)]
+        [Range(0f, 0.1f)]
         #endregion
         public float maxSpawnInterval = 0f;
 

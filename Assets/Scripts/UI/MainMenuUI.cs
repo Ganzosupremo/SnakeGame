@@ -12,6 +12,10 @@ namespace SnakeGame.UI
 
         private bool isSettingsLoaded = false;
 
+        protected override void Awake()
+        {
+            base.Awake();
+        }
 
         private void Start()
         {
@@ -62,6 +66,11 @@ namespace SnakeGame.UI
             instructionsButton.SetActive(true);
 
             returnButton.SetActive(false);
+        }
+
+        public void QuitGame()
+        {
+            Application.Quit();
         }
 
     }

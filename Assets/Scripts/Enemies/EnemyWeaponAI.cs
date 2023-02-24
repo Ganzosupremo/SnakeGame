@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SnakeGame
+namespace SnakeGame.Enemies
 {
     /// <summary>
     /// Controls the fire and reload of weapons for the enemies.

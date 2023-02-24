@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using SnakeGame.AStarPathfinding;
 
-namespace SnakeGame
+namespace SnakeGame.Enemies
 {
     [RequireComponent(typeof(Enemy))]
     [DisallowMultipleComponent]

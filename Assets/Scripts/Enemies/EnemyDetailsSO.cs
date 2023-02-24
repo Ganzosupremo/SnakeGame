@@ -1,7 +1,7 @@
 using UnityEngine;
 using SnakeGame.SoundsSystem;
 
-namespace SnakeGame
+namespace SnakeGame.Enemies
 {
     [CreateAssetMenu(fileName = "Enemy_", menuName = "Scriptable Objects/Enemy/Enemy Details")]
     public class EnemyDetailsSO : ScriptableObject

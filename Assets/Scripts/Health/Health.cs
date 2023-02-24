@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using SnakeGame.Enemies;
+using SnakeGame.PlayerSystem;
 
 namespace SnakeGame
 {
@@ -135,6 +137,21 @@ namespace SnakeGame
             }
 
             IsDamageable = true;
+        }
+
+        /// <summary>
+        /// Sets the <see cref="IsDamageable"/> property to the passed bool.
+        /// NOTE: It does so in the inverse way, so for example, if the passed bool
+        ///  is false, then the <see cref="IsDamageable"/> property will be true. If the passed 
+        ///  bool is true the <see cref="IsDamageable"/> property will be false.
+        ///  When the <see cref="IsDamageable"/> property is false, means that this 
+        ///  object is invincible to any damage, if it's true, that means that 
+        ///  this object can receive any damage.
+        /// </summary>
+        /// <param name="isDamageable"></param>
+        public void SetIsDamageable(bool isDamageable)
+        {
+            IsDamageable = !isDamageable;
         }
     }
 }

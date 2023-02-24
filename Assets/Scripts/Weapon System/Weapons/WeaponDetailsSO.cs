@@ -97,7 +97,7 @@ public class WeaponDetailsSO : ScriptableObject
     {
         GameManager.Instance.GetSnake().activeWeapon.GetCurrentWeapon().weaponTotalAmmoCapacity = totalAmmoCapacity;
         GameManager.Instance.GetSnake().activeWeapon.GetCurrentWeapon().weaponClipRemaining = clipMaxCapacity;
-        }
+    }
 
 
     #region Validation

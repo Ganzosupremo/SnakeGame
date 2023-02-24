@@ -83,6 +83,27 @@ namespace SnakeGame
         EmotionalDamage = 5
     }
 
+    public enum Abilities
+    {
+        None,
+        /// <summary>
+        /// No need to explain what this does
+        /// </summary>
+        SlowDownTime,
+        /// <summary>
+        /// The current active weapon fires multiple bullets at the cost of one bullet.
+        /// </summary>
+        MultipleBullets,
+        /// <summary>
+        /// GOTTA GO FAST!
+        /// </summary>
+        Flash,
+        /// <summary>
+        /// GOTTA FIRE FAST!
+        /// </summary>
+        QuickFire
+    }
+
     public enum SceneIndex
     {
         MainMenu = 0,

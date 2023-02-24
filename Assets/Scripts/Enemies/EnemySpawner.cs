@@ -1,12 +1,10 @@
-using System;
 using System.Collections;
-using SnakeGame.Dungeon.NoiseGenerator;
 using SnakeGame.SoundsSystem;
 using SnakeGame.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace SnakeGame
+namespace SnakeGame.Enemies
 {
     [DisallowMultipleComponent]
     public class EnemySpawner : MonoBehaviour
@@ -107,7 +105,7 @@ namespace SnakeGame
             //Grid grid = NoiseMap.Instance.grid;
 
             // Create an instance of the helper class used to select a random enemy
-            RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new RandomSpawnableObject<EnemyDetailsSO>(currentRoom.EnemiesByLevelList);
+            RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new(currentRoom.EnemiesByLevelList);
             //RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new RandomSpawnableObject<EnemyDetailsSO>(currentMap.enemiesByLevelList);
 
             // See if we have space to spawn the enemies

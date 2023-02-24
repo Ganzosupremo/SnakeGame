@@ -1,13 +1,13 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
-using SnakeGame.SaveAndLoadSystem;
-using System;
 using System.Collections;
+using SnakeGame.Interfaces;
+using SnakeGame.SaveAndLoadSystem;
 
 namespace SnakeGame.UI
 {
-    public class SettingsUI : MonoBehaviour//, IPersistenceData
+    public class SettingsUI : MonoBehaviour, IPersistenceData
     {
         [SerializeField] private TMP_Dropdown difficultyDropdown;
         [SerializeField] private TextMeshProUGUI playerHealth;
@@ -18,14 +18,14 @@ namespace SnakeGame.UI
         
         private Difficulty selectedDifficulty;
 
-        private void Awake()
-        {
-            if (PlayerPrefs.HasKey("Difficulty"))
-            {
-                selectedDifficulty = (Difficulty)PlayerPrefs.GetInt("Difficulty");
-                difficultyDropdown.value = (int)selectedDifficulty;
-            }
-        }
+        //private void Awake()
+        //{
+        //    if (PlayerPrefs.HasKey("Difficulty"))
+        //    {
+        //        selectedDifficulty = (Difficulty)PlayerPrefs.GetInt("Difficulty");
+        //        difficultyDropdown.value = (int)selectedDifficulty;
+        //    }
+        //}
 
         private void Start()
         {
@@ -34,13 +34,13 @@ namespace SnakeGame.UI
                 OnDropValueChange(difficultyDropdown);
             });
 
-            DifficultyManager.Instance.ChangeDifficulty(selectedDifficulty);
+            DifficultyManager.ChangeDifficulty(selectedDifficulty);
         }
 
-        private void OnDisable()
-        {
-            PlayerPrefs.SetInt("Difficulty", (int)selectedDifficulty);
-        }
+        //private void OnDisable()
+        //{
+        //    PlayerPrefs.SetInt("Difficulty", (int)selectedDifficulty);
+        //}
 
         private void OnDropValueChange(TMP_Dropdown difficultyDropdown)
         {
@@ -106,7 +106,7 @@ namespace SnakeGame.UI
 
         public void SaveChanges()
         {
-            DifficultyManager.Instance.ChangeDifficulty(selectedDifficulty);
+            DifficultyManager.ChangeDifficulty(selectedDifficulty);
             SaveDataManager.Instance.SaveGame();
             StartCoroutine(DisplayMessage("Changes Saved", 2f));
         }
@@ -119,16 +119,15 @@ namespace SnakeGame.UI
             messageToDisplay.text = "";
         }
 
-        //public void Load(GameData data)
-        //{
-        //    selectedDifficulty = data.savedDifficulty;
-        //    test = data.test;
-        //}
+        public void Load(GameData data)
+        {
+            selectedDifficulty = data.savedDifficulty;
+            difficultyDropdown.value = (int)selectedDifficulty;
+        }
 
-        //public void Save(GameData data)
-        //{
-        //    data.savedDifficulty = selectedDifficulty;
-        //    data.test = test;
-        //}
+        public void Save(GameData data)
+        {
+            data.savedDifficulty = selectedDifficulty;
+        }
     }
 }
