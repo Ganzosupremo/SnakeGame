@@ -144,10 +144,14 @@ namespace SnakeGame.PlayerSystem
 
         private void OnSpecialAbility()
         {
+            if (!gameObject.activeSelf) return;
+
             if (snakeInputActions.Snake.SlowTime.IsPressed() && 
                 specialAbilityCooldownTimer <= 0f &&
                 !isSpecialAbilityActive)
             {
+                // The cost for using special abilities
+                snake.health.TakeDamage(1);
                 SnakeAbility(snake.snakeDetails.specialAbility.abilityDuration);
             }
         }
@@ -251,6 +255,8 @@ namespace SnakeGame.PlayerSystem
         /// </summary>
         private void OnSwitchWeapon()
         {
+            if (isSpecialAbilityActive) return;
+
             Vector2 switchWeaponInput = snakeInputActions.Snake.SwitchWeapons.ReadValue<Vector2>();
 
             if (switchWeaponInput.y < 0f || switchWeaponInput.x < -0.5f)

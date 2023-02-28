@@ -198,6 +198,7 @@ GameObject:
   - component: {fileID: 8266277145047211178}
   - component: {fileID: 8266277145047211179}
   - component: {fileID: 8266277145047211182}
+  - component: {fileID: 4743964463662046210}
   - component: {fileID: 4206661892302472905}
   - component: {fileID: 2726491776011469081}
   - component: {fileID: 4104092417115581416}
@@ -218,6 +219,7 @@ GameObject:
   - component: {fileID: 6547395350463839873}
   - component: {fileID: 1300770162827080869}
   - component: {fileID: 1183575574409627718}
+  - component: {fileID: 1622866110201852124}
   m_Layer: 10
   m_Name: Snake
   m_TagString: Player
@@ -437,6 +439,32 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 0.75, y: 0.75}
+  m_EdgeRadius: 0
+--- !u!61 &4743964463662046210
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266277145047211159}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.8, y: 0.8}
   m_EdgeRadius: 0
 --- !u!114 &4206661892302472905
 MonoBehaviour:
@@ -690,3 +718,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 198789dcbe6446342adebbd38d994106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1622866110201852124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266277145047211159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a0b0f0aa9dd37448ac3569030e5823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dealDamageOnContact: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 262144

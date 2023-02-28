@@ -92,13 +92,24 @@ public class WeaponDetailsSO : ScriptableObject
     #endregion 
     public float weaponReloadTime = 0f;
 
+    public void SetFireRate(float fireRate)
+    {
+        weaponFireRate = fireRate;
+    }
+
+    public void SetInfinity(bool hasInfiniteAmmo = false, bool hasInfiniteClipCapacity = false)
+    {
+        this.hasInfiniteAmmo = hasInfiniteAmmo;
+        this.hasInfinityClipCapacity = hasInfiniteClipCapacity;
+    }
+
+
     [ContextMenu("Refill Ammo")]
     private void RefillAmmo()
     {
         GameManager.Instance.GetSnake().activeWeapon.GetCurrentWeapon().weaponTotalAmmoCapacity = totalAmmoCapacity;
         GameManager.Instance.GetSnake().activeWeapon.GetCurrentWeapon().weaponClipRemaining = clipMaxCapacity;
     }
-
 
     #region Validation
 #if UNITY_EDITOR

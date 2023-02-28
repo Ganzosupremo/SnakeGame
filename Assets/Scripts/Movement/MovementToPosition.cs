@@ -36,6 +36,6 @@ public class MovementToPosition : MonoBehaviour
     {
         Vector2 unitVector = Vector3.Normalize(movePosition - currentPosition);
 
-        m_Rb.MovePosition(m_Rb.position + (unitVector * velocity * Time.fixedDeltaTime));
+        m_Rb.MovePosition(m_Rb.position + (Time.fixedDeltaTime * velocity * unitVector));
     }
 }

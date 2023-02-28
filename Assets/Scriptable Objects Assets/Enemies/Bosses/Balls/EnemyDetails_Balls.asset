@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e02a29ac514deb4b8c5e8ad55799fd7, type: 3}
+  m_Name: EnemyDetails_Balls
+  m_EditorClassIdentifier: 
+  enemyName: Blue Balls
+  enemyPrefab: {fileID: 2268869003922632900, guid: a5dfe562a190ea54fa2b97f55de08bf9, type: 3}
+  hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
+  enemyColor: {r: 0.2573865, g: 0.19624424, b: 0.9245283, a: 1}
+  enemyChaseDistance: 50
+  standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  enemyMaterializeTime: 4
+  enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
+  enemyMaterializeColor: {r: 2.5039914, g: 1.1423291, b: 7.3385983, a: 1}
+  enemyWeapon: {fileID: 11400000, guid: 2d85811447003ea4e99bf086daa7d527, type: 2}
+  firingMinDelay: 0.5
+  firingMaxDelay: 1.5
+  firingMinDuration: 2
+  firingMaxDuration: 4
+  lineOfSightRequired: 0
+  enemyHealthDetailsArray:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    healthAmount: 1000
+    originalHealthAmount: 1000
+  - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
+    healthAmount: 1500
+    originalHealthAmount: 1500
+  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
+    healthAmount: 2000
+    originalHealthAmount: 2000
+  immuneAfterHit: 0
+  immunityTime: 0
+  startDazeTime: 0
+  isHealthBarDisplayed: 1

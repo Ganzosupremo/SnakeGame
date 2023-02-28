@@ -12,10 +12,9 @@ namespace SnakeGame.PlayerSystem
     [DisallowMultipleComponent]
     public class SnakeSpecialAbility : MonoBehaviour
     {
-        private float updateTimer = 0.75f;
-        private float timerReseter;
         private Snake snake;
         private Health health;
+        private SetActiveWeaponEvent setActiveWeaponEvent;
         private Abilities ability = Abilities.None;
         private SpecialAbilitySO specialAbilitySO;
 
@@ -29,47 +28,44 @@ namespace SnakeGame.PlayerSystem
         private bool hasInfiniteAmmo;
         private bool hasInfiniteClipCapacity;
 
-        private VolumeProfile mainGameProfile;
-
         private void Awake()
         {
             snake = GetComponent<Snake>();
             health = GetComponent<Health>();
-            mainGameProfile = GameResources.Instance.mainGameData;
-            timerReseter = updateTimer;
+            setActiveWeaponEvent= GetComponent<SetActiveWeaponEvent>();
         }
 
         private void Start()
         {
-            originalBulletsAmountMin = snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMin;
-            originalBulletsAmountMax = snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMax;
+            //originalBulletsAmountMin = snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMin;
+            //originalBulletsAmountMax = snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMax;
 
             minOriginalMoveSpeed = snake.GetSnakeControler().GetMoveSpeed();
             maxOriginalMoveSpeed = snake.GetSnakeControler().GetMoveSpeed();
 
-            originalFireRate = snake.activeWeapon.GetCurrentWeapon().weaponDetails.weaponFireRate;
-            hasInfiniteAmmo = snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfiniteAmmo;
-            hasInfiniteClipCapacity = snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfinityClipCapacity;
+            //originalFireRate = snake.activeWeapon.GetCurrentWeapon().weaponDetails.weaponFireRate;
+            //hasInfiniteAmmo = snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfiniteAmmo;
+            //hasInfiniteClipCapacity = snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfinityClipCapacity;
         }
 
-        private void Update()
+        private void OnEnable()
         {
-            updateTimer -= Time.deltaTime;
-            if (updateTimer <= 0f)
-            {
-                originalBulletsAmountMin = snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMin;
-                originalBulletsAmountMax = snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMax;
+            setActiveWeaponEvent.OnSetActiveWeapon += SetActiveWeaponEvent_OnSetActiveWeapon;
+        }
 
-                minOriginalMoveSpeed = snake.GetSnakeControler().GetMoveSpeed();
-                maxOriginalMoveSpeed = snake.GetSnakeControler().GetMoveSpeed();
+        private void OnDisable()
+        {
+            setActiveWeaponEvent.OnSetActiveWeapon -= SetActiveWeaponEvent_OnSetActiveWeapon;
+        }
 
-                originalFireRate = snake.activeWeapon.GetCurrentWeapon().weaponDetails.weaponFireRate;
-                hasInfiniteAmmo = snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfiniteAmmo;
-                hasInfiniteClipCapacity = snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfinityClipCapacity;
+        private void SetActiveWeaponEvent_OnSetActiveWeapon(SetActiveWeaponEvent setActiveWeaponEvent, SetActiveWeaponEventArgs setActiveWeaponEventArgs)
+        {
+            originalBulletsAmountMin = setActiveWeaponEventArgs.weapon.weaponDetails.weaponCurrentAmmo.ammoSpawnAmountMin;
+            originalBulletsAmountMax = setActiveWeaponEventArgs.weapon.weaponDetails.weaponCurrentAmmo.ammoSpawnAmountMax;
 
-                updateTimer = timerReseter;
-            }
-            
+            originalFireRate = setActiveWeaponEventArgs.weapon.weaponDetails.weaponFireRate;
+            hasInfiniteAmmo = setActiveWeaponEventArgs.weapon.weaponDetails.hasInfiniteAmmo;
+            hasInfiniteClipCapacity = setActiveWeaponEventArgs.weapon.weaponDetails.hasInfinityClipCapacity;
         }
 
         /// <summary>
@@ -113,9 +109,8 @@ namespace SnakeGame.PlayerSystem
                     health.SetIsDamageable(specialAbilitySO.isInvincible);
                     break;
                 case Abilities.QuickFire:
-                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.weaponFireRate = specialAbilitySO.weaponFireRate;
-                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfiniteAmmo = specialAbilitySO.hasInfinityAmmo;
-                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfinityClipCapacity = specialAbilitySO.hasInfinityClipCapacity;
+                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.SetFireRate(specialAbilitySO.weaponFireRate);
+                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.SetInfinity(specialAbilitySO.hasInfinityAmmo, specialAbilitySO.hasInfinityClipCapacity);
                     break;
                 default:
                     break;
@@ -144,9 +139,8 @@ namespace SnakeGame.PlayerSystem
                     health.SetIsDamageable(!specialAbilitySO.isInvincible);
                     break;
                 case Abilities.QuickFire:
-                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.weaponFireRate = originalFireRate;
-                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfiniteAmmo = !hasInfiniteAmmo;
-                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfinityClipCapacity = !hasInfiniteClipCapacity;
+                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.SetFireRate(originalFireRate);
+                    snake.activeWeapon.GetCurrentWeapon().weaponDetails.SetInfinity(hasInfiniteAmmo, hasInfiniteClipCapacity);
                     break;
                 default:
                     break;

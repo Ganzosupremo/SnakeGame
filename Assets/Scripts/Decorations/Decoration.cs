@@ -7,7 +7,6 @@ namespace SnakeGame.Decorations
         #region Header References
         [Header("REFERENCES")]
         #endregion
-
         [Tooltip("Populate with the sprite renderer of the prefab")]
         public SpriteRenderer spriteRenderer;
 

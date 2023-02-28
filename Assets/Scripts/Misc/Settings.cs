@@ -26,15 +26,15 @@ public static class Settings
     #endregion
 
     #region ANIMATOR PARAMETERS
-    //Animation parameters for the player
-    //public static int aimUp = Animator.StringToHash("aimUp");
-    //public static int aimDown = Animator.StringToHash("aimDown");
-    //public static int aimUpLeft = Animator.StringToHash("aimUpLeft");
-    //public static int aimUpRight = Animator.StringToHash("aimUpRight");
-    //public static int aimLeft = Animator.StringToHash("aimLeft");
-    //public static int aimRight = Animator.StringToHash("aimRight");
-    //public static int isIdle = Animator.StringToHash("isIdle");
-    //public static int isMoving = Animator.StringToHash("isMoving");
+    // Animation parameters for the player
+    public static int aimUp = Animator.StringToHash("aimUp");
+    public static int aimDown = Animator.StringToHash("aimDown");
+    public static int aimUpLeft = Animator.StringToHash("aimUpLeft");
+    public static int aimUpRight = Animator.StringToHash("aimUpRight");
+    public static int aimLeft = Animator.StringToHash("aimLeft");
+    public static int aimRight = Animator.StringToHash("aimRight");
+    public static int isIdle = Animator.StringToHash("isIdle");
+    public static int isMoving = Animator.StringToHash("isMoving");
     //public static int rollUp = Animator.StringToHash("rollUp");
     //public static int rollLeft = Animator.StringToHash("rollLeft");
     //public static int rollRight = Animator.StringToHash("rollRight");
@@ -43,14 +43,14 @@ public static class Settings
     public static float playerAnimationSpeed = 8f;
     public static float enemyAnimationSpeed = 3f;
 
-    //Animation parameters for the door
+    // Animation parameters for the door
     public static int openDoor = Animator.StringToHash("open");
 
-    //Animation parameter for the destroyable items
+    // Animation parameter for the destroyable items
     public static int destroy = Animator.StringToHash("destroy");
     public static string destroyedState = "Destroyed";
 
-    //Animation parameters for the table
+    // Animation parameters for the table
     public static int flipUp = Animator.StringToHash("flipUp");
     public static int flipRight = Animator.StringToHash("flipRight");
     public static int flipLeft = Animator.StringToHash("flipLeft");

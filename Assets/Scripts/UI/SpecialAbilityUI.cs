@@ -1,6 +1,5 @@
 using SnakeGame.PlayerSystem;
 using System.Collections;
-using UnityEngine;
 
 namespace SnakeGame.UI
 {

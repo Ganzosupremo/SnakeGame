@@ -90,9 +90,6 @@ namespace SnakeGame
 
         public void IncreaseHealth(int amountToIncrease)
         {
-            //int healthIncrease = Mathf.RoundToInt(startingHealth * amountToIncrease / 100);
-            //int totalHealth = currentHealth + healthIncrease;
-
             CurrentHealth += amountToIncrease;
 
             CallHealthEvent(0);
@@ -115,6 +112,9 @@ namespace SnakeGame
             {
                 if (immunityCoroutine != null)
                     StopCoroutine(immunityCoroutine);
+
+                if (snake != null)
+                    snake.SubstractSnakeSegment();
 
                 immunityCoroutine = StartCoroutine(ImmunityRoutine(immunityTime, spriteRenderer));
             }

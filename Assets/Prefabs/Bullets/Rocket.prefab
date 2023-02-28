@@ -144,6 +144,7 @@ GameObject:
   - component: {fileID: 9142345832759894126}
   - component: {fileID: 7238273981159682823}
   - component: {fileID: 7704925794994691758}
+  - component: {fileID: 6508099508790373244}
   m_Layer: 6
   m_Name: Rocket
   m_TagString: Untagged
@@ -287,6 +288,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!247 &6508099508790373244
+ConstantForce2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8740502524224239974}
+  m_Enabled: 1
+  m_Force: {x: 6, y: 6}
+  m_RelativeForce: {x: 10, y: 10}
+  m_Torque: 0
 --- !u!1001 &8905545290804950933
 PrefabInstance:
   m_ObjectHideFlags: 0

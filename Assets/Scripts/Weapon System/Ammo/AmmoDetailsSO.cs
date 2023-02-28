@@ -37,7 +37,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
         #region Tooltip
         [Tooltip("The ammo charge time - If the ammo should charge briefly before it can move. For example when creating an ammo pattern, the ammo should charge first before moving")]
-        [Range(0f, 10f)]
+        [Range(0f, 2f)]
         #endregion
         public float ammoChargeTime = 0.1f;
 
@@ -111,13 +111,13 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
         #region Tooltip
         [Tooltip("This is the min spread angle for the ammo. A higher spread means less accuracy. A random value is calculated between the min and the max spread values")]
-        [Range(1f, 50f)]
+        [Range(0f, 50f)]
         #endregion
         public float ammoSpreadMin = 0f;
 
         #region Tooltip
         [Tooltip("This is the max spread angle for the ammo. A higher spread means less accuracy. A random value is calculated between the min and the max spread values")]
-        [Range(1f, 50f)]
+        [Range(0f, 50f)]
         #endregion
         public float ammoSpreadMax = 1f;
 
@@ -188,7 +188,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         /// With enemies, the max ammo damage cap will be ignored.
         /// </summary>
         /// <param name="increaseDamageBy">The new damage in percent</param>
-        public void IncreaseDamage(int increaseDamageBy = 20)
+        public bool IncreaseDamage(int increaseDamageBy = 20)
         {
             if (isPlayerAmmo)
             {
@@ -196,11 +196,18 @@ namespace SnakeGame.AbwehrSystem.Ammo
                 ammoDamage += damageIncrease;
 
                 if (ammoDamage > maxAmmoDamage)
+                {
                     ammoDamage = maxAmmoDamage;
+                    return false;
+                }
+
+                return true;
             }
+            // is enemy ammo
             else
             {
                 ammoDamage += increaseDamageBy;
+                return true;
             }
         }
 
@@ -212,7 +219,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         /// and with enemies, the damage cannot go below zero.
         /// </summary>
         /// <param name="decreaseDamageBy">The damage to decrease in percentage</param>
-        public void DecreaseDamage(int decreaseDamageBy = 20)
+        public bool DecreaseDamage(int decreaseDamageBy = 20)
         {
             if (isPlayerAmmo)
             {
@@ -220,13 +227,19 @@ namespace SnakeGame.AbwehrSystem.Ammo
                 ammoDamage -= decreaseDamage;
 
                 if (ammoDamage < originalAmmoDamage)
+                {
                     ammoDamage = originalAmmoDamage;
+                    return false;
+                }
+                return true;
             }
+            // Is enemy ammo
             else
             {
                 ammoDamage -= decreaseDamageBy;
                 if (ammoDamage < 0)
                     ammoDamage = 1;
+                return true;
             }
         }
 

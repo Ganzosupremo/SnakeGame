@@ -299,7 +299,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &120150112
 GameObject:
@@ -1064,7 +1064,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &474176074
 GameObject:
@@ -1104,13 +1104,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474176074}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -76.6355, y: 216.03218, z: 0.09192454}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 894524360}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -1315,24 +1315,52 @@ MonoBehaviour:
     prefabToUse: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
     componentType: SnakeBody
   - name: Bullet4x4
-    PoolSize: 35
+    PoolSize: 40
     prefabToUse: {fileID: 8740502524224239974, guid: 56480e3e174a52742bb7ec6b595da317, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: Bullet6x6
-    PoolSize: 35
+    PoolSize: 40
     prefabToUse: {fileID: 8740502524224239974, guid: d0f146bad743fa741bc599fb6df10484, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: Bullet7x7
-    PoolSize: 35
+    PoolSize: 40
     prefabToUse: {fileID: 8740502524224239974, guid: 403b055819914404080cb61038c1a2da, type: 3}
-    componentType: SnakeGame.Interfaces.IFireable
-  - name: Rocket
-    PoolSize: 7
-    prefabToUse: {fileID: 8740502524224239974, guid: 521269d0fc03989468912949f492a91e, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: Bullet9x9
     PoolSize: 35
     prefabToUse: {fileID: 8740502524224239974, guid: 1f3742a0f8539554a8cd9c54d383a3ba, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Rocket
+    PoolSize: 30
+    prefabToUse: {fileID: 8740502524224239974, guid: 521269d0fc03989468912949f492a91e, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: A
+    PoolSize: 10
+    prefabToUse: {fileID: 7273270984713707489, guid: 52aaa3a18b7213742b1c5bc7144342a1, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: B
+    PoolSize: 10
+    prefabToUse: {fileID: 4798742040580595437, guid: 3f1803215f5f7764a8f7549ad6d7236e, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: C
+    PoolSize: 10
+    prefabToUse: {fileID: 4798742040580595437, guid: 51bb75278dc047c429186aecb458aab9, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: D
+    PoolSize: 10
+    prefabToUse: {fileID: 4798742040580595437, guid: 939e6c80d4fff3440bcdcd5a53c2a7d6, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: E
+    PoolSize: 10
+    prefabToUse: {fileID: 4798742040580595437, guid: 027156ca15e270144bf6e682166375a9, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: F
+    PoolSize: 10
+    prefabToUse: {fileID: 4798742040580595437, guid: 55782fbc0ae2ebb46b32f097a02de8f5, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: G
+    PoolSize: 10
+    prefabToUse: {fileID: 4798742040580595437, guid: 5f96c4f41fe21374d80afc4020fa2795, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: ' Enemy Bullet 6x6'
     PoolSize: 200
@@ -1346,16 +1374,20 @@ MonoBehaviour:
     PoolSize: 10
     prefabToUse: {fileID: 4847929037998128972, guid: 28ba4a29ab5d97249b36557b12d8a007, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
+  - name: Blue Ball's Pattern
+    PoolSize: 10
+    prefabToUse: {fileID: 8250569895992648376, guid: 767b3e0dfdd46e643b7192023645bf85, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
   - name: SmokeWeaponEffect
-    PoolSize: 20
+    PoolSize: 25
     prefabToUse: {fileID: 8467163931044552805, guid: 0ee6cd7c7d4fa8540a7640543bc9a282, type: 3}
     componentType: WeaponShootEffect
   - name: FlashWeaponEffect
-    PoolSize: 20
+    PoolSize: 25
     prefabToUse: {fileID: 8467163931044552805, guid: 1419577dfb85ed44790b33eaa5be6636, type: 3}
     componentType: WeaponShootEffect
   - name: SmokeTrailWeaponEffect
-    PoolSize: 20
+    PoolSize: 25
     prefabToUse: {fileID: 8467163931044552805, guid: 8a3aa985874a6ca40a59199d79763c1b, type: 3}
     componentType: WeaponShootEffect
   - name: AmmoHitEffect
@@ -1363,11 +1395,11 @@ MonoBehaviour:
     prefabToUse: {fileID: 8467163931044552805, guid: fdea5c72d8ade9e40834d6c093aa4e29, type: 3}
     componentType: AmmoHitEffect
   - name: Food
-    PoolSize: 20
+    PoolSize: 10
     prefabToUse: {fileID: 7338082217808987913, guid: aa068fa4ec15301499092874ada9112f, type: 3}
     componentType: Food
   - name: Desert Food
-    PoolSize: 20
+    PoolSize: 10
     prefabToUse: {fileID: 1835589249367107746, guid: 080056cd55feee54e8aa6b84c67a7da7, type: 3}
     componentType: Food
   - name: Golden Food
@@ -1393,13 +1425,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 589272213}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -76.6355, y: 216.03218, z: 0.09192454}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 894524360}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &633479772
 GameObject:
@@ -1732,7 +1764,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &738335397
 GameObject:
@@ -2032,6 +2064,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &894524359
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 894524360}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &894524360
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894524359}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 76.6355, y: -216.03218, z: -0.09192454}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1233889721}
+  - {fileID: 589272215}
+  - {fileID: 474176076}
+  - {fileID: 1579999702}
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &917794435
 GameObject:
@@ -2811,7 +2878,7 @@ Transform:
   - {fileID: 1715937386}
   - {fileID: 1126837841}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1227997362
 GameObject:
@@ -2914,13 +2981,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233889719}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -76.6355, y: 216.03218, z: 0.09192454}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 894524360}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &1233889722
 AudioListener:
@@ -3066,7 +3133,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: -0.0000014305, y: 18.5}
-  m_SizeDelta: {x: 147.8302, y: 7.7275}
+  m_SizeDelta: {x: 160, y: 8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1447294440
 MonoBehaviour:
@@ -3479,13 +3546,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1579999699}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -76.6355, y: 216.03218, z: 0.09192454}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 894524360}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1715937383
 GameObject:
@@ -4017,7 +4084,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2011717368
 GameObject:

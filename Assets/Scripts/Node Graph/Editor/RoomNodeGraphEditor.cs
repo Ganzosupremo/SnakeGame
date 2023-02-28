@@ -80,7 +80,6 @@ public class RoomNodeGraphEditor : EditorWindow
             DrawBackgroungGrid(gridSmall, 0.4f, Color.gray);
             DrawBackgroungGrid(gridLarge, 0.7f, Color.gray);
 
-
             //Draw A Line If Being Dragged
             DrawDraggedLine();
 
@@ -152,7 +151,7 @@ public class RoomNodeGraphEditor : EditorWindow
             currentRoomNode = IsMouseOverARoomNode(currentEvent);
         }
 
-        //Process Events, if the mouse is not over a node or we are currentlu draging a line from a node to another
+        // Process Events, if the mouse is not over a node or we are currently draging a line from a node to another
         if (currentRoomNode == null || currentRoomNodeGraph.roomNodeToDrawLineFrom != null)
         {
             ProcessRoomNodeGraphEvents(currentEvent);
@@ -194,13 +193,16 @@ public class RoomNodeGraphEditor : EditorWindow
             case EventType.MouseDown:
                 ProcessMouseDownEvent(currentEvent);
                 break;
-            //Process The Mouse Up Events, When The Mouse Is Resealed
+            //Process The Mouse Up Events, When The Mouse Is Released
             case EventType.MouseUp:
                 ProcessMouseUpEvent(currentEvent);
                 break;
 
             case EventType.MouseDrag:
                 ProcessMouseDragEvent(currentEvent);
+                break;
+            case EventType.KeyDown:
+                ProcessKeyDownEvent(currentEvent);
                 break;
             default:
                 break;
@@ -230,16 +232,65 @@ public class RoomNodeGraphEditor : EditorWindow
     /// </summary>
     private void ShowContextMenu(Vector2 mousePosition)
     {
-        GenericMenu menu = new GenericMenu();
+        GenericMenu menu = new();
 
         menu.AddItem(new GUIContent("Create Room Node"), false, CreateRoomNode, mousePosition);
-        menu.AddSeparator("");
+        menu.AddItem(new GUIContent("Create A Bulk Of Room Nodes", "Creates a lot of room nodes in one click."), false, CreateRoomNodes, mousePosition);
+        menu.AddSeparator("---------");
         menu.AddItem(new GUIContent("Select All Nodes"), false, SelectAllRoomNodes);
-        menu.AddSeparator("");
+        menu.AddSeparator("---------");
         menu.AddItem(new GUIContent("Delete Selected Room Node Links"), false, DeleteSelectedRoomNodeLinks);
         menu.AddItem(new GUIContent("Delete 'Em All (Selected Nodes)"), false, DeleteSelectedRoomNodes);
 
         menu.ShowAsContext();
+    }
+
+    /// <summary>
+    /// Creates more than one room node on mouse position.
+    /// </summary>
+    /// <param name="mousePosition"></param>
+    private void CreateRoomNodes(object mousePosition)
+    {
+        // If the current node Editor is empty, then add a rooom node of type entrance and exit
+        if (currentRoomNodeGraph.roomNodeList.Count == 0)
+        {
+            CreateRoomNode(new Vector2(200f, 200f), roomNodeTypeList.list.Find(x => x.isEntrance));
+            CreateRoomNode(new Vector2(400f, 400f), roomNodeTypeList.list.Find(x => x.isExit));
+        }
+
+        CreateRoomNodes(mousePosition, roomNodeTypeList.list.Find(x => x.isNone));
+    }
+
+    /// <summary>
+    /// Overloaded version of the CreateRoomNodes method.
+    /// </summary>
+    /// <param name="mousePosition"></param>
+    /// <param name="roomNodeTypeSO"></param>
+    private void CreateRoomNodes(object mousePositionObject, RoomNodeTypeSO roomNodeType)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Vector2 mousePosition = (Vector2)mousePositionObject;
+
+            //Add a little offset
+            Vector2 offset = new(Random.Range(mousePosition.x, mousePosition.y), Random.Range(mousePosition.x, mousePosition.y));
+
+            // Create Room Node SO Asset
+            RoomNodeSO roomNode = CreateInstance<RoomNodeSO>();
+
+            // Add Room Node to the Current room node graph room node list
+            currentRoomNodeGraph.roomNodeList.Add(roomNode);
+
+            // Set room node values
+            roomNode.Initialize(new Rect(offset, new Vector2(nodeWidth, nodeHeight)), currentRoomNodeGraph, roomNodeType);
+
+            // Add room node to room node graph SO asset database
+            AssetDatabase.AddObjectToAsset(roomNode, currentRoomNodeGraph);
+            AssetDatabase.SaveAssets();
+
+            // Makes sure the graph stays updated
+            currentRoomNodeGraph.OnValidate();
+        }
     }
 
     /// <summary>
@@ -248,7 +299,7 @@ public class RoomNodeGraphEditor : EditorWindow
     /// <param name="mousePositionObject"></param>
     private void CreateRoomNode(object mousePositionObject)
     {
-        //If the current node Editor is empty, then add a rooom node of type entrance and exit
+        // If the current node Editor is empty, then add a rooom node of type entrance and exit
         if (currentRoomNodeGraph.roomNodeList.Count == 0)
         {
             CreateRoomNode(new Vector2(200f, 200f), roomNodeTypeList.list.Find(x => x.isEntrance));
@@ -281,7 +332,7 @@ public class RoomNodeGraphEditor : EditorWindow
 
         AssetDatabase.SaveAssets();
 
-        //Makes sure the graph keeps updated
+        // Makes sure the graph stays updated
         currentRoomNodeGraph.OnValidate();
     }
 
@@ -473,6 +524,18 @@ public class RoomNodeGraphEditor : EditorWindow
         for (int i = 0; i < currentRoomNodeGraph.roomNodeList.Count; i++)
         {
             currentRoomNodeGraph.roomNodeList[i].DragNode(dragDelta);
+        }
+
+        GUI.changed = true;
+    }
+
+    private void ProcessKeyDownEvent(Event currentEvent)
+    {
+        // Delete the selected nodes if the delete key was pressed
+        if (currentEvent.keyCode == KeyCode.Delete ||
+            currentEvent.keyCode == KeyCode.Backspace)
+        {
+            DeleteSelectedRoomNodes();
         }
 
         GUI.changed = true;

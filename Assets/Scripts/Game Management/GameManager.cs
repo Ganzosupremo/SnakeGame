@@ -430,12 +430,12 @@ namespace SnakeGame
 
             yield return new WaitForSeconds(1f);
 
-            yield return StartCoroutine(FadeScreen(0f, 1f, 2f, new Color(0f, 0f, 0.4f)));
+            yield return StartCoroutine(FadeScreen(0f, 1f, 2f, Color.Lerp(new Color(0f, 0f, 0f, 0.45f), new Color(0f, 0f, 0f, 0.3f), 1f)));
 
             yield return StartCoroutine(DisplayMessageRoutine("Well Done " + GameResources.Instance.currentSnake.snakeName + "!" +
-                " You Defeated all Enemies. Except... The Boss! \n\n Find Him and Finish The Job.", Color.white, 4.5f));
+                " You Defeated all Enemies. Except for... The Boss/es! \n\n Find Him/Them and Finish The Job.", Color.white, 4.5f));
 
-            yield return StartCoroutine(FadeScreen(1f, 0f, 2f, new Color(0f, 0f, 0f, 0.4f)));
+            yield return StartCoroutine(FadeScreen(1f, 0f, 2f, Color.Lerp(new Color(0f, 0f, 0f, 0.45f), new Color(0f, 0f, 0f, 0.3f), 1f)));
         }
 
         private IEnumerator LevelCompleted()

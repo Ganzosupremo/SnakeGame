@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7752ba1764f42e649842a553eee2081c, type: 3}
+  m_Name: AmmoDetails_MagicWand
+  m_EditorClassIdentifier: 
+  ammoName: MagicWand Ammo
+  isPlayerAmmo: 1
+  ammoSprite: {fileID: -1006212575, guid: 70230541bfb24e3449cd506b528cf8d5, type: 3}
+  ammoPrefabArray:
+  - {fileID: 7273270984713707489, guid: 52aaa3a18b7213742b1c5bc7144342a1, type: 3}
+  - {fileID: 4798742040580595437, guid: 3f1803215f5f7764a8f7549ad6d7236e, type: 3}
+  - {fileID: 4798742040580595437, guid: 51bb75278dc047c429186aecb458aab9, type: 3}
+  - {fileID: 4798742040580595437, guid: 939e6c80d4fff3440bcdcd5a53c2a7d6, type: 3}
+  - {fileID: 4798742040580595437, guid: 027156ca15e270144bf6e682166375a9, type: 3}
+  - {fileID: 4798742040580595437, guid: 55782fbc0ae2ebb46b32f097a02de8f5, type: 3}
+  - {fileID: 4798742040580595437, guid: 5f96c4f41fe21374d80afc4020fa2795, type: 3}
+  ammoMaterial: {fileID: 2100000, guid: 3addf02ae29f95d47af51b9eb69214ff, type: 2}
+  ammoChargeTime: 1
+  ammoChargeMaterial: {fileID: 2100000, guid: a568d7677ebdccc4e808d4ffc5339ed0, type: 2}
+  ammoHitEffect: {fileID: 11400000, guid: 264d27a6ca14cd24a88046fc1d91a497, type: 2}
+  ammoDamage: 5
+  originalAmmoDamage: 5
+  maxAmmoDamage: 10
+  minAmmoSpeed: 20
+  maxAmmoSpeed: 30
+  ammoRange: 25
+  ammoRotationSpeed: 10
+  ammoSpreadMin: 2
+  ammoSpreadMax: 5
+  ammoSpawnAmountMin: 1
+  ammoSpawnAmountMax: 1
+  minSpawnInterval: 0.03
+  maxSpawnInterval: 0.09
+  hasAmmoTrail: 0
+  ammoTrailLifetime: 3
+  ammoTrailMaterial: {fileID: 0}
+  ammoTrailStartWidth: 0
+  ammoTrailEndWidth: 0
