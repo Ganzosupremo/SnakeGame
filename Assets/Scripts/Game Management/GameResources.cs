@@ -105,6 +105,11 @@ namespace SnakeGame
         public Material litMaterial;
 
         #region Tooltip
+        [Tooltip("The material for the sprite outlines")]
+        #endregion
+        public Material outlineMaterial;
+
+        #region Tooltip
         [Tooltip("Populate with tha variable lit shader")]
         #endregion
         public Shader variableLitShader;

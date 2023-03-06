@@ -22,7 +22,6 @@ namespace SnakeGame
         /// to load the next level
         /// </summary>
         public int LevelIndex { get { return currentDungeonLevelListIndex; } }
-        
         /// <summary>
         /// Gets the total count of game levels
         /// </summary>
@@ -96,6 +95,7 @@ namespace SnakeGame
             scoreMultiplier = 0;
 
             PauseMenuUI.Instance.ChangeDayCicle();
+            snake.ChangeLightIntensity();
             StartCoroutine(FadeScreen(0f, 1f, 0f, Color.black));
         }
 

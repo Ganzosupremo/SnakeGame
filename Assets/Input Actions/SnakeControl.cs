@@ -118,6 +118,15 @@ namespace SnakeInput
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SpecialAbility"",
+                    ""type"": ""Button"",
+                    ""id"": ""cb123486-0e6c-4179-a7c5-024054d7fb45"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -373,6 +382,17 @@ namespace SnakeInput
                     ""action"": ""SlowTime"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c02b6598-a788-40ae-a676-d76d750b2468"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SpecialAbility"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -467,6 +487,7 @@ namespace SnakeInput
             m_Snake_Pause = m_Snake.FindAction("Pause", throwIfNotFound: true);
             m_Snake_DisplayMap = m_Snake.FindAction("DisplayMap", throwIfNotFound: true);
             m_Snake_SlowTime = m_Snake.FindAction("SlowTime", throwIfNotFound: true);
+            m_Snake_SpecialAbility = m_Snake.FindAction("SpecialAbility", throwIfNotFound: true);
             // OverviewMap
             m_OverviewMap = asset.FindActionMap("OverviewMap", throwIfNotFound: true);
             m_OverviewMap_Click = m_OverviewMap.FindAction("Click", throwIfNotFound: true);
@@ -540,6 +561,7 @@ namespace SnakeInput
         private readonly InputAction m_Snake_Pause;
         private readonly InputAction m_Snake_DisplayMap;
         private readonly InputAction m_Snake_SlowTime;
+        private readonly InputAction m_Snake_SpecialAbility;
         public struct SnakeActions
         {
             private @SnakeControl m_Wrapper;
@@ -554,6 +576,7 @@ namespace SnakeInput
             public InputAction @Pause => m_Wrapper.m_Snake_Pause;
             public InputAction @DisplayMap => m_Wrapper.m_Snake_DisplayMap;
             public InputAction @SlowTime => m_Wrapper.m_Snake_SlowTime;
+            public InputAction @SpecialAbility => m_Wrapper.m_Snake_SpecialAbility;
             public InputActionMap Get() { return m_Wrapper.m_Snake; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -593,6 +616,9 @@ namespace SnakeInput
                     @SlowTime.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSlowTime;
                     @SlowTime.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSlowTime;
                     @SlowTime.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSlowTime;
+                    @SpecialAbility.started -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSpecialAbility;
+                    @SpecialAbility.performed -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSpecialAbility;
+                    @SpecialAbility.canceled -= m_Wrapper.m_SnakeActionsCallbackInterface.OnSpecialAbility;
                 }
                 m_Wrapper.m_SnakeActionsCallbackInterface = instance;
                 if (instance != null)
@@ -627,6 +653,9 @@ namespace SnakeInput
                     @SlowTime.started += instance.OnSlowTime;
                     @SlowTime.performed += instance.OnSlowTime;
                     @SlowTime.canceled += instance.OnSlowTime;
+                    @SpecialAbility.started += instance.OnSpecialAbility;
+                    @SpecialAbility.performed += instance.OnSpecialAbility;
+                    @SpecialAbility.canceled += instance.OnSpecialAbility;
                 }
             }
         }
@@ -702,6 +731,7 @@ namespace SnakeInput
             void OnPause(InputAction.CallbackContext context);
             void OnDisplayMap(InputAction.CallbackContext context);
             void OnSlowTime(InputAction.CallbackContext context);
+            void OnSpecialAbility(InputAction.CallbackContext context);
         }
         public interface IOverviewMapActions
         {

@@ -24,7 +24,7 @@ namespace SnakeGame.Enemies
         private WaitForFixedUpdate fixedUpdateWait;
         private bool shouldChasePlayer = false;
         private List<Vector2Int> surroundingsPositionsList = new();
-        private SpriteRenderer enemyWeaponSprite;
+        //private SpriteRenderer enemyWeaponSprite;
 
         [HideInInspector] public int updateFramesNumber = 1;
         [HideInInspector] public float enemySpeed;
@@ -33,7 +33,7 @@ namespace SnakeGame.Enemies
         {
             enemy = GetComponent<Enemy>();
             enemySpeed = movementDetails.GetMoveSpeed();
-            enemyWeaponSprite = GetComponentInChildren<SpriteRenderer>();
+            //enemyWeaponSprite = GetComponentInChildren<SpriteRenderer>();
         }
 
         private void Start()
@@ -108,7 +108,7 @@ namespace SnakeGame.Enemies
                     enemy.movementToPositionEvent.CallMovementToPosition(nextPos, transform.position, (nextPos - transform.position).normalized, enemySpeed);
                     RotateBodyWithAngle(nextPos);
 
-                    yield return fixedUpdateWait; // The enemy moves using the 2D physics , so wait for the foxed update.
+                    yield return fixedUpdateWait; // The enemy moves using the 2D physics , so wait for the fixed update.
                 }
 
                 yield return fixedUpdateWait;

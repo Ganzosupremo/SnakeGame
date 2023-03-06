@@ -1152,14 +1152,14 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
-    width: 1
-    height: 1
+    y: 0.37870368
+    width: 0.11197917
+    height: 0.111979164
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.25
+  orthographic size: 8.4375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1381,15 +1381,19 @@ MonoBehaviour:
   - name: SmokeWeaponEffect
     PoolSize: 25
     prefabToUse: {fileID: 8467163931044552805, guid: 0ee6cd7c7d4fa8540a7640543bc9a282, type: 3}
-    componentType: WeaponShootEffect
+    componentType: SnakeGame.VisualEffects.WeaponShootEffect
   - name: FlashWeaponEffect
     PoolSize: 25
     prefabToUse: {fileID: 8467163931044552805, guid: 1419577dfb85ed44790b33eaa5be6636, type: 3}
-    componentType: WeaponShootEffect
+    componentType: SnakeGame.VisualEffects.WeaponShootEffect
   - name: SmokeTrailWeaponEffect
     PoolSize: 25
     prefabToUse: {fileID: 8467163931044552805, guid: 8a3aa985874a6ca40a59199d79763c1b, type: 3}
-    componentType: WeaponShootEffect
+    componentType: SnakeGame.VisualEffects.WeaponShootEffect
+  - name: AbilityEffect
+    PoolSize: 2
+    prefabToUse: {fileID: 3754341511128468287, guid: f9b3037f5fff0564c95d0f85829a1c9e, type: 3}
+    componentType: SnakeGame.VisualEffects.SpecialAbilityEffect
   - name: AmmoHitEffect
     PoolSize: 20
     prefabToUse: {fileID: 8467163931044552805, guid: fdea5c72d8ade9e40834d6c093aa4e29, type: 3}
@@ -1398,16 +1402,28 @@ MonoBehaviour:
     PoolSize: 10
     prefabToUse: {fileID: 7338082217808987913, guid: aa068fa4ec15301499092874ada9112f, type: 3}
     componentType: Food
+  - name: Forest Food
+    PoolSize: 10
+    prefabToUse: {fileID: 7470451495794545654, guid: 30c54b61f30ac924b958e3b2b5399431, type: 3}
+    componentType: Food
+  - name: Mushroom Food
+    PoolSize: 10
+    prefabToUse: {fileID: 5141301755754440865, guid: 50b083d498f30ec44beaac2fdd31ce53, type: 3}
+    componentType: Food
   - name: Desert Food
     PoolSize: 10
     prefabToUse: {fileID: 1835589249367107746, guid: 080056cd55feee54e8aa6b84c67a7da7, type: 3}
+    componentType: Food
+  - name: Meat
+    PoolSize: 10
+    prefabToUse: {fileID: 3428425626574085998, guid: 53bb8f933c194674ca4953db08efad10, type: 3}
     componentType: Food
   - name: Golden Food
     PoolSize: 5
     prefabToUse: {fileID: 8270178289337601746, guid: 31768c373ba70594fac258d96c89a3f4, type: 3}
     componentType: Food
   - name: Void Food
-    PoolSize: 5
+    PoolSize: 2
     prefabToUse: {fileID: 3794084094822649161, guid: a7e39615cb62f9943a57838275065124, type: 3}
     componentType: Food
   - name: Sound Effect
@@ -2966,8 +2982,9 @@ MonoBehaviour:
   currentGameState: 0
   previousGameState: 0
   gameLevelList:
-  - {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
+  - {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
   - {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+  - {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
   - {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
   currentDungeonLevelListIndex: 0
   loadScreenText: {fileID: 240902833}

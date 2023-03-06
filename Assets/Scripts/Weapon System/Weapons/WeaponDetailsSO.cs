@@ -97,6 +97,13 @@ public class WeaponDetailsSO : ScriptableObject
         weaponFireRate = fireRate;
     }
 
+    /// <summary>
+    /// Sets the bools <seealso cref="hasInfiniteAmmo"/> and <seealso cref="hasInfinityClipCapacity"/>.
+    /// NOTE: Both can be set independently of each other and will affect the weapon differently
+    /// depending on the values setted.
+    /// </summary>
+    /// <param name="hasInfiniteAmmo"></param>
+    /// <param name="hasInfiniteClipCapacity"></param>
     public void SetInfinity(bool hasInfiniteAmmo = false, bool hasInfiniteClipCapacity = false)
     {
         this.hasInfiniteAmmo = hasInfiniteAmmo;

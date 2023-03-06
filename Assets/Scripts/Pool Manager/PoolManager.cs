@@ -69,28 +69,6 @@ namespace SnakeGame
             }
         }
 
-        //private void CreatePool(GameObject prefab, int poolSize, Type componentType)
-        //{
-        //    int poolKey = prefab.GetInstanceID();
-        //    string prefabName = prefab.name;
-
-        //    GameObject parentGameobject = new(prefabName + "Anchor");
-        //    parentGameobject.transform.SetParent(objectPoolTransform);
-
-        //    if (!poolDictionary.ContainsKey(poolKey))
-        //    {
-        //        poolDictionary.Add(poolKey, new Queue<Component>());
-
-        //        for (int i = 0; i < poolSize; i++)
-        //        {
-        //            GameObject newObject = Instantiate(prefab, parentGameobject.transform);
-
-        //            newObject.SetActive(false);
-        //            poolDictionary[poolKey].Enqueue(newObject.GetComponent(componentType));
-        //        }
-        //    }
-        //}
-
         /// <summary>
         /// Reuses A Game Object Contained In The Pool.
         /// </summary>
@@ -98,7 +76,7 @@ namespace SnakeGame
         /// <param name="position">The World Position Where The Gameobject Should Appear When Enabled.</param>
         /// <param name="rotation">Should Be Set If The Component Needs A Rotation.</param>
         /// <returns></returns>
-        public Component ReuseComponent(GameObject prefabToUse, Vector3 position, Quaternion rotation)
+        public Component ReuseComponent(GameObject prefabToUse, Vector3 position, Quaternion rotation = default)
         {
             int poolKey = prefabToUse.GetInstanceID();
 

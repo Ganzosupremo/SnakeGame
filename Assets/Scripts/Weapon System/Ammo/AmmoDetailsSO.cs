@@ -130,14 +130,14 @@ namespace SnakeGame.AbwehrSystem.Ammo
         [Tooltip("This is the min number of bullets that will spawn per shoot. A random value is calculated between the min and the max values")]
         [Range(1, 10)]
         #endregion
-        public int ammoSpawnAmountMin = 1;
+        public int MinBulletsPerShoot = 1;
 
         #region Tooltip
         [Tooltip("This is the max number of bullets that will spawn per shoot. A random value is calculated between the min and the max values." +
             " One is added in the FireWeapon class logic, so if the max ammo to spawn is 2, the final max ammo will be 3.")]
         [Range(1, 10)]
         #endregion
-        public int ammoSpawnAmountMax = 1;
+        public int MaxBulletsPerShoot = 1;
 
         #region Tooltip
         [Tooltip("The ammo spawn interval between them so they don't appear all at once. It is randomly calculated with the min and max values")]
@@ -180,6 +180,42 @@ namespace SnakeGame.AbwehrSystem.Ammo
         [Tooltip("The ending width for the trail")]
         #endregion
         [Range(0f, 2f)] public float ammoTrailEndWidth;
+
+        /// <summary>
+        /// Sets the spread of the current ammo.
+        /// A random value will be choosen between the min and max values.
+        /// </summary>
+        /// <param name="minSpread"></param>
+        /// <param name="maxSpread"></param>
+        public void SetAmmoSpread(float minSpread, float maxSpread)
+        {
+            ammoSpreadMin = minSpread;
+            ammoSpreadMax = maxSpread;
+        }
+
+        /// <summary>
+        /// Sets the interval with which, if set to more than one, multiple bullets will spawn.
+        /// A random value will be choosen between the min and max values.
+        /// </summary>
+        /// <param name="minSpawnInterval"></param>
+        /// <param name="maxSpawnInterval"></param>
+        public void SetAmmoSpawnInterval(float minSpawnInterval, float maxSpawnInterval)
+        {
+            this.minSpawnInterval = minSpawnInterval;
+            this.maxSpawnInterval = maxSpawnInterval;
+        }
+
+        /// <summary>
+        /// Sets the amount of bullets that will spawn per shoot.
+        /// A random value will be choosen between the min and max values.
+        /// </summary>
+        /// <param name="minBullets"></param>
+        /// <param name="maxBullets"></param>
+        public void SetBulletsToSpawn(int minBullets, int maxBullets)
+        {
+            MinBulletsPerShoot = minBullets;
+            MaxBulletsPerShoot = maxBullets;
+        }
 
         /// <summary>
         /// Increases the weapon damage.
@@ -267,7 +303,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             HelperUtilities.ValidateCheckPositiveRange(this, nameof(ammoSpreadMin), ammoSpreadMin, nameof(ammoSpreadMax), ammoSpreadMax, true);
             HelperUtilities.ValidateCheckPositiveValue(this, nameof(ammoRange), ammoRange, false);
             HelperUtilities.ValidateCheckPositiveRange(this, nameof(minAmmoSpeed), minAmmoSpeed, nameof(maxAmmoSpeed), maxAmmoSpeed, false);
-            HelperUtilities.ValidateCheckPositiveRange(this, nameof(ammoSpawnAmountMin), ammoSpawnAmountMin, nameof(ammoSpawnAmountMax), ammoSpawnAmountMax, false);
+            HelperUtilities.ValidateCheckPositiveRange(this, nameof(MinBulletsPerShoot), MinBulletsPerShoot, nameof(MaxBulletsPerShoot), MaxBulletsPerShoot, false);
             HelperUtilities.ValidateCheckPositiveRange(this, nameof(minSpawnInterval), minSpawnInterval, nameof(maxSpawnInterval), maxSpawnInterval, true);
 
             if (hasAmmoTrail)

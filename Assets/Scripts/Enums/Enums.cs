@@ -111,3 +111,13 @@ namespace SnakeGame
         Settings = 2,
     }
 }
+
+namespace SnakeGame.PlayerSystem.AbilitySystem
+{
+    public enum AbilityState
+    {
+        Ready,
+        Active,
+        Cooldown
+    }
+}

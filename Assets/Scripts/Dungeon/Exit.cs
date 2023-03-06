@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using SnakeGame.VisualEffects;
+using SnakeGame.Debuging;
 
 namespace SnakeGame.Dungeon
 {
@@ -69,7 +70,7 @@ namespace SnakeGame.Dungeon
 
         private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
         {
-            Debug.Log(m_gameLevelIndex);
+            Debuger.Log(m_gameLevelIndex);
             StartCoroutine(MaterializeExit());
         }
 

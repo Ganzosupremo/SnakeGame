@@ -5,6 +5,7 @@ using SnakeGame;
 using SnakeGame.Interfaces;
 using SnakeGame.AbwehrSystem.Ammo;
 using SnakeGame.SoundsSystem;
+using SnakeGame.VisualEffects;
 
 [RequireComponent(typeof(FireWeaponEvent))]
 [RequireComponent(typeof(ActiveWeapon))]
@@ -99,7 +100,7 @@ public class FireWeapon : MonoBehaviour
         int ammoCounter = 0;
 
         //Get a random number of bullets that are gonna be fired, per shoot
-        int bulletsPerShoot = Random.Range(currentAmmo.ammoSpawnAmountMin, currentAmmo.ammoSpawnAmountMax + 1);
+        int bulletsPerShoot = Random.Range(currentAmmo.MinBulletsPerShoot, currentAmmo.MaxBulletsPerShoot + 1);
 
         //Get a random interval that the bullets are gonna spawn with
         float ammoSpawnInterval;

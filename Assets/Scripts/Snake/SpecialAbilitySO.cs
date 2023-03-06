@@ -1,10 +1,11 @@
-using Unity.Mathematics;
-using UnityEditor;
+using System;
 using UnityEngine;
 
-namespace SnakeGame.PlayerSystem
+namespace SnakeGame.ObsoleteClasses
 {
-    [CreateAssetMenu(fileName = "SpecialAbility_", menuName = "Scriptable Objects/Player/Special Ability")]
+    [CreateAssetMenu(fileName = "SpecialAbility_", menuName = "Scriptable Objects/Player/Legacy/Special Ability")]
+    [Obsolete("Don't use this scriptable object for special abilities anymore." +
+        " Create another class and let that class inherit from UniversalAbility instead.")]
     public class SpecialAbilitySO : ScriptableObject
     {
         public Abilities ability;

@@ -3,6 +3,7 @@ using UnityEngine;
 using SnakeGame;
 using SnakeGame.VisualEffects;
 using SnakeGame.SoundsSystem;
+using System;
 
 [RequireComponent(typeof(MaterializeEffect))]
 [RequireComponent(typeof(Destroy))]
@@ -10,22 +11,26 @@ using SnakeGame.SoundsSystem;
 public class Food : MonoBehaviour
 {
     // The grid dimensions - deprecated
+    [Obsolete]
     private int gridWidth = 20;
+    [Obsolete]
     private int gridHeight = 20;
-    private long score = 0;
 
     private FoodSO foodSO;
     private MaterializeEffect materializeEffect;
     private SpriteRenderer spriteRenderer;
-    
+    private long score = 0;
+
     // This is the trigger collider, detects when the player comes near the food and eats it
     private CircleCollider2D triggerCollider2D;
     
     // This collider prevents the food for passing trough walls or something
     [SerializeField] private CircleCollider2D solidCollider2D;
 
-    // The position of the food - deprecated
+    // The position of the food
+    [Obsolete]
     int foodX = 0;
+    [Obsolete]
     int foodY = 0;
 
     private void Awake()
@@ -49,7 +54,6 @@ public class Food : MonoBehaviour
     {
         this.foodSO = foodSO;
         score = foodSO.score;
-        score += Random.Range(1, 452);
 
         StartCoroutine(MaterializeFood());
     }
@@ -64,15 +68,11 @@ public class Food : MonoBehaviour
         EnableFood(true);
     }
 
-    /// <summary>
-    /// Was used in a previous scipt, 
-    /// however this method is no longer used.
-    /// </summary>
-    /// <returns></returns>
+    [Obsolete("Was an early test, but it's not used anymore.")]
     public GameObject GenerateFood()
     {
-        foodX = Random.Range(0, gridWidth);
-        foodY = Random.Range(0, gridHeight);
+        foodX = UnityEngine.Random.Range(0, gridWidth);
+        foodY = UnityEngine.Random.Range(0, gridHeight);
         return Instantiate(this.gameObject, new Vector2(foodX, foodY), Quaternion.identity);
     }
 

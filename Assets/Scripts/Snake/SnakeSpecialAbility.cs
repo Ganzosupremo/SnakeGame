@@ -1,8 +1,9 @@
 using SnakeGame.Debuging;
+using SnakeGame.PlayerSystem;
+using System;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-namespace SnakeGame.PlayerSystem
+namespace SnakeGame.ObsoleteClasses
 {
     /// <summary>
     /// This class handles the snake's special abilities system
@@ -10,6 +11,8 @@ namespace SnakeGame.PlayerSystem
     [RequireComponent(typeof(Snake))]
     [RequireComponent(typeof(Health))]
     [DisallowMultipleComponent]
+    [Obsolete("This class won't be used in the future for managing the special abilities," +
+        " use the SnakeAbilityManager instead.")]
     public class SnakeSpecialAbility : MonoBehaviour
     {
         private Snake snake;
@@ -60,8 +63,8 @@ namespace SnakeGame.PlayerSystem
 
         private void SetActiveWeaponEvent_OnSetActiveWeapon(SetActiveWeaponEvent setActiveWeaponEvent, SetActiveWeaponEventArgs setActiveWeaponEventArgs)
         {
-            originalBulletsAmountMin = setActiveWeaponEventArgs.weapon.weaponDetails.weaponCurrentAmmo.ammoSpawnAmountMin;
-            originalBulletsAmountMax = setActiveWeaponEventArgs.weapon.weaponDetails.weaponCurrentAmmo.ammoSpawnAmountMax;
+            originalBulletsAmountMin = setActiveWeaponEventArgs.weapon.weaponDetails.weaponCurrentAmmo.MinBulletsPerShoot;
+            originalBulletsAmountMax = setActiveWeaponEventArgs.weapon.weaponDetails.weaponCurrentAmmo.MaxBulletsPerShoot;
 
             originalFireRate = setActiveWeaponEventArgs.weapon.weaponDetails.weaponFireRate;
             hasInfiniteAmmo = setActiveWeaponEventArgs.weapon.weaponDetails.hasInfiniteAmmo;
@@ -100,8 +103,8 @@ namespace SnakeGame.PlayerSystem
                     snake.activeWeapon.GetCurrentAmmo().maxSpawnInterval = specialAbilitySO.spawnIntervalMax;
 
                     // Set the new amount of bullets to spawn per shoot.
-                    snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMin = specialAbilitySO.minBullets;
-                    snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMax = specialAbilitySO.maxBullets;
+                    snake.activeWeapon.GetCurrentAmmo().MinBulletsPerShoot = specialAbilitySO.minBullets;
+                    snake.activeWeapon.GetCurrentAmmo().MaxBulletsPerShoot = specialAbilitySO.maxBullets;
                     break;
                 case Abilities.Flash:
                     //mainGameProfile.
@@ -130,8 +133,8 @@ namespace SnakeGame.PlayerSystem
                     Time.timeScale = 1f;
                     break;
                 case Abilities.MultipleBullets:
-                    snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMin = originalBulletsAmountMin;
-                    snake.activeWeapon.GetCurrentAmmo().ammoSpawnAmountMax = originalBulletsAmountMax;
+                    snake.activeWeapon.GetCurrentAmmo().MinBulletsPerShoot = originalBulletsAmountMin;
+                    snake.activeWeapon.GetCurrentAmmo().MaxBulletsPerShoot = originalBulletsAmountMax;
                     break;
                 case Abilities.Flash:
                     snake.GetSnakeControler().GetMovementDetails().minMoveSpeed = minOriginalMoveSpeed;

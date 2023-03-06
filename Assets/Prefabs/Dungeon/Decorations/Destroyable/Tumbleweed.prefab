@@ -18,6 +18,9 @@ GameObject:
   - component: {fileID: 1421078527872679476}
   - component: {fileID: 7013239912598023992}
   - component: {fileID: -3899169694466271323}
+  - component: {fileID: 5345043490643907597}
+  - component: {fileID: 3282014220227501570}
+  - component: {fileID: 4735871700485877374}
   m_Layer: 18
   m_Name: Tumbleweed
   m_TagString: Untagged
@@ -80,7 +83,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -251573173
   m_SortingLayer: 4
-  m_SortingOrder: 5
+  m_SortingOrder: 0
   m_Sprite: {fileID: -1176618065, guid: 045787fc76b92324faa53c87100ae994, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -104,6 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc46d5a31ccc7644a1bdf8a702759f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 3.5
 --- !u!95 &3032972114675141518
 Animator:
   serializedVersion: 4
@@ -203,6 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealthAmount: 1
   destroySoundEffect: {fileID: 0}
+  isMoveable: 1
 --- !u!114 &-3899169694466271323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,3 +221,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 3145581054664824498}
+--- !u!114 &5345043490643907597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247257897759034753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 810ba8ce264dbaa498f7f12d941e9a66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!50 &3282014220227501570
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247257897759034753}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 10
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &4735871700485877374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247257897759034753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a09f65caad207e48a1300d1360193d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

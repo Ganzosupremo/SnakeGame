@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SnakeGame.VisualEffects;
-using System.Data;
-using System;
+using UnityEngine.Rendering.Universal;
+using SnakeGame.UI;
+using SnakeGame.PlayerSystem.AbilitySystem;
 
 namespace SnakeGame.PlayerSystem
 {
@@ -15,7 +16,7 @@ namespace SnakeGame.PlayerSystem
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(BoxCollider2D))]
-    [RequireComponent(typeof(SnakeSpecialAbility))]
+    [RequireComponent(typeof(SnakeAbilityManager))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(SnakeControler))]
     [RequireComponent(typeof(Health))]
@@ -45,7 +46,7 @@ namespace SnakeGame.PlayerSystem
         #region Components
         [HideInInspector] public Animator animator;
         [HideInInspector] public SnakeDetailsSO snakeDetails;
-        [HideInInspector] public SnakeSpecialAbility snakeSpecialAbility;
+        //[HideInInspector] public SnakeSpecialAbility snakeSpecialAbility;
         [HideInInspector] public Health health;
         [HideInInspector] public HealthEvent healthEvent;
         [HideInInspector] public Destroy destroy;
@@ -66,6 +67,7 @@ namespace SnakeGame.PlayerSystem
         [HideInInspector] public SpriteRenderer spriteRenderer;
         [HideInInspector] public List<Weapon> weaponList = new();
         [HideInInspector] public SnakeBody snakeBody;
+        [HideInInspector] public Light2D snakeLight;
         #endregion
 
         public List<SnakeBody> SnakeBodyList { get; private set; } = new();
@@ -81,7 +83,7 @@ namespace SnakeGame.PlayerSystem
             animator = GetComponent<Animator>();
             health = GetComponent<Health>();
             healthEvent = GetComponent<HealthEvent>();
-            snakeSpecialAbility = GetComponent<SnakeSpecialAbility>();
+            //snakeSpecialAbility = GetComponent<SnakeSpecialAbility>();
             destroy = GetComponent<Destroy>();
             destroyEvent = GetComponent<DestroyEvent>();
             aimWeaponEvent = GetComponent<AimWeaponEvent>();
@@ -100,6 +102,7 @@ namespace SnakeGame.PlayerSystem
             weaponReloadedEvent = GetComponent<WeaponReloadedEvent>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             materializeEffect = GetComponent<MaterializeEffect>();
+            snakeLight = GetComponentInChildren<Light2D>();
         }
 
         private void Start()
@@ -362,6 +365,32 @@ namespace SnakeGame.PlayerSystem
             snakeControler.IsSnakeEnabled = isActive;
             snakeControler.enabled = isActive;
             fireWeapon.enabled = isActive;
+        }
+
+        public void ChangeSpriteMaterial(Material material)
+        {
+            spriteRenderer.material = material;
+        }
+
+        public void ChangeLightIntensity()
+        {
+            switch (PauseMenuUI.Instance.CurrentTime)
+            {
+                case DayCicle.Morning:
+                    snakeLight.intensity = 0f;
+                    break;
+                case DayCicle.Afternoon:
+                    snakeLight.intensity = 0.1f;
+                    break;
+                case DayCicle.Evening:
+                    snakeLight.intensity = 0.3f;
+                    break;
+                case DayCicle.Night:
+                    snakeLight.intensity = 0.6f;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

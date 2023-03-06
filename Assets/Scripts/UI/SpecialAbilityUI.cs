@@ -10,7 +10,6 @@ namespace SnakeGame.UI
         protected override void Awake()
         {
             base.Awake();
-
             abilityBar = GetComponentInChildren<SpecialAbilityBar>();
         }
 

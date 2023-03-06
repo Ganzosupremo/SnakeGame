@@ -4,6 +4,7 @@ using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 using SnakeInput;
 using SnakeGame.UI;
+using System;
 
 namespace SnakeGame.PlayerSystem
 {
@@ -31,10 +32,14 @@ namespace SnakeGame.PlayerSystem
         private bool isSnakeDashing = false;
         private float dashCooldownTimer = 0f;
 
+        [Obsolete]
         private float specialAbilityCooldownTimer = 0f;
+        [Obsolete]
         private Coroutine specialAbilityCoroutine;
-        private bool isSpecialAbilityActive = false;
 
+
+
+        private bool isSpecialAbilityActive = false;
         public bool IsSnakeEnabled { get; set; } = false;
 
         private void Awake()
@@ -59,8 +64,6 @@ namespace SnakeGame.PlayerSystem
             if (!IsSnakeEnabled) return;
 
             OnMove();
-
-            OnSpecialAbility();
         }
 
         private void Update()
@@ -70,8 +73,6 @@ namespace SnakeGame.PlayerSystem
             WeaponInputs();
 
             SnakeDashCooldownTimer();
-
-            SnakeSpecialAbilityCooldownTimer();
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -142,6 +143,8 @@ namespace SnakeGame.PlayerSystem
             }
         }
 
+        [Obsolete("Was used to activate a special ability when the required input was pressed." +
+            " Now the SnakeAbilityManager is used for that.")]
         private void OnSpecialAbility()
         {
             if (!gameObject.activeSelf) return;
@@ -152,36 +155,38 @@ namespace SnakeGame.PlayerSystem
             {
                 // The cost for using special abilities
                 snake.health.TakeDamage(1);
-                SnakeAbility(snake.snakeDetails.specialAbility.abilityDuration);
+                SnakeAbility(2f);
             }
         }
 
+        [Obsolete("Also obsolete for the same reason as the above method.")]
         private void SnakeAbility(float duration)
         {
             if (specialAbilityCoroutine != null)
                 StopCoroutine(specialAbilityCoroutine);
 
             specialAbilityCoroutine = StartCoroutine(SnakeAbilityRoutine(duration, 
-                snake.snakeDetails.specialAbility.ability, snake.snakeDetails.specialAbility));
+                Abilities.None, null));
         }
 
-        private IEnumerator SnakeAbilityRoutine(float duration, Abilities ability, SpecialAbilitySO specialAbility)
+        [Obsolete("Obsolete just the same as the above method.")]
+        private IEnumerator SnakeAbilityRoutine(float duration, Abilities ability, UnityEngine.Object specialAbility)
         {
             while (duration >= 0f)
             {
                 isSpecialAbilityActive = true;
 
-                snake.snakeSpecialAbility.SetCurrentAbility(ability, specialAbility);
-                snake.snakeSpecialAbility.ActivateAbility();
+                //snake.snakeSpecialAbility.SetCurrentAbility(ability, specialAbility);
+                //snake.snakeSpecialAbility.ActivateAbility();
 
                 duration -= Time.unscaledDeltaTime;
-                StartCoroutine(SpecialAbilityUI.Instance.UpdateSpecialAbilityBar(duration / specialAbility.abilityDuration));
+                StartCoroutine(SpecialAbilityUI.Instance.UpdateSpecialAbilityBar(duration / 5f));
                 yield return waitForFixedUpdate;
             }
 
             isSpecialAbilityActive = false;
-            snake.snakeSpecialAbility.ResetToNormal();
-            specialAbilityCooldownTimer = specialAbility.abilityCooldownTimer;
+            //snake.snakeSpecialAbility.ResetToNormal();
+            specialAbilityCooldownTimer = 5f;
             SpecialAbilityUI.Instance.ResetSpecialAbilityBar();
             SpecialAbilityUI.Instance.ResetSpecialAbilityCooldownBar();
         }
@@ -393,13 +398,14 @@ namespace SnakeGame.PlayerSystem
             }
         }
 
+        [Obsolete("The ability cooldown is now keep on the SnakeAbilityManager.")]
         private void SnakeSpecialAbilityCooldownTimer()
         {
             if (specialAbilityCooldownTimer >= 0f)
             {
                 specialAbilityCooldownTimer -= Time.unscaledDeltaTime;
                 StartCoroutine(SpecialAbilityUI.Instance.UpdateSpecialAbilityCooldownBar
-                    (specialAbilityCooldownTimer / snake.snakeDetails.specialAbility.abilityCooldownTimer));
+                    (specialAbilityCooldownTimer));
             }
         }
 
@@ -530,18 +536,25 @@ namespace SnakeGame.PlayerSystem
             movementDetails.maxMoveSpeed = maxVel;
         }
 
+        /// <summary>
+        /// Sets the <seealso cref="isSpecialAbilityActive"/> bool, 
+        /// if true the player won't be able to change the current weapon until
+        /// the bool is set to false again.
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetSpecialAbilityBool(bool value)
+        {
+            isSpecialAbilityActive = value;
+        }
+
         public void EnableSnake()
         {
             IsSnakeEnabled = true;
-            //snakeControl.Snake.Enable();
-            //snakeControl.Enable();
         }
 
         public void DisableSnake()
         {
             IsSnakeEnabled = false;
-            //snakeControl.Snake.Disable();
-            //snakeControl.Disable();
         }
 
         /// <summary>

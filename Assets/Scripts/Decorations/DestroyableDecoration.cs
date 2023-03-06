@@ -27,6 +27,9 @@ namespace SnakeGame.Decorations
         private HealthEvent healthEvent;
         private Health health;
         private ReceiveDamageOnContact receiveDamageOnContact;
+        private MoveableDecoration moveableDecoration = null;
+
+        [SerializeField] private bool isMoveable;
 
         private void Awake()
         {
@@ -36,6 +39,8 @@ namespace SnakeGame.Decorations
             health = GetComponent<Health>();
             health.SetStartingHealth(startingHealthAmount);
             receiveDamageOnContact = GetComponent<ReceiveDamageOnContact>();
+            if (isMoveable) 
+                moveableDecoration = GetComponent<MoveableDecoration>();
         }
 
         private void OnEnable()
@@ -77,6 +82,8 @@ namespace SnakeGame.Decorations
             Destroy(receiveDamageOnContact);
             Destroy(health);
             Destroy(healthEvent);
+            if (moveableDecoration != null)
+                Destroy(moveableDecoration);
             Destroy(this);
         }
     }

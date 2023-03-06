@@ -1,3 +1,4 @@
+using SnakeGame.PlayerSystem.AbilitySystem;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,10 +19,11 @@ namespace SnakeGame.PlayerSystem
         [Tooltip("The prefab for this snake")]
         #endregion
         public GameObject snakePrefab;
+
         #region Tooltip
         [Tooltip("The special ability for this snake type.")]
         #endregion
-        public SpecialAbilitySO specialAbility;
+        public UniversalAbility ability;
 
         #region Header Health System
         [Space(10)]
@@ -84,14 +86,6 @@ namespace SnakeGame.PlayerSystem
         #endregion
         [ColorUsage(true, true)]
         public Color materializeColor;
-
-        #region Header Special Abbility Settings
-        [Header("Special Abbility Settings")]
-        [Space(10)]
-        #endregion
-        public bool hasSpecialAbility = false;
-        public float abilityDuration = 1f;
-        public float abilityCooldown = 5f;
 
         #region Validation
 #if UNITY_EDITOR

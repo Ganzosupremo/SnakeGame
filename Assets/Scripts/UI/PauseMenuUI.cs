@@ -62,6 +62,7 @@ namespace SnakeGame.UI
         {
             selectedTime = (DayCicle)dayCicleDropdown.value;
             ChangeDayCicle();
+            GameManager.Instance.GetSnake().ChangeLightIntensity();
         }
 
         /// <summary>

@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
-namespace SnakeGame.PlayerSystem
+namespace SnakeGame.PlayerSystem.AbilitySystem
 {
     [CustomEditor(typeof(SnakeDetailsSO))]
     public class AbilitiesEditor : Editor
@@ -17,21 +13,21 @@ namespace SnakeGame.PlayerSystem
             base.OnInspectorGUI();
             SnakeDetailsSO details = target as SnakeDetailsSO;
 
-            if (details.specialAbility != null)
+            if (details.ability != null)
             {
-                DrawAbilitiesEditor(details.specialAbility, ref abilitiesFoldout, ref abilitiesEditor);
+                DrawAbilitiesEditor(details.ability, ref abilitiesFoldout, ref abilitiesEditor);
                 EditorPrefs.SetBool(nameof(abilitiesFoldout), abilitiesFoldout);
             }
         }
 
-        private void DrawAbilitiesEditor(SpecialAbilitySO specialAbility, ref bool foldout, ref Editor editor)
+        private void DrawAbilitiesEditor(UniversalAbility ability, ref bool foldout, ref Editor editor)
         {
-            if (specialAbility != null)
+            if (ability != null)
             {
-                foldout = EditorGUILayout.InspectorTitlebar(foldout, specialAbility);
+                foldout = EditorGUILayout.InspectorTitlebar(foldout, ability);
                 if (foldout)
                 {
-                    CreateCachedEditor(specialAbility, null, ref editor);
+                    CreateCachedEditor(ability, null, ref editor);
                     editor.OnInspectorGUI();
                 }
             }
