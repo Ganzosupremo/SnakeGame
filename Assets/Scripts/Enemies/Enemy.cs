@@ -2,8 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Unity.RemoteConfig;
 using SnakeGame.VisualEffects;
 using SnakeGame.SoundsSystem;
+using System.Threading.Tasks;
+using Unity.Services.RemoteConfig;
+using System;
+using Unity.Services.Core;
+using Unity.Services.Authentication;
+using SnakeGame.Debuging;
 
 namespace SnakeGame.Enemies
 {
@@ -39,6 +46,11 @@ namespace SnakeGame.Enemies
     #endregion
     public class Enemy : MonoBehaviour
     {
+        public struct UserAttributes { }
+        public struct AppAttributes { }
+
+
+        public bool ShouldFetchRemoteSettings = false;
         [HideInInspector] public EnemyDetailsSO enemyDetails;
         [HideInInspector] public SpriteRenderer[] spriteRendererArray;
         [HideInInspector] public AimWeaponEvent aimWeaponEvent;
@@ -92,13 +104,11 @@ namespace SnakeGame.Enemies
         private void OnEnable()
         {
             healthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
-            //aimWeaponEvent.OnWeaponAim += AimWeaponEvent_OnWeaponAim;
         }
 
         private void OnDisable()
         {
             healthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
-            //aimWeaponEvent.OnWeaponAim -= AimWeaponEvent_OnWeaponAim;
         }
 
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
@@ -108,20 +118,6 @@ namespace SnakeGame.Enemies
                 EnemyDestroyed();
             }
         }
-
-        //private void AimWeaponEvent_OnWeaponAim(AimWeaponEvent aimWeaponEvent, AimWeaponEventArgs aimWeaponEventArgs)
-        //{
-        //    RotateEnemy(aimWeaponEventArgs.aimAngle);
-        //}
-
-        ///// <summary>
-        ///// Rotates the enemy to face the fire direction
-        ///// </summary>
-        ///// <param name="aimAngle"></param>
-        //private void RotateEnemy(float aimAngle)
-        //{
-        //    enemyRotateTransform.eulerAngles = new(0f, 0f, aimAngle);
-        //}
 
         public void InitializeEnemy(EnemyDetailsSO enemyDetails, int enemySpawnNumber, GameLevelSO gameLevel)
         {
@@ -135,7 +131,6 @@ namespace SnakeGame.Enemies
 
             SetPolygonColliderShape();
 
-            // Calls the materialize effect class
             StartCoroutine(MaterializeEnemy());
         }
 
@@ -215,7 +210,6 @@ namespace SnakeGame.Enemies
         {
             // Enable/Disable the colliders
             triggerCollider.enabled = isEnabled;
-            //solidCollider.enabled = isEnabled;
 
             // Enable/Disable the enemy movement AI
             enemyMovementAI.enabled = isEnabled;
@@ -226,8 +220,8 @@ namespace SnakeGame.Enemies
 
         private void EnemyDestroyed()
         {
-            if (enemyDetails.hitSoundEffect != null)
-                SoundEffectManager.Instance.PlaySoundEffect(enemyDetails.hitSoundEffect);
+            if (enemyDetails.deathSoundEffect != null)
+                SoundEffectManager.Instance.PlaySoundEffect(enemyDetails.deathSoundEffect);
 
             DestroyEvent destroyEvent = GetComponent<DestroyEvent>();
             destroyEvent.CallOnDestroy(false, 0);
@@ -243,7 +237,8 @@ namespace SnakeGame.Enemies
         /// </summary>
         private void ResetEnemyColor()
         {
-            enemySpriteRenderer.color = enemyDetails.enemyColor;
+            if (enemySpriteRenderer.color != enemyDetails.enemyColor)
+                enemySpriteRenderer.color = enemyDetails.enemyColor;
         }
     }
 }

@@ -8,6 +8,7 @@ using SnakeGame.UI;
 using SnakeGame.Minimap;
 using SnakeGame.Enemies;
 using SnakeGame.PlayerSystem;
+using SnakeGame.HighscoreSystem;
 
 namespace SnakeGame
 {
@@ -481,15 +482,42 @@ namespace SnakeGame
 
             GetSnake().GetSnakeControler().DisableSnake();
 
+            int rank = HighScoreManager.Instance.GetRank(gameScore);
+            string rankText;
+
+            if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
+            {
+                rankText = $"Your Score this time was ranked {rank} on the Top {Settings.maxNumberOfHighScoresToSave}.";
+
+                string playerName = GameResources.Instance.currentSnake.name;
+                if (playerName == "")
+                {
+                    playerName = snakeDetails.snakeName.ToUpper();
+                }
+
+                //Update the score
+                HighScoreManager.Instance.AddScore(new Score()
+                {
+                    PlayerName = playerName,
+                    LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
+                    $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
+                    PlayerScore = gameScore
+                }, rank);
+            }
+            else
+            {
+                rankText = $"Your Score could not get on the Top {Settings.maxNumberOfHighScoresToSave} this Time.\n Try Next Time!";
+            }
+
+            yield return new WaitForSeconds(1f);
+
             //Display the game complete message
-            yield return StartCoroutine(DisplayMessageRoutine("Good Job Soldier " + GameResources.Instance.currentSnake.snakeName + "!"
-                + "\n\nYou've Fulfilled Your Journey!", Color.white, 5.5f));
+            yield return StartCoroutine(DisplayMessageRoutine($"Well Done {GameResources.Instance.currentSnake.snakeName}!\n You Defeated every Boss on Every Biome. " +
+                $"\n\nYou're now the Ultimate Snake.", Color.white, 5.5f));
 
-            yield return StartCoroutine(DisplayMessageRoutine("Your Final Score Was " + gameScore.ToString("###,###,###0"), Color.white, 6f));
+            yield return StartCoroutine(DisplayMessageRoutine($"Your final Score: {gameScore:###.###0}. \n\n{rankText}", Color.white, 6f));
 
-            yield return StartCoroutine(DisplayMessageRoutine("Congratulations For Completing The Game,\n\nAnd Thanks For Playing", Color.white, 6f));
-
-            yield return StartCoroutine(DisplayMessageRoutine("Press 'Enter' To Restart The Game Or Enjoy The Music :)", Color.white, 0f));
+            yield return StartCoroutine(DisplayMessageRoutine($"Thanks For Playing. Press 'Enter' To Restart The Game.", Color.white, 0f));
 
             currentGameState = GameState.Restarted;
         }
@@ -498,6 +526,32 @@ namespace SnakeGame
         {
             previousGameState = GameState.GameLost;
             GetSnake().GetSnakeControler().DisableSnake();
+
+            int rank = HighScoreManager.Instance.GetRank(gameScore);
+            string rankText;
+
+            if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
+            {
+                rankText = $"Your Score this time was ranked {rank} on the Top {Settings.maxNumberOfHighScoresToSave}.";
+
+                string playerName = GameResources.Instance.currentSnake.name;
+                if (playerName == "")
+                    playerName = snakeDetails.snakeName.ToUpper();
+
+                //Update the score
+                HighScoreManager.Instance.AddScore(new Score()
+                {
+                    PlayerName = playerName,
+                    LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
+                    $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
+                    PlayerScore = gameScore
+                }, rank);
+            }
+            else
+            {
+                rankText = $"Your Score could not get on the Top {Settings.maxNumberOfHighScoresToSave} this Time.\n Try Next Time!";
+            }
+
             yield return new WaitForSeconds(1f);
 
             yield return StartCoroutine(FadeScreen(0f, 1f, 2f, Color.black));
@@ -512,12 +566,12 @@ namespace SnakeGame
             string name = GameResources.Instance.currentSnake.snakeName;
             if (name == "") name = snakeDetails.snakeName.ToUpper();
 
-            yield return StartCoroutine(DisplayMessageRoutine("You Died " + name +
-        "! \n\nYou Failed (Miserably), But Are YOU Gonna Give Up?", Color.white, 3.5f));
+            yield return StartCoroutine(DisplayMessageRoutine($"You Died {name}!" +
+                    $"\nYou Failed (Miserably), But Are YOU Gonna Give Up?", Color.white, 3.5f));
 
-            yield return StartCoroutine(DisplayMessageRoutine("Your Final Score Was " + gameScore.ToString("###,###,###0"), Color.white, 4f));
+            yield return StartCoroutine(DisplayMessageRoutine($"Your Final Score: {gameScore:###.###0}\n\n {rankText}", Color.white, 4f));
 
-            yield return StartCoroutine(DisplayMessageRoutine("Press 'Enter' to try again", Color.white, 0f));
+            yield return StartCoroutine(DisplayMessageRoutine("Press 'Enter' to Try Again", Color.white, 0f));
 
             currentGameState = GameState.Restarted;
         }

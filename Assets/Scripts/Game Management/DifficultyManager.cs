@@ -5,6 +5,10 @@ namespace SnakeGame
 {
     public static class DifficultyManager
     {
+        public static Difficulty CurrentDifficulty { get { return m_difficulty; } }
+        
+        private static Difficulty m_difficulty;
+
         public static void ChangeDifficulty(Difficulty selectedDifficulty)
         {
             #region A Fricking Big Chunk of Code
@@ -29,10 +33,11 @@ namespace SnakeGame
                         for (int i = 0; i < enemy.enemyHealthDetailsArray.Length; i++)
                         {
                             // If the difficulty is change, reset the health to the original value
-                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].originalHealthAmount;
+                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].defaultHealthAmount;
                         }
 
                         enemy.immuneAfterHit = false;
+                        enemy.immunityTime = 0;
                     }
                     // Set the player health depending on the difficulty selected
                     foreach (SnakeDetailsSO snake in GameResources.Instance.snakeDetailsList)
@@ -61,12 +66,13 @@ namespace SnakeGame
                         for (int i = 0; i < enemy.enemyHealthDetailsArray.Length; i++)
                         {
                             // If the difficulty is change, reset the health to the original value
-                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].originalHealthAmount;
+                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].defaultHealthAmount;
                             // And now the health can be increased
                             enemy.enemyHealthDetailsArray[i].healthAmount += extraHealth;
                         }
 
                         enemy.immuneAfterHit = false;
+                        enemy.immunityTime = 0;
                     }
 
                     foreach (SnakeDetailsSO snake in GameResources.Instance.snakeDetailsList)
@@ -95,12 +101,13 @@ namespace SnakeGame
                         for (int i = 0; i < enemy.enemyHealthDetailsArray.Length; i++)
                         {
                             // If the difficulty is change, reset the health to the original value
-                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].originalHealthAmount;
+                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].defaultHealthAmount;
                             // And now the health can be increased
                             enemy.enemyHealthDetailsArray[i].healthAmount += extraHealth;
                         }
 
                         enemy.immuneAfterHit = false;
+                        enemy.immunityTime = 0;
                     }
 
                     foreach (SnakeDetailsSO snake in GameResources.Instance.snakeDetailsList)
@@ -130,12 +137,13 @@ namespace SnakeGame
                         for (int i = 0; i < enemy.enemyHealthDetailsArray.Length; i++)
                         {
                             // If the difficulty is change, reset the health to the original value
-                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].originalHealthAmount;
+                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].defaultHealthAmount;
                             // And now the health can be increased
                             enemy.enemyHealthDetailsArray[i].healthAmount += extraHealth;
                         }
 
                         enemy.immuneAfterHit = false;
+                        enemy.immunityTime = 0;
                     }
 
                     foreach (SnakeDetailsSO snake in GameResources.Instance.snakeDetailsList)
@@ -167,13 +175,13 @@ namespace SnakeGame
                         for (int i = 0; i < enemy.enemyHealthDetailsArray.Length; i++)
                         {
                             // If the difficulty is change, reset the health to the original value
-                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].originalHealthAmount;
+                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].defaultHealthAmount;
                             // And now the health can be increased
                             enemy.enemyHealthDetailsArray[i].healthAmount += extraHealth;
                         }
 
                         enemy.immuneAfterHit = true;
-                        enemy.immunityTime = 2f;
+                        enemy.immunityTime = 0.3f;
                     }
 
                     foreach (SnakeDetailsSO snake in GameResources.Instance.snakeDetailsList)
@@ -205,13 +213,13 @@ namespace SnakeGame
                         for (int i = 0; i < enemy.enemyHealthDetailsArray.Length; i++)
                         {
                             // If the difficulty is change, reset the health to the original value
-                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].originalHealthAmount;
+                            enemy.enemyHealthDetailsArray[i].healthAmount = enemy.enemyHealthDetailsArray[i].defaultHealthAmount;
                             // And now the health can be increased
                             enemy.enemyHealthDetailsArray[i].healthAmount += extraHealth;
                         }
 
                         enemy.immuneAfterHit = true;
-                        enemy.immunityTime = 4f;
+                        enemy.immunityTime = 0.7f;
                     }
 
                     foreach (SnakeDetailsSO snake in GameResources.Instance.snakeDetailsList)

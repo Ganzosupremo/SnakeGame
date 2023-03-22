@@ -2,8 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Jobs;
 using Random = UnityEngine.Random;
 using SnakeGame.AStarPathfinding;
+using Unity.Jobs;
+using Unity.Burst;
+using Unity.Mathematics;
+using Unity.Collections;
+using static SnakeGame.Enemies.EnemyMovementAI;
 
 namespace SnakeGame.Enemies
 {
@@ -11,12 +17,23 @@ namespace SnakeGame.Enemies
     [DisallowMultipleComponent]
     public class EnemyMovementAI : MonoBehaviour
     {
+        public struct EnemyMovementData
+        {
+            public void MoveEnemy()
+            {
+
+            }
+        }
+
+
         #region Tooltip
         [Tooltip("The movement details SO containing information about the movement, such as speed etc.")]
         #endregion
         public MovementDetailsSO movementDetails;
 
         private Enemy enemy;
+        private List<EnemyMovementAI> enemies = new();
+        private JobHandle jobHandle;
         private Stack<Vector3> movementSteps = new();
         private Vector3 playerReferencePosition;
         private Coroutine moveEnemyRoutine;
@@ -24,7 +41,6 @@ namespace SnakeGame.Enemies
         private WaitForFixedUpdate fixedUpdateWait;
         private bool shouldChasePlayer = false;
         private List<Vector2Int> surroundingsPositionsList = new();
-        //private SpriteRenderer enemyWeaponSprite;
 
         [HideInInspector] public int updateFramesNumber = 1;
         [HideInInspector] public float enemySpeed;
@@ -33,6 +49,8 @@ namespace SnakeGame.Enemies
         {
             enemy = GetComponent<Enemy>();
             enemySpeed = movementDetails.GetMoveSpeed();
+
+
             //enemyWeaponSprite = GetComponentInChildren<SpriteRenderer>();
         }
 
@@ -47,6 +65,7 @@ namespace SnakeGame.Enemies
         private void Update()
         {
             MoveEnemy();
+
         }
 
         /// <summary>
@@ -95,29 +114,6 @@ namespace SnakeGame.Enemies
             }
         }
 
-        private IEnumerator MoveEnemyCoroutine(Stack<Vector3> movementSteps)
-        {
-            while (movementSteps.Count > 0)
-            {
-                Vector3 nextPos = movementSteps.Pop();
-
-                // While not very close continue moving, too close move to the next point
-                while (Vector3.Distance(nextPos, transform.position) > 0.3f)
-                {
-                    //Call the movement event
-                    enemy.movementToPositionEvent.CallMovementToPosition(nextPos, transform.position, (nextPos - transform.position).normalized, enemySpeed);
-                    RotateBodyWithAngle(nextPos);
-
-                    yield return fixedUpdateWait; // The enemy moves using the 2D physics , so wait for the fixed update.
-                }
-
-                yield return fixedUpdateWait;
-            }
-
-            // End of path steps - trigger the enemy idle event
-            enemy.idleEvent.CallIdleEvent();
-        }
-
         private void CreatePath()
         {
             Room currentRoom = GameManager.Instance.GetCurrentRoom();
@@ -141,6 +137,29 @@ namespace SnakeGame.Enemies
             {
                 enemy.idleEvent.CallIdleEvent();
             }
+        }
+
+        private IEnumerator MoveEnemyCoroutine(Stack<Vector3> movementSteps)
+        {
+            while (movementSteps.Count > 0)
+            {
+                Vector3 nextPos = movementSteps.Pop();
+
+                // While not very close continue moving, too close move to the next point
+                while (Vector3.Distance(nextPos, transform.position) > 0.3f)
+                {
+                    //Call the movement event
+                    enemy.movementToPositionEvent.CallMovementToPosition(nextPos, transform.position, (nextPos - transform.position).normalized, enemySpeed);
+                    RotateBodyWithAngle(nextPos);
+
+                    yield return fixedUpdateWait; // The enemy moves using the 2D physics , so wait for the fixed update.
+                }
+
+                yield return fixedUpdateWait;
+            }
+
+            // End of path steps - trigger the enemy idle event
+            enemy.idleEvent.CallIdleEvent();
         }
 
         /// <summary>
@@ -237,5 +256,18 @@ namespace SnakeGame.Enemies
         }
 #endif
         #endregion
+    }
+
+    [BurstCompile]
+    public struct EnemyParallelMovement : IJobParallelFor
+    {
+        public NativeArray<EnemyMovementData> MovementDataArray;
+
+        public void Execute(int index)
+        {
+            var data = MovementDataArray[index];
+            data.MoveEnemy();
+            MovementDataArray[index] = data;
+        }
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 using SnakeGame;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
+using SnakeGame.Debuging;
 
 namespace SnakeGame.SoundsSystem
 {
@@ -19,18 +20,8 @@ namespace SnakeGame.SoundsSystem
 
         private void Start()
         {
-            //if (PlayerPrefs.HasKey(nameof(soundsVolume)))
-            //{
-            //    soundsVolume = PlayerPrefs.GetInt(nameof(soundsVolume));
-            //}
-
             SetSoundsVolume(soundsVolume);
             SetMinigunFireSound(minigunFireVolume);
-        }
-
-        private void OnDisable()
-        {
-            //PlayerPrefs.SetInt(nameof(soundsVolume), soundsVolume);
         }
 
         /// <summary>
@@ -71,7 +62,7 @@ namespace SnakeGame.SoundsSystem
         /// Decrease the sounds volume
         /// </summary>
         [ContextMenu("Decrease Volume")]
-        public void DecreaseMusicVolume()
+        public void DecreaseSoundsVolume()
         {
             if (soundsVolume == 0) return;
 
@@ -132,16 +123,28 @@ namespace SnakeGame.SoundsSystem
             }
         }
 
+        public void MuteSounds()
+        {
+            float muteVolumeDecibels = -80;
+            GameResources.Instance.soundMasterMixerGroup.audioMixer.SetFloat("SFXVolume", muteVolumeDecibels);
+        }
+        
+        public void MuteMinigunSoundEffects()
+        {
+            float muteVolumeDecibels = -80;
+            GameResources.Instance.minigunFireMixerGroup.audioMixer.SetFloat("MinigunFire", muteVolumeDecibels);
+        }
+
         public void Load(GameData data)
         {
-            soundsVolume = data.soundsVolume;
-            minigunFireVolume = data.minigunVolume;
+            soundsVolume = data.SoundsVolume;
+            minigunFireVolume = data.MinigunVolume;
         }
 
         public void Save(GameData data)
         {
-            data.soundsVolume = soundsVolume;
-            data.minigunVolume = minigunFireVolume;
+            data.SoundsVolume = soundsVolume;
+            data.MinigunVolume = minigunFireVolume;
         }
     }
 }

@@ -323,8 +323,8 @@ namespace SnakeGame.SaveAndLoadSystem
                 // Otherwise, compare to see which date is the most recent one
                 else
                 {
-                    DateTime mostRecentTime = DateTime.FromBinary(profilesGameData[mostRecentProfileID].lastUpdated);
-                    DateTime newTime = DateTime.FromBinary(profileData.lastUpdated);
+                    DateTime mostRecentTime = DateTime.FromBinary(profilesGameData[mostRecentProfileID].LastUpdated);
+                    DateTime newTime = DateTime.FromBinary(profileData.LastUpdated);
 
                     if (newTime > mostRecentTime)
                     {

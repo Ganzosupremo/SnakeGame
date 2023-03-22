@@ -149,7 +149,7 @@ namespace SnakeGame.PlayerSystem
         {
             if (!gameObject.activeSelf) return;
 
-            if (snakeInputActions.Snake.SlowTime.IsPressed() && 
+            if (snakeInputActions.Snake.SpecialAbility.IsPressed() && 
                 specialAbilityCooldownTimer <= 0f &&
                 !isSpecialAbilityActive)
             {

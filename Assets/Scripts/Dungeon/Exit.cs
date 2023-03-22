@@ -70,7 +70,6 @@ namespace SnakeGame.Dungeon
 
         private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
         {
-            Debuger.Log(m_gameLevelIndex);
             StartCoroutine(MaterializeExit());
         }
 

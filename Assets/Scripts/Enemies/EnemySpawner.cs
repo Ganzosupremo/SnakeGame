@@ -1,6 +1,6 @@
 using System.Collections;
 using SnakeGame.SoundsSystem;
-using SnakeGame.Utilities;
+using SnakeGame.GameUtilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

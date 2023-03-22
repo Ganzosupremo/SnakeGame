@@ -15,32 +15,33 @@ MonoBehaviour:
   enemyName: Lazuli
   enemyPrefab: {fileID: 7249687755293974846, guid: 4c06c9c0b8a4aaa4ea2b5ff3871a37fb, type: 3}
   hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
-  enemyColor: {r: 0.19215687, g: 0.21568628, b: 0.9529412, a: 1}
-  enemyChaseDistance: 100
-  standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  deathSoundEffect: {fileID: 11400000, guid: 8788a05de1c66b9448de653c9c90edf6, type: 2}
+  enemyColor: {r: 0.38431373, g: 0.43137255, b: 1.9058824, a: 1}
+  enemyChaseDistance: 20
   enemyMaterializeTime: 1.5
   enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
   enemyMaterializeColor: {r: 0, g: 0.8369784, b: 5.656854, a: 1}
+  standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   enemyWeapon: {fileID: 11400000, guid: b3f729399fae3ac41b46344ef3c50fa8, type: 2}
-  firingMinDelay: 0.5
-  firingMaxDelay: 1
-  firingMinDuration: 2
-  firingMaxDuration: 4
+  firingMinDelay: 2.1
+  firingMaxDelay: 4
+  firingMinDuration: 0.2
+  firingMaxDuration: 0.4
   lineOfSightRequired: 1
   enemyHealthDetailsArray:
   - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
     healthAmount: 100
-    originalHealthAmount: 100
+    defaultHealthAmount: 100
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
     healthAmount: 125
-    originalHealthAmount: 125
+    defaultHealthAmount: 125
   - gameLevel: {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
     healthAmount: 150
-    originalHealthAmount: 150
+    defaultHealthAmount: 150
   - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-    healthAmount: 200
-    originalHealthAmount: 200
-  immuneAfterHit: 1
-  immunityTime: 2
+    healthAmount: 175
+    defaultHealthAmount: 175
+  immuneAfterHit: 0
+  immunityTime: 0
   startDazeTime: 0
   isHealthBarDisplayed: 1

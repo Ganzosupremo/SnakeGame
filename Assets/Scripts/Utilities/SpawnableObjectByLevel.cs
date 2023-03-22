@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SnakeGame.Utilities
+namespace SnakeGame.GameUtilities
 {
     /// <summary>
     /// Defines the objects to spawn based on the <seealso cref="GameLevelSO"/>.

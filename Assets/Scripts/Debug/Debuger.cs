@@ -1,7 +1,6 @@
 #define ENABLE_LOGS
-#define A
+using UnityEngine;
 using System;
-using System.Diagnostics;
 
 namespace SnakeGame.Debuging
 {
@@ -10,24 +9,36 @@ namespace SnakeGame.Debuging
     /// </summary>
     public static class Debuger
     {
+        public static string Color(this string myString, string color)
+        {
+            return $"<color={color}>{myString}</color>";
+        }
+
+        public static void Log(this UnityEngine.Object myObject, params object[] message)
+        {
+            DoLog(Debug.Log, "<:)".Color("green"), myObject, message);
+        }
+
+        public static void LogSucces(this UnityEngine.Object myObject, params object[] message)
+        {
+            DoLog(Debug.Log, "<:)".Color("green"),myObject, message);
+        }
+
+        public static void LogWarning(this UnityEngine.Object myObject, params object[] message)
+        {
+            DoLog(Debug.LogWarning, ">:(".Color("yellow"), myObject, message);
+        }
+
+        public static void LogError(this UnityEngine.Object myObject, params object[] message)
+        {
+            DoLog(Debug.LogError,"<!>".Color("red"), myObject, message);
+        }
+
+        private static void DoLog(Action<string, UnityEngine.Object> function, string prefix,UnityEngine.Object myObject, params object[] message)
+        {
 #if UNITY_EDITOR
-        //[Conditional("ENABLE_LOGS")]
-        public static void Log(object message)
-        {
-            UnityEngine.Debug.Log(message);
-        }
-
-        //[Conditional("ENABLE_LOGS")]
-        public static void LogWarning(object message)
-        {
-            UnityEngine.Debug.LogWarning(message);
-        }
-
-        //[Conditional("ENABLE_LOGS")]
-        public static void LogError(object message)
-        {
-            UnityEngine.Debug.LogError(message);
-        }
+            function($"{prefix} [{myObject.name}]: {String.Join("; ", message)}\n", myObject);
 #endif
+        }
     }
 }

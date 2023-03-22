@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SnakeGame.Utilities
+namespace SnakeGame.GameUtilities
 {
     /// <summary>
     /// This is a generic class and can be used to spawn any item on any room,

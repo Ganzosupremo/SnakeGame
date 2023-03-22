@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Rendering.PostProcessing;
 using UnityEngine;
 
 namespace SnakeGame.SoundsSystem
@@ -44,6 +46,44 @@ namespace SnakeGame.SoundsSystem
         #endregion
         [Range(0f, 1f)]
         public float soundEffectVolume = 1f;
+
+        #region PreviewCode
+#if UNITY_EDITOR
+        [HideInInspector] public AudioSource previewer;
+
+        private void OnEnable()
+        {
+            previewer = EditorUtility.CreateGameObjectWithHideFlags(name: "AudioSourcePreview", HideFlags.HideAndDontSave,
+                typeof(AudioSource)).GetComponent<AudioSource>();
+        }
+
+        private void OnDisable()
+        {
+            DestroyImmediate(previewer);
+        }
+
+        public AudioSource Play(AudioSource audioSource = null)
+        {
+            if (soundEffectClip == null)
+                return null;
+
+            var source = audioSource;
+            if (source == null)
+            {
+                GameObject gameObject = new(name:"Sound",typeof(AudioSource));
+                source = gameObject.GetComponent<AudioSource>();
+            }
+
+            source.clip = soundEffectClip;
+            source.volume = soundEffectVolume;
+            source.pitch = Random.Range(soundEffectMinRandomValuePitch, soundEffectMaxRandomValuePitch);
+
+            source.Play();
+            //DestroyImmediate(source.gameObject);
+            return source;
+        }
+#endif
+    #endregion
 
         #region Validation
 #if UNITY_EDITOR

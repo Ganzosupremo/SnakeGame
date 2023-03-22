@@ -24,13 +24,6 @@ namespace SnakeGame.UI
         {
             base.Awake();
             globalLight = Instantiate(GameResources.Instance.globalLight, GameManager.Instance.transform);
-            //dayCicleDropdown.value = (int)selectedTime;
-
-            //if (PlayerPrefs.HasKey("CurrentTime"))
-            //{
-            //    selectedTime = (DayCicle)PlayerPrefs.GetInt("CurrentTime");
-            //    dayCicleDropdown.value = PlayerPrefs.GetInt("CurrentTime");
-            //}
         }
 
         // Start is called before the first frame update
@@ -141,7 +134,7 @@ namespace SnakeGame.UI
         /// </summary>
         public void DecreaseSoundsVolume()
         {
-            SoundEffectManager.Instance.DecreaseMusicVolume();
+            SoundEffectManager.Instance.DecreaseSoundsVolume();
             soundsLevelText.SetText(SoundEffectManager.Instance.soundsVolume.ToString());
         }
 
@@ -159,13 +152,13 @@ namespace SnakeGame.UI
 
         public void Load(GameData data)
         {
-            selectedTime = data.savedTime;
+            selectedTime = data.SavedTime;
             dayCicleDropdown.value = (int)selectedTime;
         }
 
         public void Save(GameData data)
         {
-            data.savedTime = selectedTime;
+            data.SavedTime = selectedTime;
         }
 
         #region Validation

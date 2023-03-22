@@ -1,28 +1,30 @@
+using SnakeGame.HighscoreSystem;
 using SnakeGame.UI;
 
 namespace SnakeGame.SaveAndLoadSystem
 {
     public class GameData
     {
-        public long lastUpdated;
+        public long LastUpdated;
 
-        public int soundsVolume;
-        public int minigunVolume;
-        public int musicVolume;
+        public int SoundsVolume;
+        public int MinigunVolume;
+        public int MusicVolume;
 
-        public Difficulty savedDifficulty;
-        public DayCicle savedTime;
-        public int test;
+        public Difficulty SavedDifficulty;
+        public DayCicle SavedTime;
+
+        public HighScore HighScores;
 
         public GameData()
         {
-            savedDifficulty = Difficulty.Noob;
-            savedTime = DayCicle.Morning;
-            test = 126554;
+            SavedDifficulty = Difficulty.Noob;
+            SavedTime = DayCicle.Morning;
+            HighScores = new();
 
-            soundsVolume= 6;
-            minigunVolume= 6;
-            musicVolume= 9;
+            SoundsVolume= 6;
+            MinigunVolume= 6;
+            MusicVolume= 9;
         }
     }
 }

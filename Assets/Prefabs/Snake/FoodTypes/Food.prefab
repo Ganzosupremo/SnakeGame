@@ -128,7 +128,7 @@ SpriteRenderer:
   m_SortingLayerID: -251573173
   m_SortingLayer: 4
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: fe2dce5e0f0524b419fa3e4d7be89876, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -136,7 +136,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!58 &7338082217808987909
@@ -167,6 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 242b5982edfa9ff4f802f87dacf39e0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  foodSO: {fileID: 0}
+  minimapSpriteRenderer: {fileID: 8719485910718675212}
   solidCollider2D: {fileID: 3064372313807685866}
 --- !u!114 &4248245085699498035
 MonoBehaviour:
@@ -277,7 +279,7 @@ SpriteRenderer:
   m_SortingLayerID: 390829575
   m_SortingLayer: 7
   m_SortingOrder: 15
-  m_Sprite: {fileID: 21300000, guid: fe2dce5e0f0524b419fa3e4d7be89876, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -285,6 +287,6 @@ SpriteRenderer:
   m_Size: {x: 0.6875, y: 0.9375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

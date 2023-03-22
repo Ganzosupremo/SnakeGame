@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using SnakeGame.Utilities;
+using SnakeGame.GameUtilities;
 using SnakeGame.SoundsSystem;
 using SnakeGame.Enemies;
+using SnakeGame.Foods;
 
 namespace SnakeGame
 {

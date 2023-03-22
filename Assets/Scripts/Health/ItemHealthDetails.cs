@@ -17,6 +17,6 @@ namespace SnakeGame
         /// </summary>
         [Tooltip("The health amount will change based on the difficulty, " +
             "so to reset the health amount to it's original value, this variable will be used")]
-        public int originalHealthAmount;
+        public int defaultHealthAmount;
     }
 }

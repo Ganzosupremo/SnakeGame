@@ -10,6 +10,8 @@ namespace SnakeGame.SoundsSystem
     {
         private AudioSource audioSource;
 
+        public AudioSource AudioSource { get { return audioSource; } }
+
         private void Awake()
         {
             audioSource = GetComponent<AudioSource>();

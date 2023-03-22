@@ -166,7 +166,7 @@ public static class HelperUtilities
     {
         if (stringToCheck == "")
         {
-            Debuger.Log(fieldName + " Is Empty and Must Contain a Value in Object " + thisObject.name.ToString());
+            Debuger.Log(thisObject, fieldName + " Is Empty and Must Contain a Value in Object " + thisObject.name.ToString());
             return true;
         }
         return false;
@@ -179,7 +179,7 @@ public static class HelperUtilities
     {
         if (objectToCheck == null)
         {
-            Debuger.Log(fieldName + " Is Null and Must Contain a Value in Object " + thisObject.name.ToString());
+            Debuger.Log(thisObject, fieldName + " Is Null and Must Contain a Value in Object " + thisObject.name.ToString());
             return true;
         }
 
@@ -197,7 +197,7 @@ public static class HelperUtilities
 
         if (enumerableObjectToCheck == null)
         {
-            Debuger.Log(fieldName + " Is Null in Object " + thisObject.name.ToString());
+            Debuger.Log(thisObject, fieldName + " Is Null in Object " + thisObject.name.ToString());
             return true;
         }
 
@@ -206,7 +206,7 @@ public static class HelperUtilities
         {
             if (item == null)
             {
-                Debuger.Log(fieldName + " Has Null Values In Object " + thisObject.name.ToString());
+                Debuger.Log(thisObject, fieldName + " Has Null Values In Object " + thisObject.name.ToString());
                 error = true;
             }
             else
@@ -217,7 +217,7 @@ public static class HelperUtilities
 
         if (count == 0)
         {
-            Debuger.Log(fieldName + " Has No Values In Object " + thisObject.name.ToString());
+            Debuger.Log(thisObject, fieldName + " Has No Values In Object " + thisObject.name.ToString());
             error = true;
         }
 
@@ -237,7 +237,7 @@ public static class HelperUtilities
         {
             if (valueToCheck < 0)
             {
-                Debuger.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
+                Debuger.Log(thisObject, fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -245,7 +245,7 @@ public static class HelperUtilities
         {
             if (valueToCheck <= 0)
             {
-                Debuger.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
+                Debuger.Log(thisObject, fieldName + " must contain a positive value in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -263,7 +263,7 @@ public static class HelperUtilities
         {
             if (valueToCheck < 0)
             {
-                Debuger.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
+                Debuger.Log(thisObject, fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -271,7 +271,7 @@ public static class HelperUtilities
         {
             if (valueToCheck <= 0)
             {
-                Debuger.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
+                Debuger.Log(thisObject, fieldName + " must contain a positive value in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -289,7 +289,7 @@ public static class HelperUtilities
         {
             if (valueToCheck < 0)
             {
-                Debuger.Log(fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
+                Debuger.Log(thisObject, fieldName + " must contain a positive value or zero in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -297,7 +297,7 @@ public static class HelperUtilities
         {
             if (valueToCheck <= 0)
             {
-                Debuger.Log(fieldName + " must contain a positive value in object " + thisObject.name.ToString());
+                Debuger.Log(thisObject, fieldName + " must contain a positive value in object " + thisObject.name.ToString());
                 error = true;
             }
         }
@@ -313,7 +313,7 @@ public static class HelperUtilities
         bool error = false;
         if (valueToCheckMin > valueToCheckMax)
         {
-            Debuger.Log(fieldNameMin + "must be less or equal than " + fieldNameMax + " in Object " + thisObject.name.ToString());
+            Debuger.Log(thisObject, fieldNameMin + "must be less or equal than " + fieldNameMax + " in Object " + thisObject.name.ToString());
         }
 
         if (ValidateCheckPositiveValue(thisObject, fieldNameMin, valueToCheckMin, isZeroAllowed)) error = true;
@@ -332,7 +332,7 @@ public static class HelperUtilities
         bool error = false;
         if (valueToCheckMin > valueToCheckMax)
         {
-            Debuger.Log(fieldNameMin + "must be less or equal than " + fieldNameMax + " in Object " + thisObject.name.ToString());
+            Debuger.Log(thisObject, fieldNameMin + "must be less or equal than " + fieldNameMax + " in Object " + thisObject.name.ToString());
         }
 
         if (ValidateCheckPositiveValue(thisObject, fieldNameMin, (float)valueToCheckMin, isZeroAllowed)) error = true;

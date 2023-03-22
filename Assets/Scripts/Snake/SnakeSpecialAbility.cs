@@ -91,7 +91,7 @@ namespace SnakeGame.ObsoleteClasses
             switch (ability)
             {
                 case Abilities.None:
-                    Debuger.LogWarning("No ability was set, you need to set an ability first by " +
+                    this.LogWarning("No ability was set, you need to set an ability first by " +
                         "calling the SetCurrentAbility method.");
                     break;
                 case Abilities.SlowDownTime:

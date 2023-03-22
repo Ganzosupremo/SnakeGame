@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
-namespace SnakeGame.Utilities
+namespace SnakeGame.GameUtilities
 {
     /// <summary>
     /// Defines a <see cref="ChanceBoundaries"/> struct, in which the <see cref="T"/> is the object to spawn

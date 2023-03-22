@@ -136,6 +136,7 @@ namespace SnakeGame
         [Tooltip("Populate with the AmmoIcon prefab")]
         #endregion
         public GameObject ammoIconPrefab;
+        public GameObject ScorePrefab;
         public GameObject bossRoomCuePrefab;
 
         #region Tooltip
@@ -177,6 +178,7 @@ namespace SnakeGame
             HelperUtilities.ValidateCheckNullValue(this, nameof(litMaterial), litMaterial);
             HelperUtilities.ValidateCheckNullValue(this, nameof(variableLitShader), variableLitShader);
             HelperUtilities.ValidateCheckNullValue(this, nameof(ammoIconPrefab), ammoIconPrefab);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(ScorePrefab), ScorePrefab);
             HelperUtilities.ValidateCheckNullValue(this, nameof(bossRoomCuePrefab), bossRoomCuePrefab);
             HelperUtilities.ValidateCheckNullValue(this, nameof(globalLight), globalLight);
 

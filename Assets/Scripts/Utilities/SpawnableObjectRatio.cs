@@ -1,4 +1,4 @@
-namespace SnakeGame.Utilities
+namespace SnakeGame.GameUtilities
 {
     /// <summary>
     /// Defines the ratio on which the object T is gonna spawn

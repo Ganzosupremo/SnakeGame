@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using SnakeGame.Foods;
 
 namespace SnakeGame.ObsoleteClasses
 {
     [Obsolete("This class was a test to see how an IA could create a snake game, but it's " +
     "actually used for nothing.")]
-    public class SnakeAI : SingletonMonoBehaviour<SnakeAI>
+    public class SnakeAI : MonoBehaviour
     {
         // The grid dimensions
         public int GridWidth { get; set; }
@@ -41,12 +42,11 @@ namespace SnakeGame.ObsoleteClasses
         // A timer to control the game update frequency
         float timer = 0.0f;
 
-        protected override void Awake()
+        void Awake()
         {
-            base.Awake();
             GridWidth = 50;
             GridHeight = 50;
-            food = foodPrefab.GetComponent<Food>();
+            //food = foodPrefab.GetComponent<Food>();
         }
 
         // Start is called before the first frame update
@@ -73,7 +73,7 @@ namespace SnakeGame.ObsoleteClasses
             }
 
             // Generate the initial food position
-            food.GenerateFood();
+            //food.GenerateFood();
         }
 
         private void OnTriggerEnter2D(Collider2D other)

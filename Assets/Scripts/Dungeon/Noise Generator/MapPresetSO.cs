@@ -1,4 +1,4 @@
-using SnakeGame.Utilities;
+using SnakeGame.GameUtilities;
 using System.Collections.Generic;
 using UnityEngine;
 

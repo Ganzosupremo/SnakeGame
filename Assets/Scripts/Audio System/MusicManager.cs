@@ -128,12 +128,12 @@ namespace SnakeGame.SoundsSystem
 
         public void Load(GameData data)
         {
-            musicVolume = data.musicVolume;
+            musicVolume = data.MusicVolume;
         }
 
         public void Save(GameData data)
         {
-            data.musicVolume = musicVolume;
+            data.MusicVolume = musicVolume;
         }
     }
 }

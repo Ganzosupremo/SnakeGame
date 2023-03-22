@@ -4,9 +4,12 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
+using System;
 
 namespace SnakeGame.UI
 {
+    [Obsolete("This class is obsolete, now that there are different settings tabs," +
+        " every setting is managed separately and not on this same class.")]
     public class SettingsUI : MonoBehaviour, IPersistenceData
     {
         [SerializeField] private TMP_Dropdown difficultyDropdown;
@@ -18,35 +21,20 @@ namespace SnakeGame.UI
         
         private Difficulty selectedDifficulty;
 
-        //private void Awake()
+        //private void Start()
         //{
-        //    if (PlayerPrefs.HasKey("Difficulty"))
+        //    difficultyDropdown.onValueChanged.AddListener(delegate
         //    {
-        //        selectedDifficulty = (Difficulty)PlayerPrefs.GetInt("Difficulty");
-        //        difficultyDropdown.value = (int)selectedDifficulty;
-        //    }
-        //}
+        //        OnDropValueChange(difficultyDropdown);
+        //    });
 
-        private void Start()
-        {
-            difficultyDropdown.onValueChanged.AddListener(delegate
-            {
-                OnDropValueChange(difficultyDropdown);
-            });
-
-            DifficultyManager.ChangeDifficulty(selectedDifficulty);
-        }
-
-        //private void OnDisable()
-        //{
-        //    PlayerPrefs.SetInt("Difficulty", (int)selectedDifficulty);
+        //    DifficultyManager.ChangeDifficulty(selectedDifficulty);
         //}
 
         private void OnDropValueChange(TMP_Dropdown difficultyDropdown)
         {
             selectedDifficulty = (Difficulty)difficultyDropdown.value;
             ShowDescription();
-            //Debug.Log(selectedDifficulty.ToString());
         }
 
         /// <summary>
@@ -121,13 +109,13 @@ namespace SnakeGame.UI
 
         public void Load(GameData data)
         {
-            selectedDifficulty = data.savedDifficulty;
+            selectedDifficulty = data.SavedDifficulty;
             difficultyDropdown.value = (int)selectedDifficulty;
         }
 
         public void Save(GameData data)
         {
-            data.savedDifficulty = selectedDifficulty;
+            data.SavedDifficulty = selectedDifficulty;
         }
     }
 }

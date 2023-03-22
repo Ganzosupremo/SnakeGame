@@ -204,7 +204,7 @@ namespace SnakeGame.SaveAndLoadSystem
             }
 
             // Timestamp the game data so we know when was the last save
-            gameData.lastUpdated = System.DateTime.Now.ToBinary();
+            gameData.LastUpdated = System.DateTime.Now.ToBinary();
 
             // Save with the profile ID if multiple saves are supported
             if (supportsMultipleSaves)

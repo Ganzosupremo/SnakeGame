@@ -56,7 +56,7 @@ namespace SnakeGame.Minimap
                 GameManager.Instance.currentGameState == GameState.OverviewMap && 
                 waitBeforeTeleporting <= 0f)
             {
-                Debuger.Log("Room Cliked");
+                this.Log("Room Cliked");
                 GetRoomClicked();
                 waitBeforeTeleporting = counter;
             }
@@ -127,7 +127,6 @@ namespace SnakeGame.Minimap
                 if (collider.GetComponent<InstantiatedRoom>() != null)
                 {
                     InstantiatedRoom instantiatedRoom = collider.GetComponent<InstantiatedRoom>();
-                    Debuger.Log("Room Found");
 
                     // If the room has been cleared of enemies an has been previously visited, the player can be teleported there
                     if (instantiatedRoom.room.isClearOfEnemies && instantiatedRoom.room.isPreviouslyVisited)

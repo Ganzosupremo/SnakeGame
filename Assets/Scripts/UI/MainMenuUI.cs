@@ -1,3 +1,4 @@
+using SnakeGame.SoundsSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,12 +6,21 @@ namespace SnakeGame.UI
 {
     public class MainMenuUI : SingletonMonoBehaviour<MainMenuUI>
     {
+        [Header("Button References")]
+        [Space(5)]
         [SerializeField] private GameObject playButton;
         [SerializeField] private GameObject returnButton;
         [SerializeField] private GameObject settingsButton;
         [SerializeField] private GameObject instructionsButton;
+        [SerializeField] private GameObject highScoresButton;
+        [SerializeField] private GameObject quitButton;
+
+        [Header("Audio References")]
+        [Space(5)]
+        [SerializeField] private MusicSO mainMenuMusic;
 
         private bool isSettingsLoaded = false;
+        private bool isHighScoresLoaded = false;
 
         protected override void Awake()
         {
@@ -20,11 +30,12 @@ namespace SnakeGame.UI
         private void Start()
         {
             returnButton.SetActive(false);
+            MusicManager.Instance.PlayMusic(mainMenuMusic);
         }
 
         public void StartGame()
         {
-            SceneManager.LoadSceneAsync((int)SceneIndex.MainGame);
+            SceneManager.LoadScene((int)SceneIndex.MainGame);
         }
 
         public void LoadSettings()
@@ -32,15 +43,35 @@ namespace SnakeGame.UI
             playButton.SetActive(false);
             settingsButton.SetActive(false);
             instructionsButton.SetActive(false);
+            highScoresButton.SetActive(false);
+            quitButton.SetActive(false);
 
             returnButton.SetActive(false);
 
             isSettingsLoaded = true;
-
+            ReturnButtonUI.sceneToUnload = ReturnButtonUI.SceneToUnload.Settings;
             SceneManager.LoadScene((int)SceneIndex.Settings, LoadSceneMode.Additive);
         }
 
-        // Used in the return button on the main menu
+        public void LoadHighScores()
+        {
+            playButton.SetActive(false);
+            settingsButton.SetActive(false);
+            instructionsButton.SetActive(false);
+            highScoresButton.SetActive(false);
+            returnButton.SetActive(false);
+            
+            quitButton.SetActive(true);
+
+            isHighScoresLoaded = true;
+            ReturnButtonUI.sceneToUnload = ReturnButtonUI.SceneToUnload.HighScores;
+            SceneManager.LoadScene((int)SceneIndex.HighScores, LoadSceneMode.Additive);
+        }
+
+        /// <summary>
+        /// Returns to the main Menu unloading the scene that was open additively.
+        /// Recomended to use on the buttons that are on the Main Menu Scene
+        /// </summary>
         public void LoadMainMenu()
         {
             if (isSettingsLoaded)
@@ -48,24 +79,32 @@ namespace SnakeGame.UI
                 SceneManager.UnloadSceneAsync((int)SceneIndex.Settings);
                 isSettingsLoaded = false;
             }
-
-            SceneManager.LoadScene((int)SceneIndex.MainMenu);
+            else if (isHighScoresLoaded)
+            {
+                SceneManager.UnloadSceneAsync((int)SceneIndex.HighScores);
+                isHighScoresLoaded = false;
+            }
 
             returnButton.SetActive(false);
             playButton.SetActive(true);
             settingsButton.SetActive(true);
             instructionsButton.SetActive(true);
+            highScoresButton.SetActive(true);
+            quitButton.SetActive(true);
         }
 
-        public void ReturnMainMenu()
+        /// <summary>
+        /// Returns to the main menu without unloading the scene that was opened additively.
+        /// Recomended to use on the buttons or gameobjects that are outside the Main Menu Scene.
+        /// </summary>
+        public void ReturnButtonMainMenu()
         {
-            SceneManager.LoadScene((int)SceneIndex.MainMenu, LoadSceneMode.Additive);
-
+            returnButton.SetActive(false);
             playButton.SetActive(true);
             settingsButton.SetActive(true);
             instructionsButton.SetActive(true);
-
-            returnButton.SetActive(false);
+            highScoresButton.SetActive(true);
+            quitButton.SetActive(true);
         }
 
         public void QuitGame()

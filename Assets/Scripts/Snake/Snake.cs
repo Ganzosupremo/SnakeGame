@@ -5,6 +5,7 @@ using SnakeGame.VisualEffects;
 using UnityEngine.Rendering.Universal;
 using SnakeGame.UI;
 using SnakeGame.PlayerSystem.AbilitySystem;
+using SnakeGame.Foods;
 
 namespace SnakeGame.PlayerSystem
 {
@@ -46,7 +47,6 @@ namespace SnakeGame.PlayerSystem
         #region Components
         [HideInInspector] public Animator animator;
         [HideInInspector] public SnakeDetailsSO snakeDetails;
-        //[HideInInspector] public SnakeSpecialAbility snakeSpecialAbility;
         [HideInInspector] public Health health;
         [HideInInspector] public HealthEvent healthEvent;
         [HideInInspector] public Destroy destroy;
@@ -80,10 +80,10 @@ namespace SnakeGame.PlayerSystem
 
         private void Awake()
         {
+            #region Getting Component References
             animator = GetComponent<Animator>();
             health = GetComponent<Health>();
             healthEvent = GetComponent<HealthEvent>();
-            //snakeSpecialAbility = GetComponent<SnakeSpecialAbility>();
             destroy = GetComponent<Destroy>();
             destroyEvent = GetComponent<DestroyEvent>();
             aimWeaponEvent = GetComponent<AimWeaponEvent>();
@@ -103,6 +103,7 @@ namespace SnakeGame.PlayerSystem
             spriteRenderer = GetComponent<SpriteRenderer>();
             materializeEffect = GetComponent<MaterializeEffect>();
             snakeLight = GetComponentInChildren<Light2D>();
+            #endregion
         }
 
         private void Start()
@@ -148,21 +149,10 @@ namespace SnakeGame.PlayerSystem
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag(Settings.food))
+            if (other.TryGetComponent(out Food food))
             {
-                GrowSnake(1);
-                IncreaseWeaponDamage(20);
-                //IsSnakeColliding = true;
-            }
-            else if (other.CompareTag(Settings.goldenFood))
-            {
-                GrowSnake(2);
-                IncreaseWeaponDamage(40);
-            }
-            else if (other.CompareTag(Settings.voidFood))
-            {
-                GrowSnake(3);
-                IncreaseWeaponDamage(60);
+                GrowSnake(food.foodSO.HealthIncrease);
+                IncreaseWeaponDamage(food.foodSO.DamageIncreasePercentage);
             }
         }
 

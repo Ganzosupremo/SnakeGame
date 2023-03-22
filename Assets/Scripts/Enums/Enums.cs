@@ -109,6 +109,7 @@ namespace SnakeGame
         MainMenu = 0,
         MainGame = 1,
         Settings = 2,
+        HighScores = 3,
     }
 }
 
