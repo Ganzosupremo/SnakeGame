@@ -21,6 +21,7 @@ MonoBehaviour:
   ammoChargeTime: 0
   ammoChargeMaterial: {fileID: 0}
   ammoHitEffect: {fileID: 11400000, guid: f411aff07207ff04285c5458c0015317, type: 2}
+  CollisionSoundEffect: {fileID: 11400000, guid: c0c03ef1b887c0a48b474bd2d8a7a95c, type: 2}
   ammoDamage: 500
   originalAmmoDamage: 500
   maxAmmoDamage: 1000
@@ -30,8 +31,8 @@ MonoBehaviour:
   ammoRotationSpeed: 1
   ammoSpreadMin: 0
   ammoSpreadMax: 1
-  ammoSpawnAmountMin: 1
-  ammoSpawnAmountMax: 1
+  MinBulletsPerShoot: 1
+  MaxBulletsPerShoot: 1
   minSpawnInterval: 0.018
   maxSpawnInterval: 0.0687
   hasAmmoTrail: 1

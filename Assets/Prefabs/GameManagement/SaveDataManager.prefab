@@ -31,7 +31,7 @@ Transform:
   m_Children:
   - {fileID: 609075622160851883}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &609075621673462425
 MonoBehaviour:
@@ -48,13 +48,14 @@ MonoBehaviour:
   initializeDataIfNull: 0
   disablePersistenceManager: 0
   overrideProfileID: 0
-  testProfileID: Nigga
+  testProfileID: 
   fileName: SnakeGameData.json
   useEncryption: 0
-  supportsMultipleSaves: 0
-  profileID: W
-  autoSaveTimeSeconds: 60
+  supportsMultipleSaves: 1
+  profileID: Save 1
+  autoSaveTimeSeconds: 350
   messageToDisplay: {fileID: 609075623312657709}
+  Count: 0
 --- !u!1 &609075622160851882
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,8 +114,9 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1000
   m_TargetDisplay: 0
 --- !u!114 &609075622160851881
 MonoBehaviour:

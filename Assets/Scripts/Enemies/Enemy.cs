@@ -1,16 +1,10 @@
+using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.AudioSystem;
+using SnakeGame.VisualEffects;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Unity.RemoteConfig;
-using SnakeGame.VisualEffects;
-using SnakeGame.SoundsSystem;
-using System.Threading.Tasks;
-using Unity.Services.RemoteConfig;
-using System;
-using Unity.Services.Core;
-using Unity.Services.Authentication;
-using SnakeGame.Debuging;
 
 namespace SnakeGame.Enemies
 {
@@ -114,9 +108,7 @@ namespace SnakeGame.Enemies
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
         {
             if (healthEventArgs.healthAmount <= 0f)
-            {
                 EnemyDestroyed();
-            }
         }
 
         public void InitializeEnemy(EnemyDetailsSO enemyDetails, int enemySpawnNumber, GameLevelSO gameLevel)
@@ -221,10 +213,10 @@ namespace SnakeGame.Enemies
         private void EnemyDestroyed()
         {
             if (enemyDetails.deathSoundEffect != null)
-                SoundEffectManager.Instance.PlaySoundEffect(enemyDetails.deathSoundEffect);
+                SoundEffectManager.CallOnSoundEffectSelectedEvent(enemyDetails.deathSoundEffect);
 
-            DestroyEvent destroyEvent = GetComponent<DestroyEvent>();
-            destroyEvent.CallOnDestroy(false, 0);
+            if (TryGetComponent(out DestroyEvent destroyEvent))
+                destroyEvent.CallOnDestroy(false, 0);
         }
 
         /// <summary>

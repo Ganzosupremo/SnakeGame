@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cinemachine;
+using SnakeGame.GameUtilities;
 
 namespace SnakeGame.Minimap
 {
@@ -20,8 +21,7 @@ namespace SnakeGame.Minimap
             virtualCamera.Follow = snakePosition;
 
             // Set the snake minimap icon
-            SpriteRenderer spriteRenderer = minimapSnake.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
+            if (minimapSnake.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
                 spriteRenderer.sprite = GameManager.Instance.GetMinimapIcon();
         }
 

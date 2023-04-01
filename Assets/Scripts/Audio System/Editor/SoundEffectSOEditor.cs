@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SnakeGame.SoundsSystem
+namespace SnakeGame.AudioSystem
 {
     [CustomEditor(typeof(SoundEffectSO))]
     public class SoundEffectSOEditor : Editor

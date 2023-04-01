@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace SnakeGame.SoundsSystem
+namespace SnakeGame.AudioSystem
 {
     /// <summary>
     /// The SFX's for the game, it populater the <see cref="audioSource"/> with the variables in the <seealso cref="SoundEffectSO"/> class.

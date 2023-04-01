@@ -1,3 +1,4 @@
+using SnakeGame.Debuging;
 using UnityEngine;
 
 namespace SnakeGame.AStarPathfinding
@@ -42,7 +43,7 @@ namespace SnakeGame.AStarPathfinding
             }
             else
             {
-                Debug.Log("Requested Grid Node is out of range");
+                Debuger.Log("Requested Grid Node is out of range");
                 return null;
             }
         }

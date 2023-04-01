@@ -1,6 +1,7 @@
-using System.Collections;
-using SnakeGame.SoundsSystem;
 using SnakeGame.GameUtilities;
+using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.AudioSystem;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -36,7 +37,7 @@ namespace SnakeGame.Enemies
             currentRoom = roomChangedEventArgs.room;
 
             if (currentRoom.normalMusic != null)
-                MusicManager.Instance.PlayMusic(currentRoom.normalMusic);
+                MusicManager.CallOnMusicClipChangedEvent(currentRoom.normalMusic);
 
             // Don't spawn enemies on corridors, entrance, chest and exit rooms
             if (currentRoom.roomNodeType.isCorridorEW ||
@@ -50,7 +51,7 @@ namespace SnakeGame.Enemies
             if (currentRoom.isClearOfEnemies) return;
 
             // Get a random number of enemies to spawn for this room
-            enemiesToSpawn = currentRoom.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel(), 1);
+            enemiesToSpawn = currentRoom.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel());
 
             // Get the enemy spawn parameters for this room
             roomEnemySpawnParemeters = currentRoom.GetRoomItemSpawnParameters(GameManager.Instance.GetCurrentDungeonLevel(), 1);
@@ -69,7 +70,7 @@ namespace SnakeGame.Enemies
             currentRoom.instantiatedRoom.LockDoors();
 
             if (currentRoom.battleMusic != null)
-                MusicManager.Instance.PlayMusic(currentRoom.battleMusic);
+                MusicManager.CallOnMusicClipChangedEvent(currentRoom.battleMusic);
 
             // ... And actually spawn the enemies
             SpawnEnemies();
@@ -80,15 +81,15 @@ namespace SnakeGame.Enemies
         /// </summary>
         private void SpawnEnemies()
         {
-            if (GameManager.Instance.currentGameState == GameState.BossStage)
+            if (GameManager.CurrentGameState == GameState.BossStage)
             {
-                GameManager.Instance.previousGameState = GameState.BossStage;
-                GameManager.Instance.currentGameState = GameState.EngagingBoss;
+                GameManager.PreviousGameState = GameState.BossStage;
+                GameManager.CurrentGameState = GameState.EngagingBoss;
             }
-            else if (GameManager.Instance.currentGameState == GameState.Playing)
+            else if (GameManager.CurrentGameState == GameState.Playing)
             {
-                GameManager.Instance.previousGameState = GameState.Playing;
-                GameManager.Instance.currentGameState = GameState.EngagingEnemies;
+                GameManager.PreviousGameState = GameState.Playing;
+                GameManager.CurrentGameState = GameState.EngagingEnemies;
             }
 
             StartCoroutine(SpawnEnemiesRoutine());
@@ -176,22 +177,23 @@ namespace SnakeGame.Enemies
                 currentRoom.isClearOfEnemies = true;
 
                 // Set the state of the game
-                if (GameManager.Instance.currentGameState == GameState.EngagingEnemies)
+                if (GameManager.CurrentGameState == GameState.EngagingEnemies)
                 {
-                    GameManager.Instance.currentGameState = GameState.Playing;
-                    GameManager.Instance.previousGameState = GameState.EngagingEnemies;
+                    GameManager.CurrentGameState = GameState.Playing;
+                    GameManager.PreviousGameState = GameState.EngagingEnemies;
                 }
-                else if (GameManager.Instance.currentGameState == GameState.EngagingBoss)
+                else if (GameManager.CurrentGameState == GameState.EngagingBoss)
                 {
-                    GameManager.Instance.currentGameState = GameState.BossStage;
-                    GameManager.Instance.previousGameState = GameState.EngagingBoss;
+                    GameManager.CurrentGameState = GameState.BossStage;
+                    GameManager.PreviousGameState = GameState.EngagingBoss;
                 }
 
                 // Unlock the doors
                 currentRoom.instantiatedRoom.UnlockDoors(Settings.doorUnlockDelay);
 
+                // Play the normal music again
                 if (currentRoom.normalMusic != null)
-                    MusicManager.Instance.PlayMusic(currentRoom.normalMusic);
+                    MusicManager.CallOnMusicClipChangedEvent(currentRoom.normalMusic);
 
                 // Trigger the static event to indicate the room is clear of enemies
                 StaticEventHandler.CallRoomEnemiesDefeatedEvent(currentRoom);

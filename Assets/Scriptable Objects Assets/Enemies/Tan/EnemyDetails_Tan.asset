@@ -14,19 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Tan
   enemyPrefab: {fileID: 7249687755293974846, guid: 1d4e35021ad4df3449248301e2f2b247, type: 3}
+  MovementDetails: {fileID: 11400000, guid: 71dfd080dbc55b7449b9eeb5d04d18c4, type: 2}
   hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
   deathSoundEffect: {fileID: 11400000, guid: cb88af71d8242914cb7e627b1dc15551, type: 2}
   enemyColor: {r: 2.189284, g: 0.37839478, b: 2.1802747, a: 1}
-  enemyChaseDistance: 20
+  enemyChaseDistance: 50
   enemyMaterializeTime: 1.5
   enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
   enemyMaterializeColor: {r: 4.055858, g: 0.13391991, b: 3.7138867, a: 1}
   standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   enemyWeapon: {fileID: 11400000, guid: a1d11be8b534ce24090de8b4231fc0f9, type: 2}
-  firingMinDelay: 2.4
-  firingMaxDelay: 4
-  firingMinDuration: 0.2
-  firingMaxDuration: 0.4
+  firingMinDelay: 2.5
+  firingMaxDelay: 5
+  firingMinDuration: 0.5
+  firingMaxDuration: 1.5
   lineOfSightRequired: 1
   enemyHealthDetailsArray:
   - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}

@@ -1,3 +1,4 @@
+using SnakeGame.GameUtilities;
 using SnakeGame.PlayerSystem.AbilitySystem;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,9 +22,16 @@ namespace SnakeGame.PlayerSystem
         public GameObject snakePrefab;
 
         #region Tooltip
-        [Tooltip("The special ability for this snake type.")]
+        [Tooltip("The special ability for this snake type." +
+            " A random ability is choosen from the AbilitiesArray.")]
         #endregion
         public UniversalAbility ability;
+
+        #region Tooltip
+        [Tooltip("This array should contain all the special abilities that will be choosen" +
+            " at random when the game starts.")]
+        #endregion
+        public UniversalAbility[] AbilitiesArray;
 
         #region Header Health System
         [Space(10)]
@@ -86,6 +94,60 @@ namespace SnakeGame.PlayerSystem
         #endregion
         [ColorUsage(true, true)]
         public Color materializeColor;
+
+        private void OnEnable()
+        {
+            DifficultyManager.OnDifficultyChanged += DifficultyManager_OnDifficultyChanged;
+        }
+
+        private void OnDisable()
+        {
+            DifficultyManager.OnDifficultyChanged -= DifficultyManager_OnDifficultyChanged;
+        }
+
+        private void DifficultyManager_OnDifficultyChanged(Difficulty difficulty)
+        {
+            switch (difficulty)
+            {
+                case Difficulty.Noob:
+
+                    ChangeHealth(10);
+
+                    break;
+                case Difficulty.Easy:
+
+                    ChangeHealth(8);
+
+                    break;
+                case Difficulty.Medium:
+
+                    ChangeHealth(6);
+
+                    break;
+                case Difficulty.Hard:
+
+                    ChangeHealth(5);
+
+                    break;
+                case Difficulty.DarkSouls:
+                    
+                    ChangeHealth(4);
+
+                    break;
+                case Difficulty.EmotionalDamage:
+
+                    ChangeHealth(3);
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ChangeHealth(int value)
+        {
+            snakeInitialHealth = value;
+        }
 
         #region Validation
 #if UNITY_EDITOR

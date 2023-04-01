@@ -1,11 +1,11 @@
+using SnakeGame.Foods;
+using SnakeGame.PlayerSystem.AbilitySystem;
+using SnakeGame.UI;
+using SnakeGame.VisualEffects;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SnakeGame.VisualEffects;
 using UnityEngine.Rendering.Universal;
-using SnakeGame.UI;
-using SnakeGame.PlayerSystem.AbilitySystem;
-using SnakeGame.Foods;
 
 namespace SnakeGame.PlayerSystem
 {
@@ -149,18 +149,19 @@ namespace SnakeGame.PlayerSystem
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.TryGetComponent(out Food food))
+            if (other.TryGetComponent(out Food food) && other.CompareTag("Food") && !IsSnakeColliding)
             {
+                IsSnakeColliding = true;
                 GrowSnake(food.foodSO.HealthIncrease);
                 IncreaseWeaponDamage(food.foodSO.DamageIncreasePercentage);
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (other.collider.CompareTag(Settings.CollisionTilemapTag))
-                TakeDamage();
-        }
+        //private void OnCollisionEnter2D(Collision2D other)
+        //{
+        //    if (other.collider.CompareTag(Settings.CollisionTilemapTag))
+        //        TakeOneDamage();
+        //}
 
         /// <summary>
         /// Initialises the snake
@@ -254,13 +255,17 @@ namespace SnakeGame.PlayerSystem
         private void GrowSnake(int increaseHealth)
         {
             snakeBody = (SnakeBody)PoolManager.Instance.ReuseComponent(GameResources.Instance.snakeBodyPrefab.gameObject,
-                this.transform.position, Quaternion.identity);
+                SnakeSegmentsList[^1].position, Quaternion.identity);
+            
             snakeBody.gameObject.SetActive(true);
             SnakeBodyList.Add(snakeBody);
 
-            Transform segment = snakeBody.transform;
-            segment.position = SnakeSegmentsList[snakeSegmentCount].position;
-            SnakeSegmentsList.Add(segment);
+            snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -SnakeBodyList.Count;
+            SnakeBodyList[snakeSegmentCount].WaitHeadUpdateCycle(SnakeBodyList.Count);
+            
+            Transform segmentTransform = snakeBody.transform;
+            segmentTransform.position = SnakeSegmentsList[snakeSegmentCount].position;
+            SnakeSegmentsList.Add(segmentTransform);
             snakeSegmentCount++;
 
             health.IncreaseHealth(increaseHealth);
@@ -268,13 +273,18 @@ namespace SnakeGame.PlayerSystem
 
         public void UpdateSnakeSegments()
         {
-            for (int i = SnakeSegmentsList.Count - 1; i > 0; i--)
+            if (SnakeBodyList.Count > 0)
             {
-                SnakeSegmentsList[i].position = SnakeSegmentsList[i - 1].position;
+                SnakeBodyList[0].SetTargetPosition(transform.position);
+
+                for (int index = SnakeSegmentsList.Count - 1; index > 0; index--)
+                {
+                    SnakeSegmentsList[index].GetComponent<SnakeBody>().SetTargetPosition(SnakeSegmentsList[index - 1].position);
+                }
             }
         }
 
-        private void TakeDamage()
+        public void TakeOneDamage()
         {
             health.TakeDamage(1);
         }
@@ -347,7 +357,7 @@ namespace SnakeGame.PlayerSystem
             {
                 StartCoroutine(GameManager.Instance.ShowMessage($"Max Damage with this Weapon Reached!", 1.5f));
             }
-
+            IsSnakeColliding = false;
         }
 
         private void EnableSnake(bool isActive)

@@ -1,6 +1,7 @@
+using SnakeGame.ProceduralGenerationSystem;
 using UnityEngine;
 
-namespace SnakeGame 
+namespace SnakeGame
 {
     /// <summary>
     /// This struct define the amount of health an item can have

@@ -7,10 +7,10 @@ using UnityEngine;
 public class RoomNodeSO : ScriptableObject
 {
     public string id;
-    public List<string> parentRoomNodeIDList = new();
+    [HideInInspector] public List<string> parentRoomNodeIDList = new();
     [HideInInspector] public List<string> childRoomNodeIDList = new();
     [HideInInspector] public RoomNodeGraphSO roomNodeGraph;
-    public RoomNodeTypeSO roomNodeType;
+    [HideInInspector] public RoomNodeTypeSO roomNodeType;
     [HideInInspector] public RoomNodeTypeListSO roomNodeTypeList;
 
     // Node layout values

@@ -19,6 +19,16 @@ namespace SnakeGame.Debuging
             DoLog(Debug.Log, "<:)".Color("green"), myObject, message);
         }
 
+        /// <summary>
+        /// Use only this Log method on things that do not inherit from the 
+        /// UnityEngine.Object class.
+        /// </summary>
+        /// <param name="message"></param>
+        public static void Log(this object myObject, params object[] message)
+        {
+            DoLog(Debug.Log, "<:)".Color("white"), myObject, message);
+        }
+
         public static void LogSucces(this UnityEngine.Object myObject, params object[] message)
         {
             DoLog(Debug.Log, "<:)".Color("green"),myObject, message);
@@ -29,15 +39,42 @@ namespace SnakeGame.Debuging
             DoLog(Debug.LogWarning, ">:(".Color("yellow"), myObject, message);
         }
 
+        /// <summary>
+        /// Use only this LogWarning method on things that do not inherit from the 
+        /// UnityEngine.Object class.
+        /// </summary>
+        /// <param name="message"></param>
+        public static void LogWarning(this object myObject, params object[] message)
+        {
+            DoLog(Debug.LogWarning, ">:(".Color("yellow"), myObject, message);
+        }
+
         public static void LogError(this UnityEngine.Object myObject, params object[] message)
         {
             DoLog(Debug.LogError,"<!>".Color("red"), myObject, message);
         }
 
+        /// <summary>
+        /// Use only this LogError method on things that do not inherit from the 
+        /// UnityEngine.Object class.
+        /// </summary>
+        /// <param name="message"></param>
+        public static void LogError(this object myObject, params object[] message)
+        {
+            DoLog(Debug.LogError, "<!>".Color("red"), myObject, message);
+        }
+
         private static void DoLog(Action<string, UnityEngine.Object> function, string prefix,UnityEngine.Object myObject, params object[] message)
         {
 #if UNITY_EDITOR
-            function($"{prefix} [{myObject.name}]: {String.Join("; ", message)}\n", myObject);
+            function($"{prefix} [{myObject.name}]: {string.Join("; ", message)}\n", myObject);
+#endif
+        }
+
+        private static void DoLog(Action<string> function, string prefix, object myObject, params object[] message)
+        {
+#if UNITY_EDITOR
+            function($"{prefix} [{myObject}]: {string.Join("; ", message)}\n");
 #endif
         }
     }

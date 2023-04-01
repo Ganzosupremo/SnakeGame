@@ -1,3 +1,4 @@
+using SnakeGame.ProceduralGenerationSystem;
 using System.Collections.Generic;
 
 namespace SnakeGame.GameUtilities

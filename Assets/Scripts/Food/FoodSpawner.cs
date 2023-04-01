@@ -1,7 +1,9 @@
+using SnakeGame.Debuging;
+using SnakeGame.GameUtilities;
+using SnakeGame.ProceduralGenerationSystem;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using SnakeGame.GameUtilities;
 
 namespace SnakeGame.Foods
 {
@@ -17,7 +19,6 @@ namespace SnakeGame.Foods
 
         private bool shouldSpawnFood = true;
 
-        private Room previousRoom;
         private Room currentRoom;
         private RoomItemSpawnParameters foodSpawnParameters;
 
@@ -38,7 +39,6 @@ namespace SnakeGame.Foods
             shouldSpawnFood = true;
 
             currentRoom = roomEnemiesDefeatedArgs.room;
-            //previousRoom = currentRoom;
 
             // Don't spawn food on corridors, entrances or chest rooms
             if (currentRoom.roomNodeType.isCorridorEW ||
@@ -47,10 +47,10 @@ namespace SnakeGame.Foods
                 currentRoom.roomNodeType.isChestRoom)
                 return;
 
-            if (!currentRoom.isClearOfEnemies || currentRoom.isPreviouslyVisited || !shouldSpawnFood) return;
+            if (!currentRoom.isClearOfEnemies || !shouldSpawnFood) return;
 
             // Get a random number of foods to spawn for this room
-            foodToSpawn = currentRoom.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel(), 2); ;
+            foodToSpawn = currentRoom.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel(), false);
 
             // Get the food spawn parameters for this room
             foodSpawnParameters = currentRoom.GetRoomItemSpawnParameters(GameManager.Instance.GetCurrentDungeonLevel(), 2);
@@ -71,13 +71,10 @@ namespace SnakeGame.Foods
 
         private IEnumerator SpawnFoodCoroutine()
         {
-            //if (currentRoom != previousRoom) yield break;
-            previousRoom = currentRoom;
-
             Grid grid = currentRoom.instantiatedRoom.grid;
 
             // Create an instance of the helper class used to select a random food
-            RandomSpawnableObject<FoodSO> randomSpawnableObject = new RandomSpawnableObject<FoodSO>(currentRoom.FoodsByLevelList);
+            RandomSpawnableObject<FoodSO> randomSpawnableObject = new(currentRoom.FoodsByLevelList);
 
             // See if we have space to spawn the food
             if (currentRoom.spawnPositionArray.Length > 0)

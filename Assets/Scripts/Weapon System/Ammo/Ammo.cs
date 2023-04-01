@@ -1,7 +1,8 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SnakeGame.Interfaces;
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
+using SnakeGame.GameUtilities;
 
 namespace SnakeGame.AbwehrSystem.Ammo
 {
@@ -70,7 +71,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
             DealDamage(other);
 
-            ActivateHitEffect();
+            ActivateAmmoEffects();
 
             DisableAmmo();
         }
@@ -160,12 +161,11 @@ namespace SnakeGame.AbwehrSystem.Ammo
             aimDirectionVector = HelperUtilities.GetDirectionVectorFromAngle(fireDirectionAngle);
         }
 
-
         private void DealDamage(Collider2D other)
         {
-            other.TryGetComponent(out Health health);
+            //other.TryGetComponent(out Health health);
 
-            if (health == null) return;
+            if (!other.TryGetComponent(out Health health)) return;
             //bool enemyHit = false;
             isColliding = true;
             health.TakeDamage(ammoDetails.ammoDamage);
@@ -175,7 +175,8 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
             if (health.enemy == null) return;
             if (health.enemy.enemyDetails.hitSoundEffect == null) return;
-            SoundEffectManager.Instance.PlaySoundEffect(health.enemy.enemyDetails.hitSoundEffect);
+
+            SoundEffectManager.CallOnSoundEffectSelectedEvent(health.enemy.enemyDetails.hitSoundEffect);
 
             //If is player ammo then update the multiplier in the UI
             //if (ammoDetails.isPlayerAmmo)
@@ -192,7 +193,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             //    }
             //}
         }
-        private void ActivateHitEffect()
+        private void ActivateAmmoEffects()
         {
             // Process if there is a hit effect & prefab
             if (ammoDetails.ammoHitEffect != null && ammoDetails.ammoHitEffect.ammoHitEffectPrefab != null)
@@ -207,6 +208,16 @@ namespace SnakeGame.AbwehrSystem.Ammo
                 // Set gameobject active (the particle system is set to automatically disable the
                 // gameobject once finished)
                 hitEffect.gameObject.SetActive(true);
+
+                PlayCollisionSoundEffect();
+            }
+        }
+
+        private void PlayCollisionSoundEffect()
+        {
+            if (ammoDetails.CollisionSoundEffect != null)
+            {
+                SoundEffectManager.CallOnSoundEffectSelectedEvent(ammoDetails.CollisionSoundEffect);
             }
         }
 

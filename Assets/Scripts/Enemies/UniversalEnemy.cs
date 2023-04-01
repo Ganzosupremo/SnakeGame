@@ -1,4 +1,5 @@
-using SnakeGame.SoundsSystem;
+using SnakeGame.GameUtilities;
+using SnakeGame.AudioSystem;
 using UnityEngine;
 
 namespace SnakeGame.Enemies
@@ -18,6 +19,13 @@ namespace SnakeGame.Enemies
         [Tooltip("The prefab for the enemy")]
         #endregion
         public GameObject enemyPrefab;
+
+        public bool IsBoss = false;
+        
+        #region Tooltip
+        [Tooltip("The Scriptable Object containing the movement settings")]
+        #endregion
+        public MovementDetailsSO MovementDetails;
 
         public SoundEffectSO hitSoundEffect;
         public SoundEffectSO deathSoundEffect;
@@ -121,9 +129,29 @@ namespace SnakeGame.Enemies
         #endregion
         public bool isHealthBarDisplayed = false;
 
+        internal float m_DefaultFireMinDelay;
+        internal float m_DefaultFireMaxDelay;
+        internal float m_DefaultFireMinDuration;
+        internal float m_DefaultFireMaxDuration;
+        internal bool m_DefaultRequireLineOfSight = false;
+
 
         protected virtual void PowerUpEnemy(GameObject parent) { }
 
         protected virtual void DowngradeEnemy(GameObject parent) { }
+
+
+        #region Validation
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            HelperUtilities.ValidateCheckNullValue(this, nameof(MovementDetails), MovementDetails);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(enemyPrefab), enemyPrefab);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(hitSoundEffect), hitSoundEffect);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(deathSoundEffect), deathSoundEffect);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(enemyMaterializeShader), enemyMaterializeShader);
+        }
+#endif
+        #endregion
     }
 }

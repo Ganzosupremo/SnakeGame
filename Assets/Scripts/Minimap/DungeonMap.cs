@@ -1,6 +1,7 @@
 using Cinemachine;
 using SnakeGame.Debuging;
-using System;
+using SnakeGame.GameUtilities;
+using SnakeGame.ProceduralGenerationSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,7 +54,7 @@ namespace SnakeGame.Minimap
             waitBeforeTeleporting -= Time.deltaTime;
 
             if (GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Click.WasPressedThisFrame() && 
-                GameManager.Instance.currentGameState == GameState.OverviewMap && 
+                GameManager.CurrentGameState == GameState.OverviewMap && 
                 waitBeforeTeleporting <= 0f)
             {
                 this.Log("Room Cliked");
@@ -72,8 +73,8 @@ namespace SnakeGame.Minimap
             GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Enable();
 
             // Set the game states
-            GameManager.Instance.previousGameState = GameManager.Instance.currentGameState;
-            GameManager.Instance.currentGameState = GameState.OverviewMap;
+            GameManager.PreviousGameState = GameManager.CurrentGameState;
+            GameManager.CurrentGameState = GameState.OverviewMap;
 
             // Disable the player
             GameManager.Instance.GetSnake().idleEvent.CallIdleEvent();
@@ -97,8 +98,8 @@ namespace SnakeGame.Minimap
             //GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Disable();
 
             // Restore the game states
-            GameManager.Instance.currentGameState = GameManager.Instance.previousGameState;
-            GameManager.Instance.previousGameState = GameState.OverviewMap;
+            GameManager.CurrentGameState = GameManager.PreviousGameState;
+            GameManager.PreviousGameState = GameState.OverviewMap;
 
             // Reenable the player
             GameManager.Instance.GetSnake().GetSnakeControler().EnableSnake();

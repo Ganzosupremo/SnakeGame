@@ -1,4 +1,5 @@
 using Cinemachine;
+using SnakeGame.GameUtilities;
 using UnityEngine;
 
 namespace SnakeGame.Miscelaneous

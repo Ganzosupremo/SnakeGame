@@ -2,7 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SnakeGame
+namespace SnakeGame.ProceduralGenerationSystem
 {
     [DisallowMultipleComponent]
     public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
@@ -551,7 +551,7 @@ namespace SnakeGame
             }
 
             // If there are no enemies to spawn in this room, then default it to be clear of enemies
-            if (room.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel(), 1) == 0)
+            if (room.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel()) == 0)
             {
                 room.isClearOfEnemies = true;
             }

@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using UnityEngine;
-using SnakeGame.GameUtilities;
-using SnakeGame.SoundsSystem;
 using SnakeGame.Enemies;
 using SnakeGame.Foods;
+using SnakeGame.GameUtilities;
+using SnakeGame.AudioSystem;
+using System.Collections.Generic;
+using UnityEngine;
 
-namespace SnakeGame
+namespace SnakeGame.ProceduralGenerationSystem
 {
     public class Room
     {
@@ -66,9 +66,9 @@ namespace SnakeGame
         /// 2 to retrive the total number of foods that are allowed to spawn on that room on that game level.
         /// The default is set to 1.</param>
         /// <returns>Returns the total number of items to spawn on the specified room on this current game level.</returns>
-        public int GetNumberOfItemsToSpawn(GameLevelSO gameLevel, int index = 1)
+        public int GetNumberOfItemsToSpawn(GameLevelSO gameLevel, bool retrieveEnemyData = true)
         {
-            if (index == 1)
+            if (retrieveEnemyData)
             {
                 foreach (RoomItemSpawnParameters spawnParameters in RoomLevelEnemySpawnParametersList)
                 {
@@ -77,10 +77,9 @@ namespace SnakeGame
                         return Random.Range(spawnParameters.minTotalItemsToSpawn, spawnParameters.maxTotalItemsToSpawn);
                     }
                 }
-
                 return 0;
             }
-            else if (index == 2)
+            else
             {
                 foreach (RoomItemSpawnParameters spawnParameters in RoomLevelFoodSpawnParametersList)
                 {
@@ -89,12 +88,8 @@ namespace SnakeGame
                         return Random.Range(spawnParameters.minTotalItemsToSpawn, spawnParameters.maxTotalItemsToSpawn);
                     }
                 }
-
                 return 0;
             }
-            else
-                return 0;
-
         }
 
         /// <summary>

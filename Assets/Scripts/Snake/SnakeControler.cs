@@ -5,6 +5,8 @@ using static UnityEngine.InputSystem.InputAction;
 using SnakeInput;
 using SnakeGame.UI;
 using System;
+using SnakeGame.GameUtilities;
+using SnakeGame.ProceduralGenerationSystem;
 
 namespace SnakeGame.PlayerSystem
 {
@@ -78,14 +80,14 @@ namespace SnakeGame.PlayerSystem
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (other.collider.CompareTag(Settings.CollisionTilemapTag) ||
-                other.collider.CompareTag(Settings.enemyTag))
-                StopDashCoroutine();
+                other.collider.CompareTag(Settings.EnemyTag))
+                TeleportSnake();
         }
 
         private void OnCollisionStay2D(Collision2D other)
         {
             if (other.collider.CompareTag(Settings.CollisionTilemapTag) ||
-                other.collider.CompareTag(Settings.enemyTag))
+                other.collider.CompareTag(Settings.EnemyTag))
                 StopDashCoroutine();
         }
 
@@ -123,11 +125,10 @@ namespace SnakeGame.PlayerSystem
             if (isSnakeDashing) return;
 
             moveDirection = snakeInputActions.Snake.Move.ReadValue<Vector2>();
-
             // Check if there is movement
             if (moveDirection != Vector2.zero)
             {
-                savedDirection = moveDirection;
+                //savedDirection = moveDirection;
                 snake.UpdateSnakeSegments();
                 // Can't move in diagonal
                 if (moveDirection.x != 0f && moveDirection.y != 0f) return;
@@ -140,6 +141,7 @@ namespace SnakeGame.PlayerSystem
             else
             {
                 snake.idleEvent.CallIdleEvent();
+                snake.UpdateSnakeSegments();
             }
         }
 
@@ -278,6 +280,7 @@ namespace SnakeGame.PlayerSystem
         /// </summary>
         /// <param name="moveDirection"></param>
         /// <returns>Returns true if the given move direction is allowed</returns>
+        [Obsolete()]
         private bool CheckMovementDirection(Vector2 moveDirection)
         {
             // If the snake is moving to the right, only allow up or down turns
@@ -374,7 +377,6 @@ namespace SnakeGame.PlayerSystem
             // Loop until the target position is reached
             while (Vector3.Distance(snake.transform.position, targetPosition) > minDistance)
             {
-                //UpdateSnakeSegmentPosition();
                 snake.movementToPositionEvent.CallMovementToPosition(targetPosition, snake.transform.position, savedDirection, movementDetails.dashSpeed, isSnakeDashing);
                 snake.UpdateSnakeSegments();
 
@@ -419,8 +421,6 @@ namespace SnakeGame.PlayerSystem
                 StopCoroutine(snakeDashCoroutine);
                 isSnakeDashing = false;
             }
-
-            //TeleportSnake();
         }
 
         /// <summary>
@@ -429,14 +429,21 @@ namespace SnakeGame.PlayerSystem
         /// </summary>
         private void TeleportSnake()
         {
-            //TODO - Substract health and weapon damage when the snake collides
+            if (!gameObject.activeSelf) return;
+
             Room currentRoom = GameManager.Instance.GetCurrentRoom();
+
+            StartCoroutine(GameManager.Instance.FadeScreen(0f, 1f, 1f, Color.black));
+
+            snake.TakeOneDamage();
 
             snake.gameObject.transform.position = new Vector3((currentRoom.lowerBounds.x + currentRoom.upperBounds.x) / 2f,
                 (currentRoom.lowerBounds.y + currentRoom.upperBounds.y) / 2f, 0f);
 
             // Get the nearest spawn point position of the room, so the snake doesn't spawn on the walls and gets hit again
             snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(snake.gameObject.transform.position);
+
+            StartCoroutine(GameManager.Instance.FadeScreen(1f, 0f, 1f, Color.black));
         }
 
         private void SetWeaponByIndex(int index)

@@ -1,8 +1,9 @@
-using System.Collections;
+using SnakeGame.Debuging;
+using SnakeGame.GameUtilities;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SnakeGame
+namespace SnakeGame.ProceduralGenerationSystem
 {
     /// <summary>
     /// This class contains all the <see cref="RoomTemplateSO"/> and <see cref="RoomNodeGraphSO"/> for this specific game level
@@ -51,8 +52,8 @@ namespace SnakeGame
             if (HelperUtilities.ValidateCheckEnumerableValues(this, nameof(roomNodeGraphsList), roomNodeGraphsList))
                 return;
 
-            //Check to make sure that room templates are specified for all room node types in the specified graphs
-            //First check that NS and EW corridors and entrances have been specified
+            // Make sure that room templates are specified for all room node types in the specified graphs
+            // First check that NS and EW corridors and entrances have been specified
             bool isEWCorridor = false;
             bool isNSCorridor = false;
             bool isEntrance = false;
@@ -73,19 +74,13 @@ namespace SnakeGame
             }
 
             if (isEWCorridor == false)
-            {
-                Debug.Log("In " + this.name.ToString() + " : No EW Corridor Room Type Specified.");
-            }
+                this.Log($"In {name}: No EW Corridor Room Type Specified.");
 
             if (isNSCorridor == false)
-            {
-                Debug.Log("In " + this.name.ToString() + " : No NS Corridor Room Type Specified.");
-            }
+                this.Log($"In {name}: No NS Corridor Room Type Specified.");
 
             if (isEntrance == false)
-            {
-                Debug.Log("In " + this.name.ToString() + " : No Entrance Corridor Room Type Specified.");
-            }
+                this.Log($"In {name}: No Entrance Corridor Room Type Specified.");
 
             //Loop through all node graph
             foreach (RoomNodeGraphSO roomNodeGraph in roomNodeGraphsList)
@@ -122,8 +117,8 @@ namespace SnakeGame
 
                     if (!isRoomNodeTypeFound)
                     {
-                        Debug.Log("In " + this.name.ToString() + ": No room template for " + roomNodeSO.roomNodeType.name.ToString()
-                            + " Found for the node graph " + roomNodeGraph.name.ToString() + ".");
+                        this.Log($"In {name}: No room template for: {roomNodeSO.roomNodeType.name} "
+                            + $"found on the node graph {roomNodeGraph.name}.");
                     }
                 }
             }

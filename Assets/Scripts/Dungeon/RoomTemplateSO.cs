@@ -1,12 +1,13 @@
-using SnakeGame.SoundsSystem;
-using SnakeGame.GameUtilities;
+using SnakeGame.Debuging;
 using SnakeGame.Enemies;
+using SnakeGame.Foods;
+using SnakeGame.GameUtilities;
+using SnakeGame.AudioSystem;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using SnakeGame.Foods;
 
-namespace SnakeGame
+namespace SnakeGame.ProceduralGenerationSystem
 {
     /// <summary>
     /// This is the template for the room that the dungeon builder will use to build the level
@@ -120,13 +121,21 @@ namespace SnakeGame
                 EditorUtility.SetDirty(this);
             }
             HelperUtilities.ValidateCheckNullValue(this, nameof(prefab), prefab);
-            //HelperUtilities.ValidateCheckNullValue(this, nameof(battleMusic), battleMusic);
-            //HelperUtilities.ValidateCheckNullValue(this, nameof(ambientMusic), ambientMusic);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(battleMusic), battleMusic);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(normalMusic), normalMusic);
             HelperUtilities.ValidateCheckNullValue(this, nameof(roomNodeType), roomNodeType);
             HelperUtilities.ValidateCheckEnumerableValues(this, nameof(doorwayList), doorwayList);
+            
+            CheckEnemyParams();
+            CheckFoodParams();
+            // Check spawn positions if populated
+            HelperUtilities.ValidateCheckEnumerableValues(this, nameof(spawnPositionArray), spawnPositionArray);
+        }
 
+        private void CheckEnemyParams()
+        {
             #region Check all the parameters for the enemies are defined
-            // Check if enemies are gonna spawn in a room, that really all the necessary details
+            // Check if enemies are gonna spawn in a room and that really all the necessary details
             // have been populated.
             if (enemiesByLevelList.Count > 0 || roomEnemySpawnParemetersList.Count > 0)
             {
@@ -164,15 +173,18 @@ namespace SnakeGame
 
                     if (!isEnemyTypeListForDungeonLevelFound && enemySpawnParameters.gameLevel != null)
                     {
-                        Debug.Log("No types of enemies specified for the dungeon level " + enemySpawnParameters.gameLevel.levelName
-                            + ", located in the gameobject" + this.name.ToString());
+                        this.Log($"No types of enemies specified for the dungeon level {enemySpawnParameters.gameLevel.levelName}, "
+                            + $"located in the gameobject {name}");
                     }
                 }
             }
             #endregion
+        }
 
+        private void CheckFoodParams()
+        {
             #region Check all the parameters for food are defined
-            // Check if food is gonna spawn in this room at this game level, that everey detail
+            // Check if food is gonna spawn in this room at this game level and that every detail
             // is populated in the room template.
             if (foodByLevelList.Count > 0 || roomFoodSpawnParametersList.Count > 0)
             {
@@ -210,15 +222,12 @@ namespace SnakeGame
 
                     if (!isFoodTypeListForDungeonLevelFound && foodSpawnParameters.gameLevel != null)
                     {
-                        Debug.Log("No type of food was specified for this game level " + foodSpawnParameters.gameLevel.levelName
-                            + ", located in the gameobject" + this.name.ToString());
+                        this.Log($"No type of food was specified for the game level {foodSpawnParameters.gameLevel.levelName}, "
+                            + $"located in the gameobject {name}.");
                     }
                 }
             }
             #endregion
-
-            // Check spawn positions if populated
-            HelperUtilities.ValidateCheckEnumerableValues(this, nameof(spawnPositionArray), spawnPositionArray);
         }
 #endif
         #endregion

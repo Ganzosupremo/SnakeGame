@@ -1,3 +1,4 @@
+using SnakeGame.Debuging;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
 using TMPro;
@@ -12,29 +13,49 @@ namespace SnakeGame.UI
 
         private void Start()
         {
+            dropdown.onValueChanged.RemoveAllListeners();
             dropdown.onValueChanged.AddListener(delegate
             {
-                OnDropValueChange(dropdown);
+                OnDropValueChange();
             });
 
-            DifficultyManager.ChangeDifficulty(selectedDifficulty);
+            DifficultyManager.CallOnDifficultyChangedEvent(selectedDifficulty);
         }
 
-        private void OnDisable()
+        private void OnEnable()
+        {
+            //SaveDataManager.Instance.LoadGame();
+            dropdown.onValueChanged.RemoveAllListeners();
+            dropdown.onValueChanged.AddListener(delegate
+            {
+                OnDropValueChange();
+            });
+
+            DifficultyManager.CallOnDifficultyChangedEvent(selectedDifficulty);
+        }
+
+        //private void OnDisable()
+        //{
+        //    SaveDataManager.Instance.SaveGame();
+        //}
+
+        private void OnDropValueChange()
+        {
+            selectedDifficulty = (Difficulty)dropdown.value;
+            DifficultyManager.CallOnDifficultyChangedEvent(selectedDifficulty);
+            //SaveDataManager.Instance.SaveGame();
+        }
+
+        public void SaveGame()
         {
             SaveDataManager.Instance.SaveGame();
-        }
-
-        private void OnDropValueChange(TMP_Dropdown difficultyDropdown)
-        {
-            selectedDifficulty = (Difficulty)difficultyDropdown.value;
-            DifficultyManager.ChangeDifficulty(selectedDifficulty);
+            StartCoroutine(SaveDataManager.Instance.DisplayMessage("Changes Saved Succesfully.", 3.5f));
         }
 
         public void Load(GameData data)
         {
             selectedDifficulty = data.SavedDifficulty;
-            dropdown.value = (int)selectedDifficulty;
+            dropdown.value = (int)data.SavedDifficulty;
         }
 
         public void Save(GameData data)

@@ -1,57 +1,123 @@
+using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
+using SnakeGame.PlayerSystem.AbilitySystem;
 using SnakeGame.SaveAndLoadSystem;
 using System;
 using System.Collections;
 using UnityEngine;
 
-namespace SnakeGame.SoundsSystem
+namespace SnakeGame.AudioSystem
 {
     [RequireComponent(typeof(AudioSource))]
     [DisallowMultipleComponent]
     public class MusicManager : SingletonMonoBehaviour<MusicManager>, IPersistenceData
     {
-        private AudioSource musicSource = null;
-        private AudioClip currentmusicClip = null;
-
-        private Coroutine fadeOutMusicCoroutine;
-        private Coroutine fadeInMusicCoroutine;
-
+        // On the final build change to a property
         [Range(0, 20)]
-        public int musicVolume;
+        public int MusicVolume = 9;
+
+        public static event Action OnMusicVolumeIncreased;
+        public static event Action OnMusicVolumeDecreased;
+        public static event Action<MusicSO, float> OnMusicClipChanged;
+
+        private AudioSource m_MusicSource01 = null, m_MusicSource02 = null;
+        private AudioClip m_CurrentmusicClip = null;
+        private bool m_IsMusicSource01Playing = true;
+
+        // On the final build use this int internally and the property will fetch the value
+        //private int m_MusicVolume;
+        private Coroutine m_FadeMusicCoroutine;
 
         protected override void Awake()
         {
             base.Awake();
 
-            musicSource = GetComponent<AudioSource>();
-
+            m_MusicSource01 = GetComponent<AudioSource>();
+            m_MusicSource02 = gameObject.AddComponent<AudioSource>();
+            m_MusicSource02.loop = true;
+            m_MusicSource02.outputAudioMixerGroup = GameResources.Instance.musicMixerGroup;
+            
             // Start with the music off
             GameResources.Instance.musicOff.TransitionTo(0f);
         }
 
         private void Start()
         {
-            // Replace later with the save and load system
-            //if (PlayerPrefs.HasKey(nameof(musicVolume)))
-            //    musicVolume = PlayerPrefs.GetInt(nameof(musicVolume));
+            SetMusicVolume(MusicVolume);
+            m_IsMusicSource01Playing = true;
+        }
 
-            SetMusicVolume(musicVolume);
+        private void OnEnable()
+        {
+            OnMusicVolumeIncreased += MusicManager_OnMusicVolumeIncreased;
+            OnMusicVolumeDecreased += MusicManager_OnMusicVolumeDecreased;
+            OnMusicClipChanged += MusicManager_OnMusicClipChanged;
+
+            SnakeAbilityManager.OnAbilityActive += SnakeAbilityManager_OnAbilityActive;
+            SnakeAbilityManager.OnAbilityInactive += SnakeAbilityManager_OnAbilityInactive;
         }
 
         private void OnDisable()
         {
-            //PlayerPrefs.SetInt(nameof(musicVolume), musicVolume);
+            OnMusicVolumeIncreased -= MusicManager_OnMusicVolumeIncreased;
+            OnMusicVolumeDecreased -= MusicManager_OnMusicVolumeDecreased;
+            OnMusicClipChanged -= MusicManager_OnMusicClipChanged;
+
+            SnakeAbilityManager.OnAbilityActive -= SnakeAbilityManager_OnAbilityActive;
+            SnakeAbilityManager.OnAbilityInactive -= SnakeAbilityManager_OnAbilityInactive;
         }
 
-        /// <summary>
-        /// Plays the selected music
-        /// </summary>
-        /// <param name="musicTrackSO">The music track to play</param>
-        /// <param name="fadeOutTime">The time it takes to stop the other music</param>
-        /// <param name="fadeInTime">The time it takes to the selected music to start playing</param>
-        public void PlayMusic(MusicSO musicSO, float fadeOutTime = Settings.musicFadeOutTime, float fadeInTime = Settings.musicFadeInTime)
+        private void SnakeAbilityManager_OnAbilityActive()
         {
-            StartCoroutine(PlayMusicRoutine(musicSO, fadeOutTime, fadeInTime));
+            //m_MusicSource01.pitch = 0.75f;
+        }
+
+        private void SnakeAbilityManager_OnAbilityInactive(SnakeAbilityEventArgs snakeAbilityEventArgs)
+        {
+            //if (m_IsMusicSource01Playing)
+            //    m_MusicSource01.pitch = 1f;
+            //else
+            //    m_MusicSource02.pitch = 1f;
+            StartCoroutine(OnAbilityInactiveRoutine(snakeAbilityEventArgs.CooldownTime));
+        }
+
+        private IEnumerator OnAbilityInactiveRoutine(float cooldownTime)
+        {
+            yield return new WaitForSeconds(cooldownTime);
+            //float timeElapsed = 0f;
+            //if (!m_IsMusicSource01Playing)
+            //{
+            //    while (timeElapsed < cooldownTime)
+            //    {
+            //        m_MusicSource01.pitch = Mathf.Lerp(m_MusicSource01.pitch, 1f, timeElapsed / cooldownTime);
+            //        timeElapsed += Time.deltaTime;
+            //        yield return null;
+            //    }
+            //}
+            //else
+            //{
+            //    while (timeElapsed < cooldownTime)
+            //    {
+            //        m_MusicSource02.pitch = Mathf.Lerp(m_MusicSource02.pitch, 1f, timeElapsed / cooldownTime);
+            //        timeElapsed += Time.deltaTime;
+            //        yield return null;
+            //    }
+            //}
+        }
+
+        private void MusicManager_OnMusicVolumeIncreased()
+        {
+            IncreaseMusicVolume();
+        }
+
+        private void MusicManager_OnMusicVolumeDecreased()
+        {
+            DecreaseMusicVolume();
+        }
+
+        private void MusicManager_OnMusicClipChanged(MusicSO musicSO, float timeToFade = Settings.MusicFadeTime)
+        {
+            OnMusicChanged(musicSO, timeToFade);
         }
 
         [ContextMenu("Increase Volume")]
@@ -59,57 +125,67 @@ namespace SnakeGame.SoundsSystem
         {
             int maxVolume = 20;
 
-            if (musicVolume >= maxVolume) return;
+            if (MusicVolume >= maxVolume) return;
 
-            musicVolume += 1;
-            SetMusicVolume(musicVolume);
+            MusicVolume += 1;
+            SetMusicVolume(MusicVolume);
         }
 
         [ContextMenu("Decrease Volume")]
         public void DecreaseMusicVolume()
         {
-            if (musicVolume == 0) return;
+            if (MusicVolume == 0) return;
 
-            musicVolume -= 1;
-            SetMusicVolume(musicVolume);
+            MusicVolume -= 1;
+            SetMusicVolume(MusicVolume);
         }
 
-        private IEnumerator PlayMusicRoutine(MusicSO musicSO, float fadeOutTime, float fadeInTime)
+        private void OnMusicChanged(MusicSO musicSO, float timeToFade)
         {
-            if (fadeOutMusicCoroutine != null)
-                StopCoroutine(fadeOutMusicCoroutine);
+            if (m_FadeMusicCoroutine != null)
+                StopCoroutine(m_FadeMusicCoroutine);
 
-            if (fadeInMusicCoroutine != null)
-                StopCoroutine(fadeInMusicCoroutine);
-
-            // If the clip changed, play the new clip
-            if (musicSO.musicClip != currentmusicClip)
+            // If the audio clip changed, play the new audio
+            if (musicSO.musicClip != m_CurrentmusicClip)
             {
-                currentmusicClip = musicSO.musicClip;
+                m_CurrentmusicClip = musicSO.musicClip;
+                m_IsMusicSource01Playing = !m_IsMusicSource01Playing;
 
-                yield return fadeOutMusicCoroutine = StartCoroutine(FadeOutMusic(fadeOutTime));
-
-                yield return fadeInMusicCoroutine = StartCoroutine(FadeInMusic(musicSO, fadeInTime));
+                m_FadeMusicCoroutine = StartCoroutine(FadeMusic(musicSO, timeToFade));
             }
         }
 
-        private IEnumerator FadeOutMusic(float fadeOutTime)
+        private IEnumerator FadeMusic(MusicSO musicTrack, float timeToFade)
         {
-            GameResources.Instance.musicOnLow.TransitionTo(fadeOutTime);
+            float timeElapsed = 0f;
+            if (m_IsMusicSource01Playing)
+            {
+                m_MusicSource02.clip = musicTrack.musicClip;
+                m_MusicSource02.Play();
 
-            yield return new WaitForSeconds(fadeOutTime);
-        }
+                while (timeElapsed < timeToFade)
+                {
+                    m_MusicSource02.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
+                    m_MusicSource01.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+                    timeElapsed += Time.deltaTime;
+                    yield return null;
+                }
+                m_MusicSource01.Pause();
+            }
+            else
+            {
+                m_MusicSource01.clip = musicTrack.musicClip;
+                m_MusicSource01.Play();
 
-        private IEnumerator FadeInMusic(MusicSO musicSO, float fadeInTime)
-        {
-            // Set the clip and play it
-            musicSource.clip = musicSO.musicClip;
-            musicSource.volume = musicSO.musicVolume;
-            musicSource.Play();
-
-            GameResources.Instance.musicOnFull.TransitionTo(fadeInTime);
-
-            yield return new WaitForSeconds(fadeInTime);
+                while (timeElapsed < timeToFade)
+                {
+                    m_MusicSource01.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
+                    m_MusicSource02.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+                    timeElapsed += Time.deltaTime;
+                    yield return null;
+                }
+                m_MusicSource02.Pause();
+            }
         }
 
         private void SetMusicVolume(int musicVolume)
@@ -126,14 +202,37 @@ namespace SnakeGame.SoundsSystem
             }
         }
 
+        /// <summary>
+        /// Calls the <seealso cref="OnMusicVolumeIncreased"/> event, which increases
+        /// the volume of the currently played music.
+        /// </summary>
+        public static void CallOnMusicVolumeIncreasedEvent()
+        {
+            OnMusicVolumeIncreased?.Invoke();
+        }
+
+        /// <summary>
+        /// Calls the <seealso cref="OnMusicVolumeDecreased"/> event, which decreases
+        /// the volume of the currently played music.
+        /// </summary>
+        public static void CallOnMusicVolumeDecreasedEvent()
+        {
+            OnMusicVolumeDecreased?.Invoke();
+        }
+
+        public static void CallOnMusicClipChangedEvent(MusicSO musicSO, float timeToFade = Settings.MusicFadeTime)
+        {
+            OnMusicClipChanged?.Invoke(musicSO, timeToFade);
+        }
+
         public void Load(GameData data)
         {
-            musicVolume = data.MusicVolume;
+            MusicVolume = data.MusicVolume;
         }
 
         public void Save(GameData data)
         {
-            data.MusicVolume = musicVolume;
+            data.MusicVolume = MusicVolume;
         }
     }
 }

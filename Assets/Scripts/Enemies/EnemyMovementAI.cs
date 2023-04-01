@@ -1,15 +1,15 @@
+using SnakeGame.AStarPathfinding;
+using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.GameUtilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Jobs;
-using Random = UnityEngine.Random;
-using SnakeGame.AStarPathfinding;
-using Unity.Jobs;
 using Unity.Burst;
-using Unity.Mathematics;
 using Unity.Collections;
+using Unity.Jobs;
+using UnityEngine;
 using static SnakeGame.Enemies.EnemyMovementAI;
+using Random = UnityEngine.Random;
 
 namespace SnakeGame.Enemies
 {
@@ -26,14 +26,12 @@ namespace SnakeGame.Enemies
         }
 
 
-        #region Tooltip
-        [Tooltip("The movement details SO containing information about the movement, such as speed etc.")]
-        #endregion
-        public MovementDetailsSO movementDetails;
+        //#region Tooltip
+        //[Tooltip("The movement details SO containing information about the movement, such as speed etc.")]
+        //#endregion
+        //public MovementDetailsSO movementDetails;
 
         private Enemy enemy;
-        private List<EnemyMovementAI> enemies = new();
-        private JobHandle jobHandle;
         private Stack<Vector3> movementSteps = new();
         private Vector3 playerReferencePosition;
         private Coroutine moveEnemyRoutine;
@@ -48,17 +46,13 @@ namespace SnakeGame.Enemies
         private void Awake()
         {
             enemy = GetComponent<Enemy>();
-            enemySpeed = movementDetails.GetMoveSpeed();
-
-
             //enemyWeaponSprite = GetComponentInChildren<SpriteRenderer>();
         }
 
         private void Start()
         {
-            // Create the waitforfixedupdate to use in the coroutine
             fixedUpdateWait = new WaitForFixedUpdate();
-
+            enemySpeed = enemy.enemyDetails.MovementDetails.GetMoveSpeed();
             playerReferencePosition = GameManager.Instance.GetSnake().GetSnakePosition();
         }
 
@@ -250,10 +244,10 @@ namespace SnakeGame.Enemies
 
         #region Validation
 #if UNITY_EDITOR
-        private void OnValidate()
-        {
-            HelperUtilities.ValidateCheckNullValue(this, nameof(movementDetails), movementDetails);
-        }
+        //private void OnValidate()
+        //{
+        //    HelperUtilities.ValidateCheckNullValue(this, nameof(movementDetails), movementDetails);
+        //}
 #endif
         #endregion
     }

@@ -1,10 +1,11 @@
+using SnakeGame.GameUtilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Rendering.PostProcessing;
 using UnityEngine;
 
-namespace SnakeGame.SoundsSystem
+namespace SnakeGame.AudioSystem
 {
     [CreateAssetMenu(fileName = "SoundEffect_", menuName = "Scriptable Objects/Sound System/SFX")]
     public class SoundEffectSO : ScriptableObject

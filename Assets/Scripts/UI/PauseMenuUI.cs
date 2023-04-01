@@ -1,6 +1,7 @@
+using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace SnakeGame.UI
         // Start is called before the first frame update
         void Start()
         {
+            dayCicleDropdown.onValueChanged.RemoveAllListeners();
             dayCicleDropdown.onValueChanged.AddListener(delegate
             {
                 OnValueChanged(dayCicleDropdown);
@@ -91,24 +93,26 @@ namespace SnakeGame.UI
         {
             yield return null;
 
-            soundsLevelText.SetText(SoundEffectManager.Instance.soundsVolume.ToString());
-            musicLevelText.SetText(MusicManager.Instance.musicVolume.ToString());
-            minigunFireVolume.SetText(SoundEffectManager.Instance.minigunFireVolume.ToString());
+            soundsLevelText.SetText(SoundEffectManager.Instance.SoundsVolume.ToString());
+            musicLevelText.SetText(MusicManager.Instance.MusicVolume.ToString());
+            minigunFireVolume.SetText(SoundEffectManager.Instance.MinigunFireVolume.ToString());
             dayCicleDropdown.value = (int)selectedTime;
         }
 
         public void LoadMainMenu()
         {
-            SceneManager.LoadScene((int)SceneIndex.MainMenu);
+            SceneManager.LoadSceneAsync((int)SceneIndex.MainMenu, LoadSceneMode.Single);
+            //SceneManager.UnloadSceneAsync((int)SceneIndex.MainGame);
         }
 
         /// <summary>
-        /// Increase the volume of the music - the volume can be changed with a button in the pause menu UI
+        /// Increase the volume of the music.
+        /// The volume can be changed with a button in the pause menu UI
         /// </summary>
         public void IncreaseMusicVolume()
         {
-            MusicManager.Instance.IncreaseMusicVolume();
-            musicLevelText.SetText(MusicManager.Instance.musicVolume.ToString());
+            MusicManager.CallOnMusicVolumeIncreasedEvent();
+            musicLevelText.SetText(MusicManager.Instance.MusicVolume.ToString());
         }
 
         /// <summary>
@@ -116,8 +120,8 @@ namespace SnakeGame.UI
         /// </summary>
         public void DecreaseMusicVolume()
         {
-            MusicManager.Instance.DecreaseMusicVolume();
-            musicLevelText.SetText(MusicManager.Instance.musicVolume.ToString());
+            MusicManager.CallOnMusicVolumeDecreasedEvent();
+            musicLevelText.SetText(MusicManager.Instance.MusicVolume.ToString());
         }
 
         /// <summary>
@@ -125,8 +129,8 @@ namespace SnakeGame.UI
         /// </summary>
         public void IncreaseSoundsVolume()
         {
-            SoundEffectManager.Instance.IncreaseSoundsVolume();
-            soundsLevelText.SetText(SoundEffectManager.Instance.soundsVolume.ToString());
+            SoundEffectManager.CallSFXVolumeIncreasedEvent();
+            soundsLevelText.SetText(SoundEffectManager.Instance.SoundsVolume.ToString());
         }
 
         /// <summary>
@@ -134,20 +138,20 @@ namespace SnakeGame.UI
         /// </summary>
         public void DecreaseSoundsVolume()
         {
-            SoundEffectManager.Instance.DecreaseSoundsVolume();
-            soundsLevelText.SetText(SoundEffectManager.Instance.soundsVolume.ToString());
+            SoundEffectManager.CallSFXVolumeDecreasedEvent();
+            soundsLevelText.SetText(SoundEffectManager.Instance.SoundsVolume.ToString());
         }
 
         public void IncreaseMinigunFireSound()
         {
-            SoundEffectManager.Instance.IncreaseMinigunFireSound();
-            minigunFireVolume.SetText(SoundEffectManager.Instance.minigunFireVolume.ToString());
+            SoundEffectManager.CallMinigunSFXVolumeIncreasedEvent();
+            minigunFireVolume.SetText(SoundEffectManager.Instance.MinigunFireVolume.ToString());
         }
 
         public void DecreaseMinigunFireSound()
         {
-            SoundEffectManager.Instance.DecreaseMinigunFireSound();
-            minigunFireVolume.SetText(SoundEffectManager.Instance.minigunFireVolume.ToString());
+            SoundEffectManager.CallMinigunSFXVolumeDecreasedEvent();
+            minigunFireVolume.SetText(SoundEffectManager.Instance.MinigunFireVolume.ToString());
         }
 
         public void Load(GameData data)

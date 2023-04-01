@@ -1,7 +1,8 @@
 using UnityEngine;
 using SnakeGame.AbwehrSystem.Ammo;
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
 using SnakeGame;
+using SnakeGame.GameUtilities;
 
 [CreateAssetMenu(fileName = "WeaponDetails_", menuName = "Scriptable Objects/Weapon System/Weapon Details")]
 public class WeaponDetailsSO : ScriptableObject

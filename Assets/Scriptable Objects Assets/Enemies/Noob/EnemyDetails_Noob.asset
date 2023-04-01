@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Noob
   enemyPrefab: {fileID: 7249687755293974846, guid: 31709380fbee31f468c18a86ef328392, type: 3}
+  MovementDetails: {fileID: 11400000, guid: 1fe4e29aecd7a6f479c7edab2648c923, type: 2}
   hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
   deathSoundEffect: {fileID: 11400000, guid: 4ea0bede31f039a42826a758d6d60ec4, type: 2}
   enemyColor: {r: 0, g: 1.7027766, b: 2.297397, a: 1}
-  enemyChaseDistance: 20
+  enemyChaseDistance: 50
   enemyMaterializeTime: 1.5
   enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
   enemyMaterializeColor: {r: 0, g: 5.656854, b: 1.8060511, a: 1}
@@ -30,16 +31,16 @@ MonoBehaviour:
   lineOfSightRequired: 1
   enemyHealthDetailsArray:
   - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
-    healthAmount: 200
+    healthAmount: 300
     defaultHealthAmount: 200
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
-    healthAmount: 250
+    healthAmount: 350
     defaultHealthAmount: 250
   - gameLevel: {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
-    healthAmount: 275
+    healthAmount: 375
     defaultHealthAmount: 275
   - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-    healthAmount: 300
+    healthAmount: 400
     defaultHealthAmount: 300
   immuneAfterHit: 0
   immunityTime: 0

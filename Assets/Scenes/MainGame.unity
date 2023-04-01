@@ -1205,14 +1205,14 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.35925925
-    width: 0.15104167
-    height: 0.15104166
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8.4375
+  orthographic size: 11.25
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1375,27 +1375,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolArray:
   - name: SnakeBody
-    PoolSize: 200
+    PoolSize: 100
     prefabToUse: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
-    componentType: SnakeBody
+    componentType: SnakeGame.PlayerSystem.SnakeBody
   - name: Bullet4x4
-    PoolSize: 40
+    PoolSize: 100
     prefabToUse: {fileID: 8740502524224239974, guid: 56480e3e174a52742bb7ec6b595da317, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: Bullet6x6
-    PoolSize: 40
+    PoolSize: 100
     prefabToUse: {fileID: 8740502524224239974, guid: d0f146bad743fa741bc599fb6df10484, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: Bullet7x7
-    PoolSize: 40
+    PoolSize: 100
     prefabToUse: {fileID: 8740502524224239974, guid: 403b055819914404080cb61038c1a2da, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: Bullet9x9
-    PoolSize: 35
+    PoolSize: 100
     prefabToUse: {fileID: 8740502524224239974, guid: 1f3742a0f8539554a8cd9c54d383a3ba, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: Rocket
-    PoolSize: 30
+    PoolSize: 50
     prefabToUse: {fileID: 8740502524224239974, guid: 521269d0fc03989468912949f492a91e, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: A
@@ -1463,41 +1463,17 @@ MonoBehaviour:
     prefabToUse: {fileID: 8467163931044552805, guid: fdea5c72d8ade9e40834d6c093aa4e29, type: 3}
     componentType: AmmoHitEffect
   - name: Food
-    PoolSize: 10
+    PoolSize: 20
     prefabToUse: {fileID: 7338082217808987913, guid: aa068fa4ec15301499092874ada9112f, type: 3}
     componentType: SnakeGame.Foods.Food
-  - name: Forest Food
-    PoolSize: 10
-    prefabToUse: {fileID: 7470451495794545654, guid: 30c54b61f30ac924b958e3b2b5399431, type: 3}
-    componentType: SnakeGame.Foods.Food
-  - name: Mushroom Food
-    PoolSize: 10
-    prefabToUse: {fileID: 5141301755754440865, guid: 50b083d498f30ec44beaac2fdd31ce53, type: 3}
-    componentType: SnakeGame.Foods.Food
-  - name: Desert Food
-    PoolSize: 10
-    prefabToUse: {fileID: 1835589249367107746, guid: 080056cd55feee54e8aa6b84c67a7da7, type: 3}
-    componentType: SnakeGame.Foods.Food
-  - name: Meat
-    PoolSize: 10
-    prefabToUse: {fileID: 3428425626574085998, guid: 53bb8f933c194674ca4953db08efad10, type: 3}
-    componentType: SnakeGame.Foods.Food
-  - name: Golden Food
-    PoolSize: 5
-    prefabToUse: {fileID: 8270178289337601746, guid: 31768c373ba70594fac258d96c89a3f4, type: 3}
-    componentType: SnakeGame.Foods.Food
-  - name: Void Food
-    PoolSize: 2
-    prefabToUse: {fileID: 3794084094822649161, guid: a7e39615cb62f9943a57838275065124, type: 3}
-    componentType: SnakeGame.Foods.Food
   - name: Sound Effect
-    PoolSize: 40
+    PoolSize: 100
     prefabToUse: {fileID: 2906756793259760893, guid: a9838337f883dea48b2cfde7fda9e005, type: 3}
-    componentType: SnakeGame.SoundsSystem.SoundEffect
+    componentType: SnakeGame.AudioSystem.SoundEffect
   - name: MinigunFireSoundEffect
-    PoolSize: 40
+    PoolSize: 100
     prefabToUse: {fileID: 2906756793259760893, guid: c82be0c991c9cf24ea6eb21d85ad8beb, type: 3}
-    componentType: SnakeGame.SoundsSystem.SoundEffect
+    componentType: SnakeGame.AudioSystem.SoundEffect
 --- !u!4 &589272215
 Transform:
   m_ObjectHideFlags: 0
@@ -2173,11 +2149,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1233889721}
   - {fileID: 589272215}
   - {fileID: 474176076}
   - {fileID: 1579999702}
   - {fileID: 89080402}
+  - {fileID: 1233889721}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2415,7 +2391,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 595672eb954aafb4cb8bf95c2aeab8db, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9de119792052867408eb656c7adff787, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2975,8 +2951,8 @@ Transform:
   - {fileID: 2129586771}
   - {fileID: 1783494757}
   - {fileID: 392313919}
-  - {fileID: 1715937386}
   - {fileID: 1126837841}
+  - {fileID: 1715937386}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3063,14 +3039,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48f30eb3e739afa4fab40fbd922da27c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGameState: 0
-  previousGameState: 0
   gameLevelList:
-  - {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
   - {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
   - {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
+  - {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
   - {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-  currentDungeonLevelListIndex: 0
+  currentDungeonLevelListIndex: 3
   loadScreenText: {fileID: 240902833}
   canvasGroup: {fileID: 633479776}
   pauseMenuUI: {fileID: 6583639098866822507}
@@ -3088,7 +3062,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 894524360}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &1233889722
 AudioListener:
@@ -3657,7 +3631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61f1f8053498f6a45be4709e88cbdf5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicVolume: 6
+  MusicVolume: 9
 --- !u!4 &1579999702
 Transform:
   m_ObjectHideFlags: 0
@@ -4176,37 +4150,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870796536}
   m_CullTransparentMesh: 1
---- !u!1 &1992251350
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1992251352}
-  m_Layer: 0
-  m_Name: DifficultyManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1992251352
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992251350}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 500, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2011717368
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
 
 [RequireComponent(typeof(ReloadWeaponEvent))]
 [RequireComponent(typeof(WeaponReloadedEvent))]
@@ -61,7 +61,7 @@ public class ReloadWeapon : MonoBehaviour
     {
         // Play the reload sound when the weapon is reloaded
         if (weapon.weaponDetails.reloadSound != null)
-            SoundEffectManager.Instance.PlaySoundEffect(weapon.weaponDetails.reloadSound);
+            SoundEffectManager.CallOnSoundEffectSelectedEvent(weapon.weaponDetails.reloadSound);
 
         weapon.isWeaponReloading = true;
 

@@ -1,5 +1,6 @@
-using UnityEngine;
 using SnakeGame;
+using SnakeGame.GameUtilities;
+using UnityEngine;
 
 [RequireComponent(typeof(Health))]
 [DisallowMultipleComponent]

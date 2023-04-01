@@ -6,10 +6,7 @@ namespace SnakeGame.UI
 {
     public class ReturnButtonUI : MonoBehaviour
     {
-        internal enum SceneToUnload { Settings, HighScores}
-
         private Button button;
-        internal static SceneToUnload sceneToUnload;
 
         private void Awake()
         {
@@ -27,19 +24,7 @@ namespace SnakeGame.UI
 
         private void OnClick(Button button)
         {
-            switch (sceneToUnload)
-            {
-                case SceneToUnload.Settings:
-                    SceneManager.UnloadSceneAsync((int)SceneIndex.Settings);
-                    MainMenuUI.Instance.ReturnButtonMainMenu();
-                    break;
-                case SceneToUnload.HighScores:
-                    SceneManager.UnloadSceneAsync((int)SceneIndex.HighScores);
-                    MainMenuUI.Instance.ReturnButtonMainMenu();
-                    break;
-                default:
-                    break;
-            }
+            MainMenuUI.Instance.LoadMainMenu();
         }
     }
 }

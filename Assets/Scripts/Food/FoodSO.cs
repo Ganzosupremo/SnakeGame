@@ -1,5 +1,5 @@
 using SnakeGame;
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
 using UnityEngine;
 
 namespace SnakeGame.Foods

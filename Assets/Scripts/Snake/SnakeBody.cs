@@ -1,74 +1,75 @@
 using UnityEngine;
-using SnakeGame;
 
-[DisallowMultipleComponent]
-[RequireComponent(typeof(SpriteRenderer))]
-public class SnakeBody : MonoBehaviour
+namespace SnakeGame.PlayerSystem
 {
-    public Sprite[] bodySprites;
-    private SpriteRenderer spriteRenderer;
-    private Room room;
-    private InstantiatedRoom instantiatedRoom;
-
-    public BoxCollider2D boxCollider2D;
-    [HideInInspector] public Bounds segmentBounds;
-
-    private void Awake()
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(SpriteRenderer))]
+    public class SnakeBody : MonoBehaviour
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        boxCollider2D = GetComponentInChildren<BoxCollider2D>();
-        segmentBounds = boxCollider2D.bounds;
-    }
+        public Sprite[] bodySprites;
 
-    private void Start()
-    {
-        if (bodySprites.Length != 0)
+        private SpriteRenderer spriteRenderer;
+        private Vector3 m_NextPosition = Vector3.zero;
+        private int m_WaitPreviousPart;
+        private Snake m_Snake;
+
+        public BoxCollider2D boxCollider2D;
+        [HideInInspector] public Bounds segmentBounds;
+
+        private void Awake()
         {
-            // Set a random sprite for diferent parts of the snake body
-            int randomSprite = Random.Range(0, bodySprites.Length);
-            spriteRenderer.sprite = bodySprites[randomSprite];
+            m_Snake = GameManager.Instance.GetSnake();
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            boxCollider2D = GetComponentInChildren<BoxCollider2D>();
+            segmentBounds = boxCollider2D.bounds;
         }
 
-        //UpdateSegmentObstacles();
-    }
+        private void OnEnable()
+        {
+            GameManager.OnLevelChanged += GameManager_OnLevelChanged;
+        }
 
+        private void OnDisable()
+        {
+            GameManager.OnLevelChanged -= GameManager_OnLevelChanged;
+        }
 
+        private void GameManager_OnLevelChanged(int index)
+        {
+            // Send all snake segments to the head
+            transform.position = m_Snake.transform.position;
+        }
 
-    private void OnEnable()
-    {
-        StaticEventHandler.OnRoomChanged += StaticEventHandler_OnRoomChanged;
-    }
+        private void Start()
+        {
+            m_NextPosition = transform.position;
 
-    private void OnDisable()
-    {
-        StaticEventHandler.OnRoomChanged -= StaticEventHandler_OnRoomChanged;
-    }
+            if (bodySprites.Length != 0)
+            {
+                // Set a random sprite for diferent parts of the snake body
+                int randomSprite = Random.Range(0, bodySprites.Length);
+                spriteRenderer.sprite = bodySprites[randomSprite];
+            }
+        }
 
-    private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
-    {
-        
-    }
+        private void Update()
+        {
+            transform.position = Vector3.MoveTowards(transform.position, m_NextPosition, m_Snake.GetSnakeControler().GetMoveSpeed() * Time.deltaTime);
+        }
 
-    /// <summary>
-    /// Makes the enemies consider the snake segments as obstacles
-    /// so the enemies will try to avoid them and look for other path to the player
-    /// </summary>
-    private void UpdateSegmentObstacles()
-    {
-        room = GameManager.Instance.GetCurrentRoom();
-        instantiatedRoom = room.instantiatedRoom;
-        instantiatedRoom.UpdateSnakeSegmenstObstacles();
+        public void SetTargetPosition(Vector3 position)
+        {
+            if (m_WaitPreviousPart > 0)
+            {
+                m_WaitPreviousPart--;
+                return;
+            }
+            m_NextPosition = position;
+        }
 
-        //Vector3Int minColliderBounds = grid.WorldToCell(boxCollider2D.bounds.min);
-        //Vector3Int maxColliderBounds = grid.WorldToCell(boxCollider2D.bounds.max);
-
-        ////Loop through and add moveable item colliders bounds to the obstacle array
-        //for (int i = minColliderBounds.x; i <= maxColliderBounds.x; i++)
-        //{
-        //    for (int j = minColliderBounds.y; j <= maxColliderBounds.y; j++)
-        //    {
-        //        instantiatedRoom.aStarSnakeSegmentsObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
-        //    }
-        //}
+        public void WaitHeadUpdateCycle(int value)
+        {
+            m_WaitPreviousPart = value;
+        }
     }
 }

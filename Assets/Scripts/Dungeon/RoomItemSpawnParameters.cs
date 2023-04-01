@@ -1,4 +1,5 @@
 using UnityEngine;
+using SnakeGame.ProceduralGenerationSystem;
 
 namespace SnakeGame.GameUtilities
 {

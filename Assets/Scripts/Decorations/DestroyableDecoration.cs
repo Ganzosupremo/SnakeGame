@@ -1,4 +1,4 @@
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
 using System.Collections;
 using UnityEngine;
 
@@ -67,7 +67,7 @@ namespace SnakeGame.Decorations
             Destroy(boxCollider2D);
 
             if (destroySoundEffect != null)
-                SoundEffectManager.Instance.PlaySoundEffect(destroySoundEffect);
+                SoundEffectManager.CallOnSoundEffectSelectedEvent(destroySoundEffect);
 
             animator.SetBool(Settings.destroy, true);
 
@@ -78,12 +78,12 @@ namespace SnakeGame.Decorations
             }
 
             // Then destroy all components, but the sprite renderer
+            if (moveableDecoration != null)
+                Destroy(moveableDecoration);
             Destroy(animator);
             Destroy(receiveDamageOnContact);
             Destroy(health);
             Destroy(healthEvent);
-            if (moveableDecoration != null)
-                Destroy(moveableDecoration);
             Destroy(this);
         }
     }

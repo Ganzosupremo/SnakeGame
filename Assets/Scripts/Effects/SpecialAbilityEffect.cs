@@ -9,6 +9,7 @@ namespace SnakeGame.VisualEffects
 
         public void EnableParticles()
         {
+            gameObject.SetActive(true);
             if (!effectParticles.isPlaying)
             {
                 effectParticles.Play();
@@ -21,6 +22,7 @@ namespace SnakeGame.VisualEffects
             {
                 effectParticles.Stop();
             }
+            gameObject.SetActive(false);
         }
     }
 }

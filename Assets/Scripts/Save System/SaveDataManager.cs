@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using SnakeGame.Interfaces;
+using SnakeGame.Debuging;
 
 namespace SnakeGame.SaveAndLoadSystem
 {
@@ -69,7 +70,8 @@ namespace SnakeGame.SaveAndLoadSystem
 
 
         private GameData gameData;
-        private List<IPersistenceData> persistenceDataobjects;
+        public List<IPersistenceData> persistenceDataobjects;
+        public int Count;
         private FileDataHandler fileDataHandler;
         private string selectedProfileID = "";
         private Coroutine autoSaveRoutine;
@@ -82,20 +84,20 @@ namespace SnakeGame.SaveAndLoadSystem
 
             if (disablePersistenceManager)
             {
-                Debug.LogWarning("The persistence data manager is currently disabled");
+                this.LogWarning("The persistence data manager is currently disabled");
             }
 
             this.fileDataHandler = new(Application.persistentDataPath, fileName, useEncryption);
 
-            if (supportsMultipleSaves)
-                this.selectedProfileID = fileDataHandler.GetMostRecentProfileID();
-            else
-                this.selectedProfileID = profileID;
+            //if (supportsMultipleSaves)
+            //    this.selectedProfileID = fileDataHandler.GetMostRecentProfileID();
+            //else
+            this.selectedProfileID = profileID;
 
             if (overrideProfileID)
             {
                 this.selectedProfileID = testProfileID;
-                Debug.LogWarning($"Overrided the selected profile ID with the test id: {testProfileID}");
+                this.LogWarning($"Overrided the selected profile ID with the test id: {testProfileID}");
             }
         }
 
@@ -119,6 +121,7 @@ namespace SnakeGame.SaveAndLoadSystem
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             this.persistenceDataobjects = FindAllPersistenceObjects();
+            Count = persistenceDataobjects.Count;
             LoadGame();
 
             // Start the auto save
@@ -161,10 +164,11 @@ namespace SnakeGame.SaveAndLoadSystem
             if (disablePersistenceManager) return;
 
             // Load from the selected profile ID if multiple saves are supported
-            if (supportsMultipleSaves)
-                this.gameData = fileDataHandler.Load(selectedProfileID);
-            else
-                this.gameData = fileDataHandler.Load();
+            //if (supportsMultipleSaves)
+            //    this.gameData = fileDataHandler.Load(selectedProfileID);
+            //else
+            //    this.gameData = fileDataHandler.Load();
+            gameData = fileDataHandler.Load(selectedProfileID);
 
             // Just for debugging purposes, start a new game if the data is null
             if (this.gameData == null && initializeDataIfNull)
@@ -173,10 +177,12 @@ namespace SnakeGame.SaveAndLoadSystem
             // If no data is found return right away
             if (this.gameData == null)
             {
-                Debug.Log("No Data to load found. A New Game Needs to be started first");
+                this.Log("No Data to load found. A New Game Needs to be started first");
                 NewGame();
                 return;
             }
+
+            persistenceDataobjects = FindAllPersistenceObjects();
 
             foreach (IPersistenceData persistenceData in persistenceDataobjects)
             {
@@ -194,9 +200,11 @@ namespace SnakeGame.SaveAndLoadSystem
             // If we don't have any data to save, log a warning
             if (this.gameData == null)
             {
-                Debug.LogWarning("No data was found. A new game needs to be started before data can be saved");
+                this.LogWarning("No data was found. A new game needs to be started before data can be saved");
                 return;
             }
+
+            persistenceDataobjects = FindAllPersistenceObjects();
 
             foreach (IPersistenceData persistenceData in persistenceDataobjects)
             {
@@ -207,10 +215,11 @@ namespace SnakeGame.SaveAndLoadSystem
             gameData.LastUpdated = System.DateTime.Now.ToBinary();
 
             // Save with the profile ID if multiple saves are supported
-            if (supportsMultipleSaves)
-                fileDataHandler.Save(gameData, selectedProfileID);
-            else
-                fileDataHandler.Save(gameData);
+            fileDataHandler.Save(gameData, selectedProfileID);
+            //if (supportsMultipleSaves)
+            //    fileDataHandler.Save(gameData, selectedProfileID);
+            //else
+            //    fileDataHandler.Save(gameData);
         }
 
         /// <summary>
@@ -251,7 +260,7 @@ namespace SnakeGame.SaveAndLoadSystem
             {
                 yield return new WaitForSeconds(autoSaveTimeSeconds);
                 SaveGame();
-                string newMessage = String.Format("The game has been autosaved at {0:HH:mm:ss}!", DateTime.Now);
+                string newMessage = string.Format("The game has been autosaved at {0:HH:mm:ss}!", DateTime.Now);
                 StartCoroutine(DisplayMessage(newMessage, 3f));
             }
         }
@@ -261,7 +270,7 @@ namespace SnakeGame.SaveAndLoadSystem
         /// </summary>
         /// <param name="message"></param>
         /// <param name="timeToDisplay"></param>
-        private IEnumerator DisplayMessage(string message, float timeToDisplay)
+        public IEnumerator DisplayMessage(string message, float timeToDisplay)
         {
             messageToDisplay.gameObject.SetActive(true);
             messageToDisplay.text = message;

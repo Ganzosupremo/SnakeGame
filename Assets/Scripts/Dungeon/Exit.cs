@@ -2,8 +2,9 @@ using System.Collections;
 using UnityEngine;
 using SnakeGame.VisualEffects;
 using SnakeGame.Debuging;
+using UnityEngine.SceneManagement;
 
-namespace SnakeGame.Dungeon
+namespace SnakeGame.ProceduralGenerationSystem
 {
     [RequireComponent(typeof(BoxCollider2D))]
     [RequireComponent(typeof(MaterializeEffect))]
@@ -33,24 +34,16 @@ namespace SnakeGame.Dungeon
             m_SpriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        private void Update()
-        {
-            Listen();
-        }
-
-        private void Listen()
-        {
-            m_gameLevelIndex = GameManager.Instance.LevelIndex;
-        }
-
         private void OnEnable()
         {
             StaticEventHandler.OnRoomChanged += StaticEventHandler_OnRoomChanged;
+            GameManager.OnLevelChanged += GameManager_OnLevelChanged;
         }
 
         private void OnDisable()
         {
             StaticEventHandler.OnRoomChanged -= StaticEventHandler_OnRoomChanged;
+            GameManager.OnLevelChanged -= GameManager_OnLevelChanged;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -59,10 +52,14 @@ namespace SnakeGame.Dungeon
             {
                 if (m_gameLevelIndex < GameManager.Instance.LevelCount)
                 {
-                    if (GameManager.Instance.currentGameState == GameState.Playing)
+                    if (GameManager.CurrentGameState == GameState.Playing)
                     {
                         //m_gameLevelIndex++;
                         GameManager.Instance.PlayNextLevel(m_gameLevelIndex);
+                    }
+                    else if (GameManager.CurrentGameState == GameState.GameWon)
+                    {
+                        SceneManager.LoadScene((int)SceneIndex.GameWon);
                     }
                 }
             }
@@ -71,6 +68,11 @@ namespace SnakeGame.Dungeon
         private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
         {
             StartCoroutine(MaterializeExit());
+        }
+
+        private void GameManager_OnLevelChanged(int dungeonIndex)
+        {
+            m_gameLevelIndex = dungeonIndex;
         }
 
         private IEnumerator MaterializeExit()

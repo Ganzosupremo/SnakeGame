@@ -1,8 +1,9 @@
+using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.AudioSystem;
+using SnakeGame.VisualEffects;
+using System;
 using System.Collections;
 using UnityEngine;
-using SnakeGame.VisualEffects;
-using SnakeGame.SoundsSystem;
-using System;
 
 namespace SnakeGame.Foods
 {
@@ -92,7 +93,7 @@ namespace SnakeGame.Foods
         private void PlaySoundEffect()
         {
             if (foodSO.SoundEffect == null) return;
-            SoundEffectManager.Instance.PlaySoundEffect(foodSO.SoundEffect);
+            SoundEffectManager.CallOnSoundEffectSelectedEvent(foodSO.SoundEffect);
         }
 
         private void DisableFood()

@@ -28,7 +28,7 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
             health.SetIsDamageable(IsInvincible);
         }
 
-        public override void BeginCooldown(GameObject parent)
+        public override void Cooldown(GameObject parent)
         {
             Snake snake = parent.GetComponent<Snake>();
             Health health = parent.GetComponent<Health>();

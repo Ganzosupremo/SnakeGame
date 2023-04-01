@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using SnakeGame.GameUtilities;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MovementDetails_", menuName = "Scriptable Objects/Movement/Movement Details")]
@@ -18,7 +17,16 @@ public class MovementDetailsSO : ScriptableObject
     #region Tooltip
     [Tooltip("Max move speed - The GetMoveSpeed Method calculates a random value between the min and max.")]
     #endregion
-    public float maxMoveSpeed = 8f;
+    public float maxMoveSpeed = 10f;
+
+    public float DefaultMinMoveSpeed = 8f;
+    public float DefaultMaxMoveSpeed = 10f;
+
+    private void OnDisable()
+    {
+        minMoveSpeed = DefaultMinMoveSpeed;
+        maxMoveSpeed = DefaultMaxMoveSpeed;
+    }
 
     #region
     [Tooltip("This is the speed for the roll mechanich - it is used only on the player, not the enemies")]

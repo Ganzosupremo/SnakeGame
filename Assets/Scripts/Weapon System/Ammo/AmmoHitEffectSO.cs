@@ -1,3 +1,4 @@
+using SnakeGame.GameUtilities;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AmmoHitEffect_", menuName = "Scriptable Objects/Weapon System/Ammo Hit Effect")]

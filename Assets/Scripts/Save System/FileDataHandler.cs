@@ -1,3 +1,4 @@
+using SnakeGame.Debuging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -68,7 +69,7 @@ namespace SnakeGame.SaveAndLoadSystem
                     // We only try to load from backup a single time, otherwise it could end in an infinite loop
                     if (allowRestoreFromBackup)
                     {
-                        Debug.LogWarning($"Failed to load file. Attempting to roll back. \n {e}");
+                        Debuger.LogWarning($"Failed to load file. Attempting to roll back. \n {e}");
                         bool rollBackSucceded = AttemptRollBack(fullPath);
 
                         if (rollBackSucceded)
@@ -79,7 +80,7 @@ namespace SnakeGame.SaveAndLoadSystem
                     }
                     else
                     {
-                        Debug.LogError($"Error ocurred when trying to load file from: {fullPath} and backup didn't work. \n {e}");
+                        this.LogError($"Error ocurred when trying to load file from: {fullPath} and backup didn't work. \n {e}");
                     }
                 }
             }
@@ -123,7 +124,7 @@ namespace SnakeGame.SaveAndLoadSystem
                     // We only try to load from backup a single time, otherwise it could end in an infinite loop
                     if (allowRestoreFromBackup)
                     {
-                        Debug.LogWarning($"Failed to load file. Attempting to roll back. \n {e}");
+                        this.LogWarning($"Failed to load file. Attempting to roll back. \n {e}");
                         bool rollBackSucceded = AttemptRollBack(fullPath);
 
                         if (rollBackSucceded)
@@ -134,7 +135,7 @@ namespace SnakeGame.SaveAndLoadSystem
                     }
                     else
                     {
-                        Debug.LogError($"Error ocurred when trying to load file from: {fullPath} and backup didn't work. \n {e}");
+                        this.LogError($"Error ocurred when trying to load file from: {fullPath} and backup didn't work. \n {e}");
                     }
                 }
             }
@@ -195,7 +196,7 @@ namespace SnakeGame.SaveAndLoadSystem
             }
             catch (Exception e)
             {
-                Debug.LogError("Error while saving the file: " + fullPath + "\n" + e);
+                this.LogError($"Error while saving the file on: {fullPath}.\nException: {e}");
             }
         }
 
@@ -246,7 +247,7 @@ namespace SnakeGame.SaveAndLoadSystem
             }
             catch (Exception e)
             {
-                Debug.LogError("Error while saving the file: " + fullPath + "\n" + e);
+                this.LogError($"Error while saving the file on: {fullPath}. \nException: {e}");
             }
         }
 
@@ -271,7 +272,7 @@ namespace SnakeGame.SaveAndLoadSystem
 
                 if (!File.Exists(fullPath))
                 {
-                    Debug.LogWarning($"Skipping this directory, because is not a save file: {profileID}");
+                    this.LogWarning($"Skipping this directory, because is not a save file: {profileID}");
                     continue;
                 }
 
@@ -286,7 +287,7 @@ namespace SnakeGame.SaveAndLoadSystem
                 }
                 else
                 {
-                    Debug.LogError($"Tried to load data but something went wrong. ProfileID: {profileID}");
+                    this.LogError($"Tried to load data but something went wrong. ProfileID: {profileID}");
                 }
 
             }
@@ -366,7 +367,7 @@ namespace SnakeGame.SaveAndLoadSystem
                 {
                     File.Copy(fullPath, backupFilePath, true);
                     success = true;
-                    Debug.Log("Had to roll back from backup file");
+                    this.Log("Had to roll back from backup file");
                 }
                 // Otherwise, we don't yet have a backup file, so there's nothing to load from
                 else
@@ -376,7 +377,7 @@ namespace SnakeGame.SaveAndLoadSystem
             }
             catch (Exception e)
             {
-                Debug.LogError($"Error ocurred when trying to roll back from the backup file: {backupFilePath}, \n {e}");
+                this.LogError($"Error ocurred when trying to roll back from the backup file: {backupFilePath}.\nException: {e}");
             }
 
             return success;

@@ -1,8 +1,5 @@
-using SnakeGame.Dungeon.NoiseGenerator;
+using SnakeGame.ProceduralGenerationSystem;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace SnakeGame
 {
@@ -14,21 +11,6 @@ namespace SnakeGame
         public static void CallRoomChangedEvent(Room room)
         {
             OnRoomChanged?.Invoke(new RoomChangedEventArgs() { room = room });
-        }
-        #endregion
-
-        #region ON MAP GENERATED
-        public static event Action<MapGeneratedEventArgs> OnMapGenerated;
-
-        public static void CallMapGeneratedEvent(int gridSize, int width, int height, MapPresetSO mapPreset)
-        {
-            OnMapGenerated?.Invoke(new MapGeneratedEventArgs()
-            {
-                gridSize = gridSize,
-                width = width,
-                height = height,
-                mapPreset = mapPreset
-            });
         }
         #endregion
 
@@ -77,19 +59,34 @@ namespace SnakeGame
             });
         }
         #endregion
+
+        #region ON SLOWDOWN TIME
+        public static event Action<SlowDownTimeArgs> OnSlowDownTime;
+        public static event Action<SlowDownTimeArgs> OnTimeToNormal;
+
+        public static void CallOnSlowDownTimeEvent(float slowDownTimeFactor, float slowDownTimeDuration)
+        {
+            OnSlowDownTime?.Invoke(new SlowDownTimeArgs()
+            {
+                SlowDownFactor = slowDownTimeFactor,
+                SlowDownDuration = slowDownTimeDuration
+            });
+        }
+
+        public static void CallOnTimeToNormalEvent(float slowDownFactor, float cooldownDuration)
+        {
+            OnTimeToNormal?.Invoke(new SlowDownTimeArgs() 
+            { 
+                SlowDownFactor = slowDownFactor, 
+                SlowDownDuration = cooldownDuration 
+            });
+        }
+        #endregion
     }
 
     public class RoomChangedEventArgs : EventArgs
     {
         public Room room;
-    }
-
-    public class MapGeneratedEventArgs : EventArgs
-    {
-        public int gridSize;
-        public int width;
-        public int height;
-        public MapPresetSO mapPreset;
     }
 
     public class RoomEnemiesDefeatedArgs : EventArgs
@@ -111,5 +108,11 @@ namespace SnakeGame
     public class MultiplierArgs : EventArgs
     {
         public bool multiplier;
+    }
+
+    public class SlowDownTimeArgs : EventArgs
+    {
+        public float SlowDownFactor;
+        public float SlowDownDuration;
     }
 }

@@ -1,5 +1,6 @@
+using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.AudioSystem;
 using UnityEngine;
-using SnakeGame.SoundsSystem;
 
 namespace SnakeGame.Decorations
 {
@@ -40,7 +41,7 @@ namespace SnakeGame.Decorations
             {
                 if (moveSound != null && Time.frameCount % 10 == 0)
                 {
-                    SoundEffectManager.Instance.PlaySoundEffect(moveSound);
+                    SoundEffectManager.CallOnSoundEffectSelectedEvent(moveSound);
                 }
             }
         }

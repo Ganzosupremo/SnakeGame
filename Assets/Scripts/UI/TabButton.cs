@@ -1,50 +1,85 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
-using System.Xml.Serialization;
-using UnityEngine.Events;
 
 namespace SnakeGame.UI
 {
     [RequireComponent(typeof(Image))]
     [DisallowMultipleComponent]
-    public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
+    public class TabButton : MonoBehaviour
     {
         public TabGroup TabGroup;
-        public Image Background;
-        public UnityEvent OnTabSelected;
-        public UnityEvent OnTabDeselected;
 
-        private void Start()
+        private int m_Index = 0;
+
+
+        public void SelectNextPage()
         {
-            Background = GetComponent<Image>();
-            TabGroup.Subscribe(this);
+            if (m_Index >= TabGroup.ObjectsToSwap.Count - 1) return;
+            m_Index++;
+
+            //ResetObjectsToSwap();
+            MoveToSelectedObject(m_Index);
+            
+
+            //for (int i = 0; i < TabGroup.ObjectsToSwap.Count; i++)
+            //{
+            //    if (i == m_Index)
+            //    {
+            //        TabGroup.ObjectsToSwap[m_Index].SetActive(true);
+            //    }
+            //    else
+            //    {
+            //        TabGroup.ObjectsToSwap[m_Index].SetActive(false);
+            //    }
+            //}
         }
 
-        public void Select()
+        public void SelectPreviousPage()
         {
-            OnTabSelected?.Invoke();
+            if (m_Index == 0) return;
+            m_Index--;
+
+            //ResetObjectsToSwap();
+            MoveToSelectedObject(m_Index);
+            //for (int i = 0; i < TabGroup.ObjectsToSwap.Count; i++)
+            //{
+            //    if (i == m_Index)
+            //    {
+            //        TabGroup.ObjectsToSwap[m_Index].SetActive(true);
+            //    }
+            //    else
+            //    {
+            //        TabGroup.ObjectsToSwap[m_Index].SetActive(false);
+            //    }
+            //}
         }
 
-        public void Deselect()
+        private void MoveToSelectedObject(int index)
         {
-            OnTabSelected?.Invoke();
+            for (int i = 0; i < TabGroup.ObjectsToSwap.Count; i++)
+            {
+                if (i == index)
+                {
+                    TabGroup.ObjectsToSwap[index].SetActive(true);
+                }
+                else
+                {
+                    TabGroup.ObjectsToSwap[index].SetActive(false);
+                }
+            }
+
+
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        private void ResetObjectsToSwap()
         {
-            TabGroup.OnTabSelected(this);
-        }
 
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            TabGroup.OnTabEnter(this);
-        }
 
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            TabGroup.OnTabExit(this);
+            foreach (GameObject gameObject in TabGroup.ObjectsToSwap)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 }

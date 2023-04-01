@@ -40,7 +40,7 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
             hasInfiniteClipCapacity = snake.activeWeapon.GetCurrentWeapon().weaponDetails.hasInfinityClipCapacity;
         }
 
-        public override void BeginCooldown(GameObject parent)
+        public override void Cooldown(GameObject parent)
         {
             Snake snake = parent.GetComponent<Snake>();
 

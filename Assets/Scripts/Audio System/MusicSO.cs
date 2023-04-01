@@ -1,8 +1,9 @@
+using SnakeGame.GameUtilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SnakeGame.SoundsSystem
+namespace SnakeGame.AudioSystem
 {
     [CreateAssetMenu(fileName = "MusicTrack_", menuName = "Scriptable Objects/Sound System/Music Track")]
     public class MusicSO : ScriptableObject

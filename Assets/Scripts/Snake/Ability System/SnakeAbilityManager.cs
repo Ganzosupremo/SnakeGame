@@ -1,3 +1,4 @@
+using SnakeGame.Debuging;
 using SnakeGame.UI;
 using SnakeGame.VisualEffects;
 using System;
@@ -9,69 +10,53 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
     {
         public GameObject AbilityEffectParticleSystem;
 
-        private UniversalAbility ability;
-        private Snake snake;
-        private float cooldownTime;
-        private float activeTime;
-        private AbilityState state = AbilityState.Ready;
+        public static event Action OnAbilityActive;
+        public static event Action<SnakeAbilityEventArgs> OnAbilityInactive;
+
+        private UniversalAbility m_Ability;
+        private Snake m_Snake;
+        private float m_CooldownTime;
+        private float m_ActiveTime;
+        private AbilityState m_State = AbilityState.Ready;
 
         private void Awake()
         {
-            snake = GetComponent<Snake>();
+            m_Snake = GetComponent<Snake>();
+            // Choose a special ability at random
+            //m_snake.snakeDetails.ability = m_snake.snakeDetails.AbilitiesArray[Random.Range(0, m_snake.snakeDetails.AbilitiesArray.Length)];
         }
 
         private void Start()
         {
-            ability = snake.snakeDetails.ability;
-            AbilityEffectParticleSystem = Instantiate(AbilityEffectParticleSystem, snake.transform);
+            //m_Snake.snakeDetails.ability = m_Snake.snakeDetails.AbilitiesArray[UnityEngine.Random.Range(0, m_Snake.snakeDetails.AbilitiesArray.Length)];
+            m_Ability = m_Snake.snakeDetails.ability;
+            AbilityEffectParticleSystem = Instantiate(AbilityEffectParticleSystem, m_Snake.transform);
             AbilityEffectParticleSystem.SetActive(false);
         }
 
         private void Update()
         {
-            switch (state)
+            HandleAbilityState();
+        }
+
+        private void HandleAbilityState()
+        {
+            switch (m_State)
             {
                 case AbilityState.Ready:
-                    if (snake.GetSnakeControler().GetInputActions().Snake.SpecialAbility.IsPressed())
-                    {
-                        ability.Activate(gameObject);
-                        snake.ChangeSpriteMaterial(GameResources.Instance.outlineMaterial);
-                        snake.GetSnakeControler().SetSpecialAbilityBool(true);
-                        state = AbilityState.Active;
-                        activeTime = ability.activeTime;
-                    }
+
+                    if (m_Snake.GetSnakeControler().GetInputActions().Snake.SpecialAbility.IsPressed())
+                        ActivateAbility();
 
                     break;
                 case AbilityState.Active:
-                    if (activeTime > 0f)
-                    {
-                        activeTime -= Time.unscaledDeltaTime;
-                        ActivateParticleEffects();
-                        StartCoroutine(SpecialAbilityUI.Instance.UpdateSpecialAbilityBar(activeTime / ability.activeTime));
-                    }
-                    else
-                    {
-                        ability.BeginCooldown(gameObject);
-                        DeactivateParticleEffects();
-                        snake.ChangeSpriteMaterial(GameResources.Instance.litMaterial);
-                        snake.GetSnakeControler().SetSpecialAbilityBool(false);
-                        state = AbilityState.Cooldown;
-                        cooldownTime = ability.cooldownTime;
-                    }
+
+                    AbilityOnActiveTime();
 
                     break;
                 case AbilityState.Cooldown:
-                    if (cooldownTime > 0f)
-                    {
-                        cooldownTime -= Time.unscaledDeltaTime;
-                        StartCoroutine(SpecialAbilityUI.Instance.UpdateSpecialAbilityCooldownBar(cooldownTime / ability.cooldownTime));
-                    }
-                    else
-                    {
-                        SpecialAbilityUI.Instance.ResetSpecialAbilityBar();
-                        SpecialAbilityUI.Instance.ResetSpecialAbilityCooldownBar();
-                        state = AbilityState.Ready;
-                    }
+
+                    AbilityOnCooldownTime();
 
                     break;
                 default:
@@ -79,11 +64,72 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
             }
         }
 
+
+
+        private void ActivateAbility()
+        {
+            CallOnAbilityActiveEvent();
+            m_Ability.Activate(gameObject);
+            m_Snake.ChangeSpriteMaterial(GameResources.Instance.outlineMaterial);
+            m_Snake.GetSnakeControler().SetSpecialAbilityBool(true);
+            m_ActiveTime = m_Ability.ActiveTime;
+            m_State = AbilityState.Active;
+        }
+
+        private void AbilityOnActiveTime()
+        {
+            if (m_ActiveTime > 0f)
+            {
+                m_ActiveTime -= Time.unscaledDeltaTime;
+                ActivateParticleEffects();
+                StartCoroutine(SpecialAbilityUI.Instance.UpdateSpecialAbilityBar(m_ActiveTime / m_Ability.ActiveTime));
+            }
+            else
+            {
+                CallOnAbilityInactiveEvent(m_ActiveTime, m_CooldownTime);
+                m_Ability.Cooldown(gameObject);
+                DeactivateParticleEffects();
+                m_Snake.ChangeSpriteMaterial(GameResources.Instance.litMaterial);
+                m_Snake.GetSnakeControler().SetSpecialAbilityBool(false);
+                m_CooldownTime = m_Ability.CooldownTime;
+                m_State = AbilityState.Cooldown;
+            }
+        }
+
+        private void AbilityOnCooldownTime()
+        {
+            if (m_CooldownTime > 0f)
+            {
+                m_CooldownTime -= Time.unscaledDeltaTime;
+                m_Ability.UpdateAbilityOnCooldown(gameObject);
+                StartCoroutine(SpecialAbilityUI.Instance.UpdateSpecialAbilityCooldownBar(m_CooldownTime / m_Ability.CooldownTime));
+            }
+            else
+            {
+                SpecialAbilityUI.Instance.ResetSpecialAbilityBar();
+                SpecialAbilityUI.Instance.ResetSpecialAbilityCooldownBar();
+                m_State = AbilityState.Ready;
+            }
+        }
+
+        public static void CallOnAbilityActiveEvent()
+        {
+            OnAbilityActive?.Invoke();
+        }
+
+        public static void CallOnAbilityInactiveEvent(float activeTime, float cooldownTime)
+        {
+            OnAbilityInactive?.Invoke(new SnakeAbilityEventArgs
+            {
+                ActiveTime = activeTime,
+                CooldownTime = cooldownTime,
+            });
+        }
+
         private void ActivateParticleEffects()
         {
             if (AbilityEffectParticleSystem.TryGetComponent(out SpecialAbilityEffect abilityEffect))
             {
-                AbilityEffectParticleSystem.SetActive(true);
                 abilityEffect.EnableParticles();
             }
         }
@@ -92,9 +138,14 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
         {
             if (AbilityEffectParticleSystem.TryGetComponent(out SpecialAbilityEffect abilityEffect))
             {
-                //AbilityEffectParticleSystem.SetActive(false);
                 abilityEffect.DisableParticles();
             }
         }
+    }
+
+    public class SnakeAbilityEventArgs : EventArgs
+    {
+        public float ActiveTime;
+        public float CooldownTime; 
     }
 }

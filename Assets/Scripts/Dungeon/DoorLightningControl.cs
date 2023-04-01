@@ -2,55 +2,58 @@ using SnakeGame;
 using System.Collections;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class DoorLightningControl : MonoBehaviour
+namespace SnakeGame.ProceduralGenerationSystem
 {
-    private bool isLit = false;
-    private Door door;
-
-    private void Awake()
+    [DisallowMultipleComponent]
+    public class DoorLightningControl : MonoBehaviour
     {
-        door = GetComponent<Door>();
-    }
+        private bool isLit = false;
+        private Door door;
 
-    /// <summary>
-    /// The Door Fade In
-    /// </summary>
-    public void FadeInDoor(Door door)
-    {
-        Material material = new Material(GameResources.Instance.variableLitShader);
-
-        if (!isLit)
+        private void Awake()
         {
-            SpriteRenderer[] spriteRenderesArray = GetComponentsInParent<SpriteRenderer>();
+            door = GetComponent<Door>();
+        }
 
-            foreach (SpriteRenderer spriteRenderer in spriteRenderesArray)
+        /// <summary>
+        /// The Door Fade In
+        /// </summary>
+        public void FadeInDoor(Door door)
+        {
+            Material material = new Material(GameResources.Instance.variableLitShader);
+
+            if (!isLit)
             {
-                StartCoroutine(FadeInDoorCoroutine(spriteRenderer, material));
+                SpriteRenderer[] spriteRenderesArray = GetComponentsInParent<SpriteRenderer>();
+
+                foreach (SpriteRenderer spriteRenderer in spriteRenderesArray)
+                {
+                    StartCoroutine(FadeInDoorCoroutine(spriteRenderer, material));
+                }
+                isLit = true;
             }
-            isLit = true;
         }
-    }
 
-    /// <summary>
-    /// Fade In Coroutine
-    /// </summary>
-    private IEnumerator FadeInDoorCoroutine(SpriteRenderer spriteRenderer, Material material)
-    {
-        spriteRenderer.material = material;
-
-        for (float i = 0.05f; i <= 1f; i += Time.deltaTime / Settings.fadeInTime)
+        /// <summary>
+        /// Fade In Coroutine
+        /// </summary>
+        private IEnumerator FadeInDoorCoroutine(SpriteRenderer spriteRenderer, Material material)
         {
-            material.SetFloat("Alpha_Slider", i);
+            spriteRenderer.material = material;
 
-            yield return null;
+            for (float i = 0.05f; i <= 1f; i += Time.deltaTime / Settings.FadeInTime)
+            {
+                material.SetFloat("Alpha_Slider", i);
+
+                yield return null;
+            }
+
+            spriteRenderer.material = GameResources.Instance.litMaterial;
         }
 
-        spriteRenderer.material = GameResources.Instance.litMaterial;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        FadeInDoor(door);
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            FadeInDoor(door);
+        }
     }
 }

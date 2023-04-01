@@ -59,7 +59,7 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
             snake.activeWeapon.GetCurrentAmmo().SetAmmoSpawnInterval(SpawnIntervalMin, SpawnIntervalMax);
         }
 
-        public override void BeginCooldown(GameObject parent)
+        public override void Cooldown(GameObject parent)
         {
             Snake snake = parent.GetComponent<Snake>();
 

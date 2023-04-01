@@ -1,8 +1,11 @@
+using SnakeGame.ProceduralGenerationSystem;
+using System;
 using UnityEngine;
 
-namespace SnakeGame
+namespace SnakeGame.ObsoleteClasses
 {
     [System.Serializable]
+    [Obsolete]
     public class RoomEnemySpawnParameters
     {
         #region Tooltip

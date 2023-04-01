@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using SnakeGame.GameUtilities;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RoomNodeType_", menuName = "Scriptable Objects/Dungeon/Room Node Type")]

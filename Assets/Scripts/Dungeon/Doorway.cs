@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SnakeGame
+namespace SnakeGame.ProceduralGenerationSystem
 {
     [System.Serializable]
     public class Doorway

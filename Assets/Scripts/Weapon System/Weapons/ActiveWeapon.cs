@@ -1,4 +1,5 @@
 using SnakeGame.AbwehrSystem.Ammo;
+using SnakeGame.GameUtilities;
 using UnityEngine;
 
 [RequireComponent(typeof(SetActiveWeaponEvent))]

@@ -3,10 +3,11 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Tilemaps;
 using UnityEngine.Rendering.Universal;
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
 using SnakeGame.Enemies;
 using SnakeGame.PlayerSystem;
 using UnityEngine.Rendering;
+using SnakeGame.GameUtilities;
 
 namespace SnakeGame
 {
@@ -62,6 +63,7 @@ namespace SnakeGame
         [Tooltip("The master mixer group of the music")]
         #endregion
         public AudioMixerGroup musicMasterMixerGroup;
+        public AudioMixerGroup musicMixerGroup;
 
         public AudioMixerGroup minigunFireMixerGroup;
 

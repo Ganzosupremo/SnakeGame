@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 using SnakeGame;
 using SnakeGame.Interfaces;
 using SnakeGame.AbwehrSystem.Ammo;
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
 using SnakeGame.VisualEffects;
 
 [RequireComponent(typeof(FireWeaponEvent))]
@@ -223,7 +223,7 @@ public class FireWeapon : MonoBehaviour
     {
         if (activeWeapon.GetCurrentWeapon().weaponDetails.fireSound != null)
         {
-            SoundEffectManager.Instance.PlaySoundEffect(activeWeapon.GetCurrentWeapon().weaponDetails.fireSound);
+            SoundEffectManager.CallOnSoundEffectSelectedEvent(activeWeapon.GetCurrentWeapon().weaponDetails.fireSound);
         }
     }
 }

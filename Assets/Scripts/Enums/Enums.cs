@@ -110,6 +110,8 @@ namespace SnakeGame
         MainGame = 1,
         Settings = 2,
         HighScores = 3,
+        HowToPlay = 4,
+        GameWon = 5,
     }
 }
 

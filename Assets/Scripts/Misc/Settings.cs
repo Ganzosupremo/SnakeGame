@@ -15,7 +15,7 @@ public static class Settings
     #endregion
 
     #region ROOM SETTINGS
-    public const float fadeInTime = 0.5f; //Time the rooms and doors take to fade in
+    public const float FadeInTime = 0.5f; //Time the rooms and doors take to fade in
     public const int maxChildCorridors = 4; //Max number of child corridors leading from a room - max should be 3 although
                                             //this is not recommended since it can cause the dungeon building to fail, since the rooms are more likely to not fit together
     public const float doorUnlockDelay = 1f;
@@ -67,12 +67,13 @@ public static class Settings
     public const string goldenFood = "GoldenFood";
     public const string voidFood = "VoidFood";
     public const string snakeBody = "SnakeSegment";
-    public const string enemyTag = "Enemy";
+    public const string EnemyTag = "Enemy";
 
     public const string CollisionTilemapTag = "Tilemap_Collision";
     #endregion
 
     #region GAME AUDIO
+    public const float MusicFadeTime = 2.2f;
     public const float musicFadeInTime = 0.8f;
     public const float musicFadeOutTime = 0.6f;
     #endregion
@@ -98,7 +99,7 @@ public static class Settings
     #endregion
 
     #region ENEMY PARAMETERS
-    public const int defaultEnemyHealth = 20;
+    public const int defaultEnemyHealth = 100;
     #endregion
 
     #region UI PARAMETERS
@@ -107,7 +108,7 @@ public static class Settings
     #endregion
 
     #region TOUCH DAMAGE SETTINGS
-    public const float touchDamagaCooldown = 0.5f;
+    public const float touchDamagaCooldown = 0.7f;
     #endregion
 
     #region HIGH SCORES

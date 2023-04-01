@@ -1,3 +1,5 @@
+using SnakeGame.AudioSystem;
+using SnakeGame.GameUtilities;
 using UnityEngine;
 
 namespace SnakeGame.AbwehrSystem.Ammo
@@ -47,13 +49,15 @@ namespace SnakeGame.AbwehrSystem.Ammo
         public Material ammoChargeMaterial;
 
         #region Ammo Hit Effect
-        [Header("Ammo Hit Effect Settings")]
+        [Header("Collision Effects Settings")]
         [Space(10)]
         #endregion
         #region Tooltip
         [Tooltip("The SO that defines the parameters for the ammo hit effect prefab")]
         #endregion
         public AmmoHitEffectSO ammoHitEffect;
+
+        public SoundEffectSO CollisionSoundEffect;
 
         #region Header Base Ammo Parameters
         [Header("Base Ammo Parameters")]
@@ -242,6 +246,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             // is enemy ammo
             else
             {
+                ammoDamage = originalAmmoDamage;
                 ammoDamage += increaseDamageBy;
                 return true;
             }

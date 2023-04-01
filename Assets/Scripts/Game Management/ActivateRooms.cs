@@ -1,4 +1,5 @@
-using System.Collections;
+using SnakeGame.GameUtilities;
+using SnakeGame.ProceduralGenerationSystem;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace SnakeGame
         private void EnableRooms()
         {
             //If the current game state is dungeonOverviewMap, don't process any room activation
-            if (GameManager.Instance.currentGameState == GameState.OverviewMap) return;
+            if (GameManager.CurrentGameState == GameState.OverviewMap) return;
 
             HelperUtilities.CameraWorldPositionBounds(out Vector2Int minimapWorldPositionLowerBounds,
                 out Vector2Int minimapWorldPositionUpperBounds, minimapCamera);

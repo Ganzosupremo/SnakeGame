@@ -1,3 +1,4 @@
+using SnakeGame.GameUtilities;
 using System;
 using UnityEngine;
 

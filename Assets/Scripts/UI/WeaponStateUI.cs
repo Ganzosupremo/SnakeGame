@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using SnakeGame.PlayerSystem;
+using SnakeGame.GameUtilities;
 
 namespace SnakeGame.UI
 {

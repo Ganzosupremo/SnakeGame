@@ -1,4 +1,4 @@
-using SnakeGame.SoundsSystem;
+using SnakeGame.AudioSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +6,9 @@ namespace SnakeGame.UI
 {
     public class MainMenuUI : SingletonMonoBehaviour<MainMenuUI>
     {
+        internal enum LoadedScene { None, Settings, HighScores, HowToPlay}
+
+
         [Header("Button References")]
         [Space(5)]
         [SerializeField] private GameObject playButton;
@@ -19,8 +22,7 @@ namespace SnakeGame.UI
         [Space(5)]
         [SerializeField] private MusicSO mainMenuMusic;
 
-        private bool isSettingsLoaded = false;
-        private bool isHighScoresLoaded = false;
+        private LoadedScene m_loadedScene;
 
         protected override void Awake()
         {
@@ -30,7 +32,7 @@ namespace SnakeGame.UI
         private void Start()
         {
             returnButton.SetActive(false);
-            MusicManager.Instance.PlayMusic(mainMenuMusic);
+            MusicManager.CallOnMusicClipChangedEvent(mainMenuMusic);
         }
 
         public void StartGame()
@@ -45,11 +47,9 @@ namespace SnakeGame.UI
             instructionsButton.SetActive(false);
             highScoresButton.SetActive(false);
             quitButton.SetActive(false);
-
             returnButton.SetActive(false);
 
-            isSettingsLoaded = true;
-            ReturnButtonUI.sceneToUnload = ReturnButtonUI.SceneToUnload.Settings;
+            m_loadedScene = LoadedScene.Settings;
             SceneManager.LoadScene((int)SceneIndex.Settings, LoadSceneMode.Additive);
         }
 
@@ -60,12 +60,23 @@ namespace SnakeGame.UI
             instructionsButton.SetActive(false);
             highScoresButton.SetActive(false);
             returnButton.SetActive(false);
-            
             quitButton.SetActive(true);
 
-            isHighScoresLoaded = true;
-            ReturnButtonUI.sceneToUnload = ReturnButtonUI.SceneToUnload.HighScores;
+            m_loadedScene = LoadedScene.HighScores;
             SceneManager.LoadScene((int)SceneIndex.HighScores, LoadSceneMode.Additive);
+        }
+
+        public void LoadHowToPlay()
+        {
+            playButton.SetActive(false);
+            settingsButton.SetActive(false);
+            instructionsButton.SetActive(false);
+            highScoresButton.SetActive(false);
+            quitButton.SetActive(false);
+            returnButton.SetActive(false);
+
+            m_loadedScene = LoadedScene.HowToPlay;
+            SceneManager.LoadScene((int)SceneIndex.HowToPlay, LoadSceneMode.Additive);
         }
 
         /// <summary>
@@ -74,18 +85,26 @@ namespace SnakeGame.UI
         /// </summary>
         public void LoadMainMenu()
         {
-            if (isSettingsLoaded)
+            switch (m_loadedScene)
             {
-                SceneManager.UnloadSceneAsync((int)SceneIndex.Settings);
-                isSettingsLoaded = false;
-            }
-            else if (isHighScoresLoaded)
-            {
-                SceneManager.UnloadSceneAsync((int)SceneIndex.HighScores);
-                isHighScoresLoaded = false;
+                case LoadedScene.Settings:
+                    SceneManager.UnloadSceneAsync((int)SceneIndex.Settings);
+                    m_loadedScene = LoadedScene.None;
+                    break;
+                case LoadedScene.HighScores:
+                    SceneManager.UnloadSceneAsync((int)SceneIndex.HighScores);
+                    m_loadedScene = LoadedScene.None;
+                    break;
+                case LoadedScene.HowToPlay:
+                    SceneManager.UnloadSceneAsync((int)SceneIndex.HowToPlay);
+                    m_loadedScene = LoadedScene.None;
+                    break;
+                default:
+                    break;
             }
 
             returnButton.SetActive(false);
+
             playButton.SetActive(true);
             settingsButton.SetActive(true);
             instructionsButton.SetActive(true);
