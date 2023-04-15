@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
 using SnakeGame.PlayerSystem.AbilitySystem;
@@ -20,7 +21,7 @@ namespace SnakeGame.AudioSystem
         public static event Action OnMusicVolumeDecreased;
         public static event Action<MusicSO, float> OnMusicClipChanged;
 
-        private AudioSource m_MusicSource01 = null, m_MusicSource02 = null;
+        [SerializeField] private AudioSource _MusicSource01 = null, _MusicSource02 = null;
         private AudioClip m_CurrentmusicClip = null;
         private bool m_IsMusicSource01Playing = true;
 
@@ -32,13 +33,13 @@ namespace SnakeGame.AudioSystem
         {
             base.Awake();
 
-            m_MusicSource01 = GetComponent<AudioSource>();
-            m_MusicSource02 = gameObject.AddComponent<AudioSource>();
-            m_MusicSource02.loop = true;
-            m_MusicSource02.outputAudioMixerGroup = GameResources.Instance.musicMixerGroup;
+            _MusicSource01 = GetComponent<AudioSource>();
+            //_MusicSource02 = gameObject.AddComponent<AudioSource>();
+            //_MusicSource02.loop = true;
+            //_MusicSource02.outputAudioMixerGroup = GameResources.Instance.musicMixerGroup;
             
             // Start with the music off
-            GameResources.Instance.musicOff.TransitionTo(0f);
+            //GameResources.Instance.musicOff.TransitionTo(0f);
         }
 
         private void Start()
@@ -53,8 +54,16 @@ namespace SnakeGame.AudioSystem
             OnMusicVolumeDecreased += MusicManager_OnMusicVolumeDecreased;
             OnMusicClipChanged += MusicManager_OnMusicClipChanged;
 
-            SnakeAbilityManager.OnAbilityActive += SnakeAbilityManager_OnAbilityActive;
-            SnakeAbilityManager.OnAbilityInactive += SnakeAbilityManager_OnAbilityInactive;
+            if (_MusicSource02 == null)
+            {
+                _MusicSource02 = gameObject.AddComponent<AudioSource>();
+                _MusicSource02.loop = true;
+                _MusicSource02.outputAudioMixerGroup = GameResources.Instance.musicMixerGroup;
+            }
+
+
+            //SnakeAbilityManager.OnAbilityActive += SnakeAbilityManager_OnAbilityActive;
+            //SnakeAbilityManager.OnAbilityInactive += SnakeAbilityManager_OnAbilityInactive;
         }
 
         private void OnDisable()
@@ -63,46 +72,8 @@ namespace SnakeGame.AudioSystem
             OnMusicVolumeDecreased -= MusicManager_OnMusicVolumeDecreased;
             OnMusicClipChanged -= MusicManager_OnMusicClipChanged;
 
-            SnakeAbilityManager.OnAbilityActive -= SnakeAbilityManager_OnAbilityActive;
-            SnakeAbilityManager.OnAbilityInactive -= SnakeAbilityManager_OnAbilityInactive;
-        }
-
-        private void SnakeAbilityManager_OnAbilityActive()
-        {
-            //m_MusicSource01.pitch = 0.75f;
-        }
-
-        private void SnakeAbilityManager_OnAbilityInactive(SnakeAbilityEventArgs snakeAbilityEventArgs)
-        {
-            //if (m_IsMusicSource01Playing)
-            //    m_MusicSource01.pitch = 1f;
-            //else
-            //    m_MusicSource02.pitch = 1f;
-            StartCoroutine(OnAbilityInactiveRoutine(snakeAbilityEventArgs.CooldownTime));
-        }
-
-        private IEnumerator OnAbilityInactiveRoutine(float cooldownTime)
-        {
-            yield return new WaitForSeconds(cooldownTime);
-            //float timeElapsed = 0f;
-            //if (!m_IsMusicSource01Playing)
-            //{
-            //    while (timeElapsed < cooldownTime)
-            //    {
-            //        m_MusicSource01.pitch = Mathf.Lerp(m_MusicSource01.pitch, 1f, timeElapsed / cooldownTime);
-            //        timeElapsed += Time.deltaTime;
-            //        yield return null;
-            //    }
-            //}
-            //else
-            //{
-            //    while (timeElapsed < cooldownTime)
-            //    {
-            //        m_MusicSource02.pitch = Mathf.Lerp(m_MusicSource02.pitch, 1f, timeElapsed / cooldownTime);
-            //        timeElapsed += Time.deltaTime;
-            //        yield return null;
-            //    }
-            //}
+            //SnakeAbilityManager.OnAbilityActive -= SnakeAbilityManager_OnAbilityActive;
+            //SnakeAbilityManager.OnAbilityInactive -= SnakeAbilityManager_OnAbilityInactive;
         }
 
         private void MusicManager_OnMusicVolumeIncreased()
@@ -151,40 +122,40 @@ namespace SnakeGame.AudioSystem
                 m_CurrentmusicClip = musicSO.musicClip;
                 m_IsMusicSource01Playing = !m_IsMusicSource01Playing;
 
-                m_FadeMusicCoroutine = StartCoroutine(FadeMusic(musicSO, timeToFade));
+                FadeMusic(musicSO, timeToFade);
             }
         }
 
-        private IEnumerator FadeMusic(MusicSO musicTrack, float timeToFade)
+        private async void FadeMusic(MusicSO musicTrack, float timeToFade)
         {
             float timeElapsed = 0f;
             if (m_IsMusicSource01Playing)
             {
-                m_MusicSource02.clip = musicTrack.musicClip;
-                m_MusicSource02.Play();
+                _MusicSource02.clip = musicTrack.musicClip;
+                _MusicSource02.Play();
 
                 while (timeElapsed < timeToFade)
                 {
-                    m_MusicSource02.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
-                    m_MusicSource01.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+                    _MusicSource02.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
+                    _MusicSource01.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
                     timeElapsed += Time.deltaTime;
-                    yield return null;
+                    await UniTask.Yield();
                 }
-                m_MusicSource01.Pause();
+                _MusicSource01.Pause();
             }
             else
             {
-                m_MusicSource01.clip = musicTrack.musicClip;
-                m_MusicSource01.Play();
+                _MusicSource01.clip = musicTrack.musicClip;
+                _MusicSource01.Play();
 
                 while (timeElapsed < timeToFade)
                 {
-                    m_MusicSource01.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
-                    m_MusicSource02.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+                    _MusicSource01.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
+                    _MusicSource02.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
                     timeElapsed += Time.deltaTime;
-                    yield return null;
+                    await UniTask.Yield();
                 }
-                m_MusicSource02.Pause();
+                _MusicSource02.Pause();
             }
         }
 

@@ -1,8 +1,5 @@
 using SnakeGame.GameUtilities;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Rendering.PostProcessing;
 using UnityEngine;
 
 namespace SnakeGame.AudioSystem

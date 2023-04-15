@@ -4,6 +4,7 @@ using SnakeGame.AudioSystem;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Cysharp.Threading.Tasks;
 
 namespace SnakeGame.Enemies
 {
@@ -29,7 +30,7 @@ namespace SnakeGame.Enemies
             StaticEventHandler.OnRoomChanged -= StaticEventHandler_OnRoomChanged;
         }
 
-        private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
+        private async void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
         {
             enemiesSpawnedSoFar = 0;
             currentEnemyCount = 0;
@@ -50,6 +51,11 @@ namespace SnakeGame.Enemies
             // If the room is already clear of enemies, then return
             if (currentRoom.isClearOfEnemies) return;
 
+            // TODO - Display the Game Objective UI so the player knows what to do.
+            StaticEventHandler.CallOnDisplayObjectivesEvent
+                (Settings.DisplayObjectivesTime, 0f, 1f, $"Defeat 'em All!!");
+
+
             // Get a random number of enemies to spawn for this room
             enemiesToSpawn = currentRoom.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel());
 
@@ -65,10 +71,10 @@ namespace SnakeGame.Enemies
 
             // Get the number of concurrent enemies to be spawn in this room
             maxConcurrentNumberOfEnemies = GetConcurrentEnemiesToSpawn();
-
-            //Annnnd lock the doors
-            currentRoom.instantiatedRoom.LockDoors();
-
+            
+            // Start locking the doors with a delay
+            await currentRoom.instantiatedRoom.LockDoorsAsync();
+            
             if (currentRoom.battleMusic != null)
                 MusicManager.CallOnMusicClipChangedEvent(currentRoom.battleMusic);
 
@@ -79,7 +85,7 @@ namespace SnakeGame.Enemies
         /// <summary>
         /// Spawns the enemies onto the current room
         /// </summary>
-        private void SpawnEnemies()
+        private async void SpawnEnemies()
         {
             if (GameManager.CurrentGameState == GameState.BossStage)
             {
@@ -92,7 +98,7 @@ namespace SnakeGame.Enemies
                 GameManager.CurrentGameState = GameState.EngagingEnemies;
             }
 
-            StartCoroutine(SpawnEnemiesRoutine());
+            await SpawnEnemiesAsync();
         }
 
         /// <summary>
@@ -100,18 +106,13 @@ namespace SnakeGame.Enemies
         /// </summary>
         private IEnumerator SpawnEnemiesRoutine()
         {
-            // Modify this method for the different procedural map generation.
-
             Grid grid = currentRoom.instantiatedRoom.grid;
-            //Grid grid = NoiseMap.Instance.grid;
 
             // Create an instance of the helper class used to select a random enemy
             RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new(currentRoom.EnemiesByLevelList);
-            //RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new RandomSpawnableObject<EnemyDetailsSO>(currentMap.enemiesByLevelList);
 
             // See if we have space to spawn the enemies
             if (currentRoom.spawnPositionArray.Length > 0)
-            //if (currentMap.spawnPositionsList.Count > 0)
             {
                 for (int i = 0; i < enemiesToSpawn; i++)
                 {
@@ -122,11 +123,39 @@ namespace SnakeGame.Enemies
                     }
 
                     Vector3Int cellPosition = (Vector3Int)currentRoom.spawnPositionArray[Random.Range(0, currentRoom.spawnPositionArray.Length)];
-                    //Vector3Int cellPosition = (Vector3Int)currentMap.spawnPositionsList[Random.Range(0, currentMap.spawnPositionsList.Count)];
+
                     // Creates the enemy and gets the next one to spawn
                     CreateEnemy(randomSpawnableObject.GetRandomItem(), grid.CellToWorld(cellPosition));
 
                     yield return new WaitForSeconds(GetEnemySpawnInterval());
+                }
+            }
+        }
+
+        private async UniTask SpawnEnemiesAsync()
+        {
+            Grid grid = currentRoom.instantiatedRoom.grid;
+
+            // Create an instance of the helper class used to select a random enemy
+            RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new(currentRoom.EnemiesByLevelList);
+
+            // See if we have space to spawn the enemies
+            if (currentRoom.spawnPositionArray.Length > 0)
+            {
+                for (int i = 0; i < enemiesToSpawn; i++)
+                {
+                    // Wait until the enemy count is less than the max concurrent enemies
+                    while (currentEnemyCount >= maxConcurrentNumberOfEnemies)
+                    {
+                        await UniTask.NextFrame();
+                    }
+
+                    Vector3Int cellPosition = (Vector3Int)currentRoom.spawnPositionArray[Random.Range(0, currentRoom.spawnPositionArray.Length)];
+
+                    // Creates the enemy and gets the next one to spawn
+                    CreateEnemy(randomSpawnableObject.GetRandomItem(), grid.CellToWorld(cellPosition));
+
+                    await UniTask.Delay((int)GetEnemySpawnInterval());
                 }
             }
         }
@@ -158,7 +187,7 @@ namespace SnakeGame.Enemies
         /// <summary>
         /// Destroy enemy event handler
         /// </summary>
-        private void Enemy_OnDestroyed(DestroyEvent destroyEvent, DestroyedEventArgs destroyedEventArgs)
+        private async void Enemy_OnDestroyed(DestroyEvent destroyEvent, DestroyedEventArgs destroyedEventArgs)
         {
             // Unsuscribe
             destroyEvent.OnDestroy -= Enemy_OnDestroyed;
@@ -189,7 +218,7 @@ namespace SnakeGame.Enemies
                 }
 
                 // Unlock the doors
-                currentRoom.instantiatedRoom.UnlockDoors(Settings.doorUnlockDelay);
+                await currentRoom.instantiatedRoom.UnlockDoorsAsync(Settings.doorUnlockDelay);
 
                 // Play the normal music again
                 if (currentRoom.normalMusic != null)

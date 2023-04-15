@@ -60,7 +60,7 @@ namespace SnakeGame
         }
         #endregion
 
-        #region ON SLOWDOWN TIME
+        #region ON SLOWDOWN TIME EVENT
         public static event Action<SlowDownTimeArgs> OnSlowDownTime;
         public static event Action<SlowDownTimeArgs> OnTimeToNormal;
 
@@ -79,6 +79,21 @@ namespace SnakeGame
             { 
                 SlowDownFactor = slowDownFactor, 
                 SlowDownDuration = cooldownDuration 
+            });
+        }
+        #endregion
+
+        #region ON DISPLAY OBJECTIVE UI EVENT
+        public static event Action<DisplayObjectivesUIArgs> OnDisplayObjectives;
+
+        public static void CallOnDisplayObjectivesEvent(float displayTime, float currentAlpha = 0f, float targetAlpha = 1f, params string[] displayTexts)
+        {
+            OnDisplayObjectives?.Invoke(new DisplayObjectivesUIArgs
+            {
+                CurrentAlpha = currentAlpha,
+                TargetAlpha = targetAlpha,
+                DisplayTime = displayTime,
+                DisplayTexts = displayTexts
             });
         }
         #endregion
@@ -114,5 +129,15 @@ namespace SnakeGame
     {
         public float SlowDownFactor;
         public float SlowDownDuration;
+    }
+
+    public class DisplayObjectivesUIArgs : EventArgs
+    {
+        public GameState CurrentGameState;
+        public GameState PreviousGameState;
+        public float CurrentAlpha;
+        public float TargetAlpha;
+        public float DisplayTime;
+        public string[] DisplayTexts;
     }
 }

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using SnakeGame.Decorations;
 using SnakeGame.Dungeon.NoiseGenerator;
 using SnakeGame.GameUtilities;
@@ -361,7 +362,7 @@ namespace SnakeGame.ProceduralGenerationSystem
                         doorComponent.isBossRoomDoor = true;
 
                         // Prevent access until all enemies in the other rooms have been cleared
-                        doorComponent.LockDoor();
+                        doorComponent.LockDoors();
 
                         GameObject bossRoomCue = Instantiate(GameResources.Instance.bossRoomCuePrefab, gameObject.transform);
                         bossRoomCue.transform.localPosition = door.transform.localPosition;
@@ -404,21 +405,50 @@ namespace SnakeGame.ProceduralGenerationSystem
 
         /// <summary>
         /// Locks the doors when the player enters a new room
-        /// and this room does not have set to true the bool 'isClearOfEnemies'.
+        /// and this room does not have set to true the bool 'isClearOfEnemies
         /// </summary>
-        public void LockDoors()
+        public IEnumerator LockDoors(float lockDelay)
         {
             Door[] doors = GetComponentsInChildren<Door>();
+
+            // Wait a little before locking the doors
+            // so that the player can enter the room without colliding
+            // with the door collider when the door is closed.
+            yield return new WaitForSeconds(lockDelay);
 
             // Lock each door
             foreach (Door door in doors)
             {
-                door.LockDoor();
+                door.LockDoors();
             }
 
             DisableRoomCollider(false);
         }
 
+        /// <summary>
+        /// Locks the door when the player enters a new room.
+        /// </summary>
+        public async UniTask LockDoorsAsync(float lockDelay = Settings.DoorLockDelay)
+        {
+            Door[] doors = GetComponentsInChildren<Door>();
+
+            await UniTask.Delay((int)lockDelay * 1000);
+
+            var task = new UniTask[doors.Length];
+            for (int i = 0; i < doors.Length; i++)
+            {
+                task[i] = doors[i].LockDoorsAsync();
+            }
+
+            await UniTask.WhenAll(task);
+
+            DisableRoomCollider(false);
+        }
+
+        /// <summary>
+        /// Unlocks the doors on the room.
+        /// </summary>
+        /// <param name="unlockDelay"></param>
         public void UnlockDoors(float unlockDelay)
         {
             StartCoroutine(UnlockDoorsRoutine(unlockDelay));
@@ -436,6 +466,30 @@ namespace SnakeGame.ProceduralGenerationSystem
                 door.UnlockDoor();
             }
 
+            DisableRoomCollider(true);
+        }
+
+        //public async void UnlockDoorsAsync(float unlockDelay)
+        //{
+        //    await UnlockDoorsAsync(unlockDelay);
+        //}
+
+        /// <summary>
+        /// Unlocks the doors on the room.
+        /// </summary>
+        /// <param name="unlockDelay"></param>
+        /// <returns></returns>
+        public async UniTask UnlockDoorsAsync(float unlockDelay)
+        {
+            if (unlockDelay > 0f)
+                await UniTask.Delay((int)unlockDelay * 1000);
+
+            Door[] doors = GetComponentsInChildren<Door>();
+
+            foreach (Door door in doors)
+            {
+                door.UnlockDoor();
+            }
             DisableRoomCollider(true);
         }
 

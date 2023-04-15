@@ -57,7 +57,6 @@ namespace SnakeGame.Minimap
                 GameManager.CurrentGameState == GameState.OverviewMap && 
                 waitBeforeTeleporting <= 0f)
             {
-                this.Log("Room Cliked");
                 GetRoomClicked();
                 waitBeforeTeleporting = counter;
             }

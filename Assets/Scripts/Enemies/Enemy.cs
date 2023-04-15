@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Cysharp.Threading.Tasks;
 
 namespace SnakeGame.Enemies
 {
@@ -123,7 +124,7 @@ namespace SnakeGame.Enemies
 
             SetPolygonColliderShape();
 
-            StartCoroutine(MaterializeEnemy());
+            MaterializeEnemy();
         }
 
         /// <summary>
@@ -186,15 +187,13 @@ namespace SnakeGame.Enemies
             }
         }
 
-        private IEnumerator MaterializeEnemy()
+        private async void MaterializeEnemy()
         {
-            // Disables the enemy while it's been materialized
             EnableEnemy(false);
 
-            yield return StartCoroutine(materializeEffect.MaterializeRoutine(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
-                enemyDetails.enemyMaterializeTime, enemyDetails.standardEnemyMaterial, enemySpriteRenderer));
+            await materializeEffect.Materialize(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
+                enemyDetails.enemyMaterializeTime, enemyDetails.standardEnemyMaterial, enemySpriteRenderer);
 
-            // Enables the enemy again, after it has been materialzed
             EnableEnemy(true);
         }
 

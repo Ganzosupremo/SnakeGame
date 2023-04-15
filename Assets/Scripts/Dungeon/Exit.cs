@@ -1,7 +1,5 @@
-using System.Collections;
-using UnityEngine;
 using SnakeGame.VisualEffects;
-using SnakeGame.Debuging;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace SnakeGame.ProceduralGenerationSystem
@@ -67,7 +65,7 @@ namespace SnakeGame.ProceduralGenerationSystem
 
         private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
         {
-            StartCoroutine(MaterializeExit());
+            MaterializeExit();
         }
 
         private void GameManager_OnLevelChanged(int dungeonIndex)
@@ -75,12 +73,12 @@ namespace SnakeGame.ProceduralGenerationSystem
             m_gameLevelIndex = dungeonIndex;
         }
 
-        private IEnumerator MaterializeExit()
+        private async void MaterializeExit()
         {
             EnableExit(false);
 
-            yield return StartCoroutine(m_MaterializeEffect.MaterializeRoutine
-                (materializeShader,materializeColor,materializeTime, defaultLitMaterial, m_SpriteRenderer));
+            await m_MaterializeEffect.Materialize
+                (materializeShader,materializeColor,materializeTime, defaultLitMaterial, m_SpriteRenderer);
 
             EnableExit(true);
         }

@@ -80,6 +80,7 @@ namespace SnakeGame.Decorations
             // Then destroy all components, but the sprite renderer
             if (moveableDecoration != null)
                 Destroy(moveableDecoration);
+
             Destroy(animator);
             Destroy(receiveDamageOnContact);
             Destroy(health);

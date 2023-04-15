@@ -19,6 +19,8 @@ public static class Settings
     public const int maxChildCorridors = 4; //Max number of child corridors leading from a room - max should be 3 although
                                             //this is not recommended since it can cause the dungeon building to fail, since the rooms are more likely to not fit together
     public const float doorUnlockDelay = 1f;
+    public const float DoorLockDelay = 0.8f;
+    public const float DisplayObjectivesTime = 3f;
     #endregion
 
     #region SNAKE GAME SETTINGS

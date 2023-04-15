@@ -37,6 +37,7 @@ namespace SnakeGame.UI
 
         public void StartGame()
         {
+            DifficultyManager.CallOnDifficultyChangedEvent(DifficultySettingsUI.CurrentDifficulty);
             SceneManager.LoadScene((int)SceneIndex.MainGame);
         }
 

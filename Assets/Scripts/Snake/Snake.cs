@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using SnakeGame.Foods;
 using SnakeGame.PlayerSystem.AbilitySystem;
 using SnakeGame.UI;
@@ -167,7 +168,7 @@ namespace SnakeGame.PlayerSystem
         /// Initialises the snake
         /// </summary>
         /// <param name="snakeDetails">The snake details to initialize</param>
-        public void Initialize(SnakeDetailsSO snakeDetails)
+        public async UniTask Initialize(SnakeDetailsSO snakeDetails)
         {
             this.snakeDetails = snakeDetails;
 
@@ -180,7 +181,7 @@ namespace SnakeGame.PlayerSystem
 
             CreatePlayerInitialWeapon();
 
-            StartCoroutine(MaterializeSnake());
+            await MaterializeSnake();
         }
 
         /// <summary>
@@ -197,12 +198,14 @@ namespace SnakeGame.PlayerSystem
             }
         }
 
-        private IEnumerator MaterializeSnake()
+        private async UniTask MaterializeSnake()
         {
             // Disable snake while the effect is in progress
             EnableSnake(false);
-            yield return StartCoroutine(materializeEffect.MaterializeRoutine(snakeDetails.materializeShader,
-                snakeDetails.materializeColor, snakeDetails.materializeTime, snakeDetails.defaultLitMaterial, spriteRenderer));
+            
+            await materializeEffect.Materialize(snakeDetails.materializeShader,
+                snakeDetails.materializeColor, snakeDetails.materializeTime, snakeDetails.defaultLitMaterial, spriteRenderer);
+            
             // Enable the snake again
             EnableSnake(true);
         }

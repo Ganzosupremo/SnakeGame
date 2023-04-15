@@ -63,15 +63,15 @@ namespace SnakeGame.Foods
 
             score = foodSO.score;
 
-            StartCoroutine(MaterializeFood());
+            MaterializeFood();
         }
 
-        private IEnumerator MaterializeFood()
+        private async void MaterializeFood()
         {
             EnableFood(false);
 
-            yield return StartCoroutine(materializeEffect.MaterializeRoutine(foodSO.materializeShader, foodSO.materiliazeColor,
-                foodSO.materializeTime, foodSO.defaultLitMaterial, spriteRenderer));
+            await materializeEffect.Materialize(foodSO.materializeShader, foodSO.materiliazeColor,
+                foodSO.materializeTime, foodSO.defaultLitMaterial, spriteRenderer);
 
             EnableFood(true);
         }

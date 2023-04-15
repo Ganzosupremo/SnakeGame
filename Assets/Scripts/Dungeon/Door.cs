@@ -2,6 +2,7 @@ using UnityEngine;
 using SnakeGame;
 using SnakeGame.AudioSystem;
 using SnakeGame.GameUtilities;
+using Cysharp.Threading.Tasks;
 
 namespace SnakeGame.ProceduralGenerationSystem
 {
@@ -75,17 +76,28 @@ namespace SnakeGame.ProceduralGenerationSystem
             }
         }
 
-        /// <summary>
-        /// Locks The Doors When The Player Enters The Room
-        /// </summary>
-        public void LockDoor()
+        public void LockDoors()
         {
+            //Set the open parameter to false to lock the door
+            doorAnimator.SetBool(Settings.openDoor, false);
+
             isOpen = false;
             doorCollider.enabled = true;
             doorTrigger.enabled = false;
+        }
 
+        /// <summary>
+        /// Locks The Doors When The Player Enters The Room
+        /// </summary>
+        public async UniTask LockDoorsAsync()
+        {
             //Set the open parameter to false to lock the door
             doorAnimator.SetBool(Settings.openDoor, false);
+
+            isOpen = false;
+            doorCollider.enabled = true;
+            doorTrigger.enabled = false;
+            await UniTask.Yield();
         }
 
         /// <summary>

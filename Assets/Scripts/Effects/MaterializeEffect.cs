@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
 
@@ -39,6 +40,38 @@ namespace SnakeGame.VisualEffects
                 dissolveAmount += Time.deltaTime / materializeTime;
                 materializeMaterial.SetFloat("_DissolveAmount", dissolveAmount);
                 yield return new WaitForEndOfFrame();
+            }
+
+            // Set again the default lit material for the sprites renderes
+            foreach (SpriteRenderer spriteRenderer in spriteRendererArray)
+            {
+                spriteRenderer.material = defaultMaterial;
+            }
+        }
+
+        public async UniTask Materialize(Shader materializeShader, Color materializeColor, float materializeTime,
+            Material defaultMaterial, params SpriteRenderer[] spriteRendererArray)
+        {
+            Material materializeMaterial = new(materializeShader);
+
+            materializeMaterial.SetColor("_EmissionColor", materializeColor);
+
+            // Set the material for each sprite renderer
+            foreach (SpriteRenderer spriteRenderer in spriteRendererArray)
+            {
+                spriteRenderer.material = materializeMaterial;
+            }
+
+            float dissolveAmount = 0f;
+
+            // While the dissolve amount is less than one,
+            // but once it is greather than one,
+            // we set the default lit material again
+            while (dissolveAmount < 1f)
+            {
+                dissolveAmount += Time.deltaTime / materializeTime;
+                materializeMaterial.SetFloat("_DissolveAmount", dissolveAmount);
+                await UniTask.WaitForEndOfFrame(this);
             }
 
             // Set again the default lit material for the sprites renderes

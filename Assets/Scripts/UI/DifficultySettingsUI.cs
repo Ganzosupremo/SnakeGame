@@ -8,7 +8,9 @@ namespace SnakeGame.UI
 {
     public class DifficultySettingsUI : MonoBehaviour, IPersistenceData
     {
-        private Difficulty selectedDifficulty;
+        public static Difficulty CurrentDifficulty { get { return selectedDifficulty; } }
+
+        private static Difficulty selectedDifficulty = Difficulty.Medium;
         public TMP_Dropdown dropdown;
 
         private void Start()
@@ -16,7 +18,7 @@ namespace SnakeGame.UI
             dropdown.onValueChanged.RemoveAllListeners();
             dropdown.onValueChanged.AddListener(delegate
             {
-                OnDropValueChange();
+                OnDropValueChanged();
             });
 
             DifficultyManager.CallOnDifficultyChangedEvent(selectedDifficulty);
@@ -24,26 +26,18 @@ namespace SnakeGame.UI
 
         private void OnEnable()
         {
-            //SaveDataManager.Instance.LoadGame();
-            dropdown.onValueChanged.RemoveAllListeners();
-            dropdown.onValueChanged.AddListener(delegate
-            {
-                OnDropValueChange();
-            });
-
             DifficultyManager.CallOnDifficultyChangedEvent(selectedDifficulty);
         }
 
-        //private void OnDisable()
-        //{
-        //    SaveDataManager.Instance.SaveGame();
-        //}
+        private void OnDisable()
+        {
+            dropdown.onValueChanged.RemoveAllListeners();
+        }
 
-        private void OnDropValueChange()
+        private void OnDropValueChanged()
         {
             selectedDifficulty = (Difficulty)dropdown.value;
             DifficultyManager.CallOnDifficultyChangedEvent(selectedDifficulty);
-            //SaveDataManager.Instance.SaveGame();
         }
 
         public void SaveGame()

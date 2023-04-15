@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using SnakeGame.AudioSystem;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 [RequireComponent(typeof(ReloadWeaponEvent))]
 [RequireComponent(typeof(WeaponReloadedEvent))]
@@ -48,12 +50,16 @@ public class ReloadWeapon : MonoBehaviour
 
     private void StartReloadingWeapon(ReloadWeaponEventArgs reloadWeaponEventArgs)
     {
-        if (reloadWeaponCoroutine != null)
-        {
-            StopCoroutine(reloadWeaponCoroutine);
-        }
+        var CancellationTokenSource = new CancellationTokenSource();
 
-        reloadWeaponCoroutine = StartCoroutine(ReloadingWeaponCoroutine(reloadWeaponEventArgs.weapon, reloadWeaponEventArgs.reloadPercent));
+        ReloadWeaponAsync(reloadWeaponEventArgs.weapon, reloadWeaponEventArgs.reloadPercent, CancellationTokenSource);
+
+        //if (reloadWeaponCoroutine != null)
+        //{
+        //    StopCoroutine(reloadWeaponCoroutine);
+        //}
+
+        //reloadWeaponCoroutine = StartCoroutine(ReloadingWeaponCoroutine(reloadWeaponEventArgs.weapon, reloadWeaponEventArgs.reloadPercent));
 
     }
 
@@ -112,6 +118,61 @@ public class ReloadWeapon : MonoBehaviour
         weaponReloadedEvent.CallWeaponReloaded(weapon);
     }
 
+    private async void ReloadWeaponAsync(Weapon weapon, int reloadPercent, CancellationTokenSource cancellationToken)
+    {
+        // Play the reload sound when the weapon is reloaded
+        if (weapon.weaponDetails.reloadSound != null)
+            SoundEffectManager.CallOnSoundEffectSelectedEvent(weapon.weaponDetails.reloadSound);
+
+        weapon.isWeaponReloading = true;
+
+        //Update the reload timer
+        while (weapon.weaponReloadTimer < weapon.weaponDetails.weaponReloadTime)
+        {
+            weapon.weaponReloadTimer += Time.deltaTime;
+            await UniTask.WaitForEndOfFrame(this, cancellationToken: cancellationToken.Token);
+        }
+
+        //If the total ammo should be increased
+        if (reloadPercent != 0)
+        {
+            int ammoIncrease = Mathf.RoundToInt((weapon.weaponDetails.totalAmmoCapacity * reloadPercent) / 100);
+
+            int totalAmmo = weapon.weaponTotalAmmoCapacity + ammoIncrease;
+
+            if (totalAmmo > weapon.weaponDetails.totalAmmoCapacity)
+                weapon.weaponTotalAmmoCapacity = weapon.weaponDetails.totalAmmoCapacity;
+            else
+                weapon.weaponTotalAmmoCapacity = totalAmmo;
+        }
+
+        //If the weapon has infinity ammo, then just refill the mag
+        if (weapon.weaponDetails.hasInfiniteAmmo)
+        {
+            weapon.weaponClipRemaining = weapon.weaponDetails.clipMaxCapacity;
+        }
+        // else if not infinite ammo then if remaining ammo is greater than the amount required to
+        // refill the clip, then fully refill the clip
+        else if (weapon.weaponTotalAmmoCapacity >= weapon.weaponDetails.clipMaxCapacity)
+        {
+            weapon.weaponClipRemaining = weapon.weaponDetails.clipMaxCapacity;
+        }
+        // else set the clip to the remaining ammo
+        else
+        {
+            weapon.weaponClipRemaining = weapon.weaponTotalAmmoCapacity;
+        }
+
+        // Reset weapon reload timer
+        weapon.weaponReloadTimer = 0f;
+
+        // Set weapon as not reloading
+        weapon.isWeaponReloading = false;
+
+        // Call weapon reloaded event
+        weaponReloadedEvent.CallWeaponReloaded(weapon);
+    }
+
     /// <summary>
     /// Check if the <see cref="reloadWeaponCoroutine"/> is currently running, if so stop it
     /// and then start the coroutine again.
@@ -125,11 +186,15 @@ public class ReloadWeapon : MonoBehaviour
     {
         if (setActiveWeaponEventArgs.weapon.isWeaponReloading)
         {
-            if (reloadWeaponCoroutine != null)
-            {
-                StopCoroutine(reloadWeaponCoroutine);
-            }
-            reloadWeaponCoroutine = StartCoroutine(ReloadingWeaponCoroutine(setActiveWeaponEventArgs.weapon, 0));
+            var cancellationToken = new CancellationTokenSource();
+
+            ReloadWeaponAsync(setActiveWeaponEventArgs.weapon, 0, cancellationToken);
+
+            //if (reloadWeaponCoroutine != null)
+            //{
+            //    StopCoroutine(reloadWeaponCoroutine);
+            //}
+            //reloadWeaponCoroutine = StartCoroutine(ReloadingWeaponCoroutine(setActiveWeaponEventArgs.weapon, 0));
         }
     }
 }
