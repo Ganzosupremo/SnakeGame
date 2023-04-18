@@ -1,20 +1,23 @@
 using System;
 using UnityEngine;
 
-public class WeaponFiredEvent : MonoBehaviour
+namespace SnakeGame.AbwehrSystem
 {
-    public event Action<WeaponFiredEvent, WeaponFiredEventArgs> OnWeaponFired;
-
-    public void CallWeaponFiredEvent(Weapon weapon)
+    public class WeaponFiredEvent : MonoBehaviour
     {
-        OnWeaponFired?.Invoke(this, new WeaponFiredEventArgs()
-        {
-            weapon = weapon
-        });
-    }
-}
+        public event Action<WeaponFiredEvent, WeaponFiredEventArgs> OnWeaponFired;
 
-public class WeaponFiredEventArgs : EventArgs
-{
-    public Weapon weapon;
+        public void CallWeaponFiredEvent(Weapon weapon)
+        {
+            OnWeaponFired?.Invoke(this, new WeaponFiredEventArgs()
+            {
+                weapon = weapon
+            });
+        }
+    }
+
+    public class WeaponFiredEventArgs : EventArgs
+    {
+        public Weapon weapon;
+    }
 }

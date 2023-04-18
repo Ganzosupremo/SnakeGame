@@ -1,5 +1,5 @@
 using SnakeGame.HighscoreSystem;
-using SnakeGame.UI;
+using SnakeGame.TimeSystem;
 
 namespace SnakeGame.SaveAndLoadSystem
 {

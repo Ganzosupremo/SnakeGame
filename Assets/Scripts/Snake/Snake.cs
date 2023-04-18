@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
+using SnakeGame.AbwehrSystem;
 using SnakeGame.Foods;
 using SnakeGame.PlayerSystem.AbilitySystem;
-using SnakeGame.UI;
+using SnakeGame.TimeSystem;
 using SnakeGame.VisualEffects;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -110,6 +110,7 @@ namespace SnakeGame.PlayerSystem
         private void Start()
         {
             AddStartingSegments();
+            ChangeLightIntensity(TimeManager.Instance.CurrentTime);
         }
 
         private void AddStartingSegments()
@@ -132,11 +133,18 @@ namespace SnakeGame.PlayerSystem
         private void OnEnable()
         {
             healthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
+            TimeManager.OnTimeChanged += TimeManager_OnTimeChanged;
         }
 
         private void OnDisable()
         {
             healthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
+            TimeManager.OnTimeChanged -= TimeManager_OnTimeChanged;
+        }
+
+        private void TimeManager_OnTimeChanged(DayCicle dayCicle)
+        {
+            ChangeLightIntensity(dayCicle);
         }
 
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
@@ -157,12 +165,6 @@ namespace SnakeGame.PlayerSystem
                 IncreaseWeaponDamage(food.foodSO.DamageIncreasePercentage);
             }
         }
-
-        //private void OnCollisionEnter2D(Collision2D other)
-        //{
-        //    if (other.collider.CompareTag(Settings.CollisionTilemapTag))
-        //        TakeOneDamage();
-        //}
 
         /// <summary>
         /// Initialises the snake
@@ -375,9 +377,9 @@ namespace SnakeGame.PlayerSystem
             spriteRenderer.material = material;
         }
 
-        public void ChangeLightIntensity()
+        public void ChangeLightIntensity(DayCicle time)
         {
-            switch (PauseMenuUI.Instance.CurrentTime)
+            switch (time)
             {
                 case DayCicle.Morning:
                     snakeLight.intensity = 0f;

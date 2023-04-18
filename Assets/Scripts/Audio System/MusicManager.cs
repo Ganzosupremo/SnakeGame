@@ -33,7 +33,7 @@ namespace SnakeGame.AudioSystem
         {
             base.Awake();
 
-            _MusicSource01 = GetComponent<AudioSource>();
+            //_MusicSource01 = GetComponent<AudioSource>();
             //_MusicSource02 = gameObject.AddComponent<AudioSource>();
             //_MusicSource02.loop = true;
             //_MusicSource02.outputAudioMixerGroup = GameResources.Instance.musicMixerGroup;

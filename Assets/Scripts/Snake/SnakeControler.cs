@@ -1,12 +1,13 @@
+using SnakeGame.AbwehrSystem;
+using SnakeGame.GameUtilities;
+using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.UI;
+using SnakeInput;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
-using SnakeInput;
-using SnakeGame.UI;
-using System;
-using SnakeGame.GameUtilities;
-using SnakeGame.ProceduralGenerationSystem;
 
 namespace SnakeGame.PlayerSystem
 {
@@ -38,8 +39,6 @@ namespace SnakeGame.PlayerSystem
         private float specialAbilityCooldownTimer = 0f;
         [Obsolete]
         private Coroutine specialAbilityCoroutine;
-
-
 
         private bool isSpecialAbilityActive = false;
         public bool IsSnakeEnabled { get; set; } = false;

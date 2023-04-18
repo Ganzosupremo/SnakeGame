@@ -1,10 +1,11 @@
+using SnakeGame.AbwehrSystem;
+using SnakeGame.GameUtilities;
+using SnakeGame.PlayerSystem;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using SnakeGame.PlayerSystem;
-using SnakeGame.GameUtilities;
 
 namespace SnakeGame.UI
 {

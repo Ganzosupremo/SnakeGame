@@ -1,33 +1,24 @@
+using SnakeGame.AudioSystem;
 using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
-using SnakeGame.AudioSystem;
+using SnakeGame.TimeSystem;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 namespace SnakeGame.UI
 {
-    public class PauseMenuUI : SingletonMonoBehaviour<PauseMenuUI>, IPersistenceData
+    public class PauseMenuUI : MonoBehaviour, IPersistenceData
     {
-        public DayCicle CurrentTime { get { return selectedTime; } }
-
         [SerializeField] private TextMeshProUGUI musicLevelText;
         [SerializeField] private TextMeshProUGUI soundsLevelText;
         [SerializeField] private TextMeshProUGUI minigunFireVolume;
         [SerializeField] private TMP_Dropdown dayCicleDropdown;
 
         private DayCicle selectedTime;
-        private Light2D globalLight;
-        protected override void Awake()
-        {
-            base.Awake();
-            globalLight = Instantiate(GameResources.Instance.globalLight, GameManager.Instance.transform);
-        }
 
-        // Start is called before the first frame update
         void Start()
         {
             dayCicleDropdown.onValueChanged.RemoveAllListeners();
@@ -41,8 +32,8 @@ namespace SnakeGame.UI
 
         private void OnEnable()
         {
+            SaveDataManager.Instance.LoadGame();
             Time.timeScale = 0f;
-
             StartCoroutine(InitializeUI());
         }
 
@@ -55,9 +46,9 @@ namespace SnakeGame.UI
 
         private void OnValueChanged(TMP_Dropdown dayCicleDropdown)
         {
-            selectedTime = (DayCicle)dayCicleDropdown.value;
-            ChangeDayCicle();
-            GameManager.Instance.GetSnake().ChangeLightIntensity();
+            TimeManager.Instance.CallOnTimeChangedEvent((DayCicle)dayCicleDropdown.value);
+            //selectedTime = (DayCicle)dayCicleDropdown.value;
+            //ChangeDayCicle();
         }
 
         /// <summary>
@@ -65,28 +56,7 @@ namespace SnakeGame.UI
         /// </summary>
         public void ChangeDayCicle()
         {
-            switch (selectedTime)
-            {
-                case DayCicle.Morning:
-                    SetLightIntensity(1f);
-                    break;
-                case DayCicle.Afternoon:
-                    SetLightIntensity(0.8f);
-                    break;
-                case DayCicle.Evening:
-                    SetLightIntensity(0.5f);
-                    break;
-                case DayCicle.Night:
-                    SetLightIntensity(0.35f);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void SetLightIntensity(float intensity)
-        {
-            globalLight.intensity = intensity;
+            TimeManager.Instance.CallOnTimeChangedEvent(selectedTime);
         }
 
         private IEnumerator InitializeUI()
@@ -175,13 +145,5 @@ namespace SnakeGame.UI
         }
 #endif
         #endregion
-    }
-
-    public enum DayCicle
-    {
-        Morning = 0,
-        Afternoon = 1,
-        Evening = 2,
-        Night = 3
     }
 }

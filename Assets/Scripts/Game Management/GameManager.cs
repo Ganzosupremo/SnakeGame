@@ -113,8 +113,6 @@ namespace SnakeGame
             m_gameScore = 0;
             m_scoreMultiplier = 0;
 
-            PauseMenuUI.Instance.ChangeDayCicle();
-            m_snake.ChangeLightIntensity();
             //StartCoroutine(FadeScreen(0f, 1f, 0f, Color.black));
             await FadeScreenAsync(0f,1f, 0f, Color.black);
         }
@@ -448,7 +446,7 @@ namespace SnakeGame
             loadScreenText.SetText(levelName);
             loadScreenText.color = textColor;
 
-            //Display the text for a given period of time
+            // Display the text for a given period of time
             if (timeSeconds > 0f)
             {
                 float timer = timeSeconds;
@@ -469,23 +467,23 @@ namespace SnakeGame
 
             await UniTask.NextFrame();
 
-            //Clear the text
+            // Clear the text
             loadScreenText.SetText("");
         }
 
-        private async UniTask DisplayCurrentObjectiveAsync(float displayTime, CancellationToken cancellationToken,params string[] displayTexts)
-        {
-            if (cancellationToken.IsCancellationRequested) return;
+        //private async UniTask DisplayCurrentObjectiveAsync(float displayTime, CancellationToken cancellationToken,params string[] displayTexts)
+        //{
+        //    if (cancellationToken.IsCancellationRequested) return;
 
-            if (displayTime <= 0f)
-                displayTime = Settings.DisplayObjectivesTime;
+        //    if (displayTime <= 0f)
+        //        displayTime = Settings.DisplayObjectivesTime;
 
-            ObjectiveUI objectiveUI = _ObjectivesBackground.GetComponentInParent<ObjectiveUI>();
-            if (objectiveUI != null)
-            {
-                await objectiveUI.Display(0f, 1f, displayTime, displayTexts);
-            }
-        }
+        //    ObjectiveUI objectiveUI = _ObjectivesBackground.GetComponentInParent<ObjectiveUI>();
+        //    if (objectiveUI != null)
+        //    {
+        //        await objectiveUI.Display(0f, 1f, displayTime, displayTexts);
+        //    }
+        //}
 
         /// <summary>
         /// Loads the next game level if all rooms have no more enemies.
@@ -685,7 +683,7 @@ namespace SnakeGame
 
             m_currentGameState = GameState.Playing;
             await UniTask.Delay(1000);
-            await FadeScreenAsync(0f, 1f, 2f, new(0f, 0f, 0f, 0.4f));
+            //await FadeScreenAsync(0f, 1f, 2f, new(0f, 0f, 0f, 0.4f));
 
             currentDungeonLevelListIndex++;
             CallOnLevelChangedEvent();
@@ -694,7 +692,7 @@ namespace SnakeGame
             if (name == "") name = m_snakeDetails.snakeName.ToUpper();
 
             StaticEventHandler.CallOnDisplayObjectivesEvent(Settings.DisplayObjectivesTime, 0f, 1f, $"Well Done {name}! Find the exit or press 'Enter' to continue.");
-            await FadeScreenAsync(1f, 0f, 2f, new(0f, 0f, 0f, 0.4f));
+            //await FadeScreenAsync(1f, 0f, 2f, new(0f, 0f, 0f, 0.4f));
 
             while (!Input.GetKeyDown(KeyCode.Return))
             {

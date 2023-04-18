@@ -3,21 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class WeaponReloadedEvent : MonoBehaviour
+namespace SnakeGame.AbwehrSystem
 {
-    public event Action<WeaponReloadedEvent, WeaponReloadedEventArgs> OnReloaded;
-
-    public void CallWeaponReloaded(Weapon weapon)
+    [DisallowMultipleComponent]
+    public class WeaponReloadedEvent : MonoBehaviour
     {
-        OnReloaded?.Invoke(this, new WeaponReloadedEventArgs()
-        {
-            weapon = weapon
-        });
-    }
-}
+        public event Action<WeaponReloadedEvent, WeaponReloadedEventArgs> OnReloaded;
 
-public class WeaponReloadedEventArgs : EventArgs
-{
-    public Weapon weapon;
+        public void CallWeaponReloaded(Weapon weapon)
+        {
+            OnReloaded?.Invoke(this, new WeaponReloadedEventArgs()
+            {
+                weapon = weapon
+            });
+        }
+    }
+
+    public class WeaponReloadedEventArgs : EventArgs
+    {
+        public Weapon weapon;
+    }
 }

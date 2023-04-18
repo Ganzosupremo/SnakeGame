@@ -3,21 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class SetActiveWeaponEvent : MonoBehaviour
+namespace SnakeGame.AbwehrSystem
 {
-    public event Action<SetActiveWeaponEvent, SetActiveWeaponEventArgs> OnSetActiveWeapon;
-
-    public void CallSetActiveWeaponEvent(Weapon weapon)
+    [DisallowMultipleComponent]
+    public class SetActiveWeaponEvent : MonoBehaviour
     {
-        OnSetActiveWeapon?.Invoke(this, new SetActiveWeaponEventArgs()
-        {
-            weapon = weapon
-        });
-    }
-}
+        public event Action<SetActiveWeaponEvent, SetActiveWeaponEventArgs> OnSetActiveWeapon;
 
-public class SetActiveWeaponEventArgs : EventArgs
-{
-    public Weapon weapon;
+        public void CallSetActiveWeaponEvent(Weapon weapon)
+        {
+            OnSetActiveWeapon?.Invoke(this, new SetActiveWeaponEventArgs()
+            {
+                weapon = weapon
+            });
+        }
+    }
+
+    public class SetActiveWeaponEventArgs : EventArgs
+    {
+        public Weapon weapon;
+    }
 }

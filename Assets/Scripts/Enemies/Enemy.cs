@@ -1,11 +1,10 @@
-using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.AbwehrSystem;
 using SnakeGame.AudioSystem;
+using SnakeGame.ProceduralGenerationSystem;
 using SnakeGame.VisualEffects;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Cysharp.Threading.Tasks;
 
 namespace SnakeGame.Enemies
 {
