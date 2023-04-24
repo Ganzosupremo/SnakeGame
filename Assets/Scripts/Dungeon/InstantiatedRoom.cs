@@ -62,7 +62,7 @@ namespace SnakeGame.ProceduralGenerationSystem
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag(Settings.playerTag) && room != GameManager.Instance.GetCurrentRoom())
+            if (other.CompareTag(Settings.PlayerTag) && room != GameManager.Instance.GetCurrentRoom())
             {
                 room.isPreviouslyVisited = true;
                 StaticEventHandler.CallRoomChangedEvent(room);
@@ -102,7 +102,7 @@ namespace SnakeGame.ProceduralGenerationSystem
         //}
 
         /// <summary>
-        /// Initialise The Instantiated Rooms.
+        /// Initialise the instantiated room.
         /// </summary>
         public void Initialise(GameObject roomGameObject)
         {
@@ -432,9 +432,9 @@ namespace SnakeGame.ProceduralGenerationSystem
         {
             Door[] doors = GetComponentsInChildren<Door>();
 
+            var task = new UniTask[doors.Length];
             await UniTask.Delay((int)lockDelay * 1000);
 
-            var task = new UniTask[doors.Length];
             for (int i = 0; i < doors.Length; i++)
             {
                 task[i] = doors[i].LockDoorsAsync();

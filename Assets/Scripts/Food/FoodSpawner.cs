@@ -1,6 +1,7 @@
 using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
 using SnakeGame.ProceduralGenerationSystem;
+using System;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;

@@ -63,7 +63,7 @@ public static class Settings
     #endregion
 
     #region GAMEOBJECTS TAGS
-    public const string playerTag = "Player";
+    public const string PlayerTag = "Player";
     public const string playerWeapon = "playerWeapon";
     public const string food = "Food";
     public const string goldenFood = "GoldenFood";

@@ -37,7 +37,7 @@ namespace SnakeGame.ProceduralGenerationSystem
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag(Settings.playerTag) || other.CompareTag(Settings.playerWeapon))
+            if (other.CompareTag(Settings.PlayerTag) || other.CompareTag(Settings.playerWeapon))
             {
                 //playRandomSound = Random.Range(0, GameResources.Instance.openCloseDoorSoundEffect.Length);
                 OpenDoor();
@@ -91,6 +91,7 @@ namespace SnakeGame.ProceduralGenerationSystem
         /// </summary>
         public async UniTask LockDoorsAsync()
         {
+            await UniTask.Delay(500);
             //Set the open parameter to false to lock the door
             doorAnimator.SetBool(Settings.openDoor, false);
 

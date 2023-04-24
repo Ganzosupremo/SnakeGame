@@ -1,10 +1,8 @@
 using Cysharp.Threading.Tasks;
 using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
-using SnakeGame.PlayerSystem.AbilitySystem;
 using SnakeGame.SaveAndLoadSystem;
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace SnakeGame.AudioSystem
@@ -46,6 +44,7 @@ namespace SnakeGame.AudioSystem
         {
             SetMusicVolume(MusicVolume);
             m_IsMusicSource01Playing = true;
+            _MusicSource02.enabled = true;
         }
 
         private void OnEnable()
@@ -53,12 +52,14 @@ namespace SnakeGame.AudioSystem
             OnMusicVolumeIncreased += MusicManager_OnMusicVolumeIncreased;
             OnMusicVolumeDecreased += MusicManager_OnMusicVolumeDecreased;
             OnMusicClipChanged += MusicManager_OnMusicClipChanged;
+            _MusicSource02.enabled = true;
 
             if (_MusicSource02 == null)
             {
                 _MusicSource02 = gameObject.AddComponent<AudioSource>();
                 _MusicSource02.loop = true;
                 _MusicSource02.outputAudioMixerGroup = GameResources.Instance.musicMixerGroup;
+                _MusicSource02.enabled = true;
             }
 
 

@@ -10,7 +10,8 @@ namespace SnakeGame
         
         private static Difficulty m_difficulty;
 
-        [Obsolete]
+        [Obsolete("The Difficulty is changed through an event and the changes happen on the EnemyDetailsSO class itself. " +
+            "Use the static event OnDifficultyChanged instead.", true)]
         public static void ChangeDifficulty(Difficulty selectedDifficulty)
         {
             #region A Fricking Big Chunk of Code
@@ -153,12 +154,13 @@ namespace SnakeGame
             #endregion
         }
 
+        [Obsolete]
         private static void SetEnemySpeedToDefault(EnemyDetailsSO enemy)
         {
             enemy.MovementDetails.minMoveSpeed = enemy.MovementDetails.DefaultMinMoveSpeed;
             enemy.MovementDetails.maxMoveSpeed = enemy.MovementDetails.DefaultMaxMoveSpeed;
         }
-
+        [Obsolete]
         private static void IncreaseEnemyMoveSpeed(EnemyDetailsSO enemy, float moveSpeed = 0f)
         {
             SetEnemySpeedToDefault(enemy);
@@ -170,12 +172,14 @@ namespace SnakeGame
             enemy.MovementDetails.maxMoveSpeed += moveSpeed;
         }
 
+        [Obsolete]
         private static void SetEnemyImmunityTime(EnemyDetailsSO enemy, bool isImmune = false, float immunityTime = 0f)
         {
             enemy.immuneAfterHit = isImmune;
             enemy.immunityTime = immunityTime;
         }
 
+        [Obsolete]
         private static void SetEnemyHealth(EnemyDetailsSO enemy, int extraHealth)
         {
             for (int i = 0; i < enemy.enemyHealthDetailsArray.Length; i++)
@@ -198,6 +202,7 @@ namespace SnakeGame
         /// <param name="lineOfSightRequired">True if the enemy requires a sight if the player before firing.</param>
         /// <param name="increaseDamage">True if the damage if the enemy weapon will increase.</param>
         /// <param name="newDamage">The damage to increase the enemy weapon to. NOTE: The damage should increase with flat numbers and not percentages.</param>
+        [Obsolete]
         private static void SetEnemyWeapon(EnemyDetailsSO enemy, float fireMinDelay = 0.1f, float fireMaxDelay = 0.5f, float fireMinDuration = 2f, float fireMaxDuration = 4f,
             bool lineOfSightRequired = true, bool increaseDamage = false, int newDamage = 0)
         {

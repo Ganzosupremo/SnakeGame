@@ -10,6 +10,8 @@ namespace SnakeGame.UI
 {
     public class DisplayMusicUI : MonoBehaviour
     {
+        public static bool CanDisplay { get; set; } = false;
+
         [SerializeField] private GameObject _MusicBackground;
         [SerializeField] private TextMeshProUGUI _MusicNameText;
         [Range(0.1f, 4f)]
@@ -22,6 +24,7 @@ namespace SnakeGame.UI
 
         private void Start()
         {
+            CanDisplay = false;
             m_CancellationSource = new CancellationTokenSource();
             _MusicBackground.SetActive(false);
         }
@@ -46,6 +49,11 @@ namespace SnakeGame.UI
         {
             if (cancellationToken.IsCancellationRequested) return;
 
+            while (!CanDisplay)
+            {
+                await UniTask.NextFrame();
+            }
+
             if (musicSO.musicClip != m_CurrentMusicClip)
             {
                 m_CurrentMusicClip = musicSO.musicClip;
@@ -58,24 +66,11 @@ namespace SnakeGame.UI
                 await UniTask.Delay((int)DelayTime * 1000);
 
                 LeanTween.moveX(_MusicBackground.GetComponent<RectTransform>(), 0f, TimeToTween).setEase(LeanTweenType.easeOutBack).setOnComplete(DisableBackground);
+                CanDisplay = true;
             }
             else
             {
                 cancellationToken.ThrowIfCancellationRequested();
-            }
-        }
-
-        private async UniTask MoveObjectX(float delay, MusicSO musicSO)
-        {
-            float moveToTarget = 0f;
-            _MusicNameText.text = musicSO.musicName;
-
-            while (moveToTarget <= delay)
-            {
-                Vector3 newPosition = new(moveToTarget, 0f, 0f);
-                await UniTask.WaitForEndOfFrame(this);
-                _MusicBackground.transform.localPosition = newPosition;
-                moveToTarget += TimeToTween * 30f * Time.deltaTime;
             }
         }
 

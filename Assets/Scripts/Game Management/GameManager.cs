@@ -83,6 +83,7 @@ namespace SnakeGame
         private long m_gameScore;
         private int m_scoreMultiplier;
         private CancellationTokenSource m_CancellationTokenSource = new();
+        private List<UniTask> m_TaskList = new();
 
         protected override void Awake()
         {
@@ -560,6 +561,7 @@ namespace SnakeGame
         public async UniTask FadeScreenAsync(float currentAlpha, float targetAlpha, float timeSeconds, Color screenColor)
         {
             IsFading = true;
+            DisplayMusicUI.CanDisplay = false;
 
             Image image = canvasGroup.GetComponent<Image>();
             image.color = screenColor;
@@ -571,16 +573,28 @@ namespace SnakeGame
                 canvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / timeSeconds);
                 await UniTask.NextFrame();
             }
+
             IsFading = false;
+            DisplayMusicUI.CanDisplay = true;
         }
 
+        /// <summary>
+        /// Use this method when you wanna call ShowMessageRoutine() and the StartCoroutine() method is not available.
+        /// </summary>
+        /// <param name="messageToDisplay"></param>
+        /// <param name="time"></param>
+        public void CallShowMesageRoutine(string messageToDisplay, float time)
+        {
+            StartCoroutine(ShowMessageRoutine(messageToDisplay, time));
+        }
+        
         /// <summary>
         /// Shows a message on the game UI
         /// </summary>
         /// <param name="messageToDisplay"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public IEnumerator ShowMessage(string messageToDisplay, float time)
+        public IEnumerator ShowMessageRoutine(string messageToDisplay, float time)
         {
             if (IsFading) yield break;
 
@@ -594,7 +608,7 @@ namespace SnakeGame
         /// </summary>
         /// <param name="messageToDisplay"></param>
         /// <param name="displayTime"></param>
-        public async UniTask ShowMessageAsync(string messageToDisplay, float displayTime, CancellationToken cancellationToken)
+        public async UniTask ShowMessageAsync(string messageToDisplay, float displayTime, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested) return;
             if (IsFading) return;
@@ -683,7 +697,7 @@ namespace SnakeGame
 
             m_currentGameState = GameState.Playing;
             await UniTask.Delay(1000);
-            //await FadeScreenAsync(0f, 1f, 2f, new(0f, 0f, 0f, 0.4f));
+            await FadeScreenAsync(0f, 1f, 2f, new(0f, 0f, 0f, 0.4f));
 
             currentDungeonLevelListIndex++;
             CallOnLevelChangedEvent();
@@ -691,13 +705,20 @@ namespace SnakeGame
             string name = GameResources.Instance.currentSnake.snakeName;
             if (name == "") name = m_snakeDetails.snakeName.ToUpper();
 
-            StaticEventHandler.CallOnDisplayObjectivesEvent(Settings.DisplayObjectivesTime, 0f, 1f, $"Well Done {name}! Find the exit or press 'Enter' to continue.");
-            //await FadeScreenAsync(1f, 0f, 2f, new(0f, 0f, 0f, 0.4f));
+            await DisplayMessageAsync($"Well Done {name}!" +
+                $"\n You defeated the boss on this biome, but there are more out there...", Color.white, 3.5f, cancellationToken);
+
+            await DisplayMessageAsync($"Press 'Enter'" +
+                "\n or head to the exit room, to continue your Journey.", Color.white, 3.5f, cancellationToken);
+
+            //StaticEventHandler.CallOnDisplayObjectivesEvent(Settings.DisplayObjectivesTime, 0f, 1f, $"Well Done {name}! Find the exit or press 'Enter' to continue.");
+            await FadeScreenAsync(1f, 0f, 2f, new(0f, 0f, 0f, 0.4f));
 
             while (!Input.GetKeyDown(KeyCode.Return))
             {
                 await UniTask.NextFrame();
             }
+
             PlayGameLevel(currentDungeonLevelListIndex);
         }
 

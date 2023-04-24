@@ -46,7 +46,7 @@ namespace SnakeGame.ProceduralGenerationSystem
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag(Settings.playerTag))
+            if (other.CompareTag(Settings.PlayerTag))
             {
                 if (m_gameLevelIndex < GameManager.Instance.LevelCount)
                 {

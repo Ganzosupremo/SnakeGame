@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using SnakeGame.AudioSystem;
+using SnakeGame.Foods;
 using SnakeGame.GameUtilities;
 using UnityEngine;
 
@@ -185,6 +187,26 @@ namespace SnakeGame.AbwehrSystem.Ammo
         #endregion
         [Range(0f, 2f)] public float ammoTrailEndWidth;
 
+        private void OnEnable()
+        {
+            ammoDamage = originalAmmoDamage;
+            Food.OnFoodEaten += Food_OnFoodEaten;
+        }
+
+        private void OnDisable()
+        {
+            ammoDamage = originalAmmoDamage;
+            Food.OnFoodEaten -= Food_OnFoodEaten;
+        }
+
+        private void Food_OnFoodEaten(Food food)
+        {
+            AmmoDetailsSO currentAmmo = GameManager.Instance.GetSnake().activeWeapon.GetCurrentAmmo();
+            // Find a way to increase the damage of only the currently equiped weapon and not every single weapon
+            if (isPlayerAmmo && currentAmmo == this)
+                IncreaseDamage(food.foodSO.DamageIncreasePercentage);
+        }
+
         /// <summary>
         /// Sets the spread of the current ammo.
         /// A random value will be choosen between the min and max values.
@@ -238,9 +260,11 @@ namespace SnakeGame.AbwehrSystem.Ammo
                 if (ammoDamage > maxAmmoDamage)
                 {
                     ammoDamage = maxAmmoDamage;
+                    GameManager.Instance.CallShowMesageRoutine($"Max Damage with this Weapon Reached!", 1.5f);
                     return false;
                 }
 
+                GameManager.Instance.CallShowMesageRoutine($"Damage of this Weapon Increased By {increaseDamageBy}%.", 1.5f);
                 return true;
             }
             // is enemy ammo
@@ -284,15 +308,6 @@ namespace SnakeGame.AbwehrSystem.Ammo
             }
         }
 
-        private void OnEnable()
-        {
-            ammoDamage = originalAmmoDamage;
-        }
-
-        private void OnDisable()
-        {
-            ammoDamage = originalAmmoDamage;
-        }
         #region Validation
 #if UNITY_EDITOR
         private void OnValidate()

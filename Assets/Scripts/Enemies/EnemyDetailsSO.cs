@@ -16,7 +16,6 @@ namespace SnakeGame.Enemies
         private void SetDefaultWeaponValues()
         {
             // Set the default weapon values and save them for later
-
             m_DefaultFireMinDelay = firingMinDelay;
             m_DefaultFireMaxDelay = firingMaxDelay;
             m_DefaultFireMinDuration = firingMinDuration;
@@ -49,7 +48,7 @@ namespace SnakeGame.Enemies
             {
                 case Difficulty.Noob:
 
-                    ReconfigureWeapon(0f, 0.1f, 0.5f, 1f, true, true, 0);
+                    ReconfigureWeapon(0f, 0.1f, 0.1f, 0.1f);
                     IncreaseEnemyMoveSpeed();
                     ResetEnemyHealthToDefault();
                     SetEnemyImmunityTime();
@@ -57,7 +56,7 @@ namespace SnakeGame.Enemies
                     break;
                 case Difficulty.Easy:
 
-                    ReconfigureWeapon(0.1f, 0.8f, 1f, 2f, true, true, 0);
+                    ReconfigureWeapon(0.2f, 0.6f, 1f, 2f);
                     IncreaseEnemyMoveSpeed(0.5f);
                     ReconfigureEnemyHealth(50);
                     SetEnemyImmunityTime();
@@ -65,7 +64,7 @@ namespace SnakeGame.Enemies
                     break;
                 case Difficulty.Medium:
 
-                    ReconfigureWeapon(0.3f, 1f, 1.5f, 2.5f, true, true, 0);
+                    ReconfigureWeapon(0.3f, 0.8f, 1.5f, 2.5f);
                     IncreaseEnemyMoveSpeed(0.8f);
                     ReconfigureEnemyHealth(100);
                     SetEnemyImmunityTime();
@@ -73,7 +72,7 @@ namespace SnakeGame.Enemies
                     break;
                 case Difficulty.Hard:
 
-                    ReconfigureWeapon(0.5f, 1.1f, 2f, 2.8f, true, true, 0);
+                    ReconfigureWeapon(0.5f, 1f, 2f, 2.8f);
                     IncreaseEnemyMoveSpeed(1f);
                     ReconfigureEnemyHealth(150);
                     SetEnemyImmunityTime();
@@ -81,7 +80,7 @@ namespace SnakeGame.Enemies
                     break;
                 case Difficulty.DarkSouls:
 
-                    ReconfigureWeapon(0.6f, 1.3f, 2.5f, 3.5f, false, true, 1);
+                    ReconfigureWeapon(0.6f, 1.2f, 2.5f, 3.5f, false, true, 1);
                     IncreaseEnemyMoveSpeed(1.2f);
 
                     // Add extra health
@@ -91,7 +90,7 @@ namespace SnakeGame.Enemies
                     break;
                 case Difficulty.EmotionalDamage:
 
-                    ReconfigureWeapon(0.8f, 1.5f, 3f, 4.5f, false, true, 2);
+                    ReconfigureWeapon(0.8f, 1.4f, 3f, 4.5f, false, true, 2);
                     IncreaseEnemyMoveSpeed(1.5f);
                     ReconfigureEnemyHealth(500);
                     SetEnemyImmunityTime(true, 0.5f);
@@ -174,7 +173,7 @@ namespace SnakeGame.Enemies
         /// <param name="increaseDamage">Always set to true so the damage reset whenever the difficulty is changed.</param>
         /// <param name="damageToIncrease"></param>
         private void ReconfigureWeapon(float minFireDelay = 0.5f, float maxFireDelay = 1f, float minFireDuration = 1f, float maxFireDuration = 2f, 
-            bool requieresLineOfSight = true, bool increaseDamage = true, int damageToIncrease = 0)
+            bool requieresLineOfSight = true, bool increaseDamage = false, int damageToIncrease = 0)
         {
             if (enemyWeapon != null && !IsBoss)
             {
@@ -182,6 +181,12 @@ namespace SnakeGame.Enemies
 
                 firingMinDelay -= minFireDelay;
                 firingMaxDelay -= maxFireDelay;
+
+                if (firingMinDelay <= 0f && firingMaxDelay <= 1f)
+                {
+                    firingMinDelay = 0.1f;
+                    firingMaxDelay = 0.5f;
+                }
 
                 firingMinDuration += minFireDuration;
                 firingMaxDuration += maxFireDuration;

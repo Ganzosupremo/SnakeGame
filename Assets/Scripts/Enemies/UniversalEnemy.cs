@@ -134,7 +134,7 @@ namespace SnakeGame.Enemies
         internal float m_DefaultFireMaxDelay;
         internal float m_DefaultFireMinDuration;
         internal float m_DefaultFireMaxDuration;
-        internal bool m_DefaultRequireLineOfSight = false;
+        internal bool m_DefaultRequireLineOfSight = true;
 
 
         protected virtual void PowerUpEnemy(GameObject parent) { }

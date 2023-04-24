@@ -12,6 +12,8 @@ namespace SnakeGame.Foods
     [RequireComponent(typeof(DestroyEvent))]
     public class Food : MonoBehaviour
     {
+        public static event Action<Food> OnFoodEaten;
+
         // The grid dimensions - deprecated
         [Obsolete]
         private int gridWidth = 20;
@@ -24,6 +26,7 @@ namespace SnakeGame.Foods
         [SerializeField] private SpriteRenderer minimapSpriteRenderer;
         private Sprite foodSprite;
         private long score = 0;
+        private bool m_IsColliding = false;
 
         // This is the trigger collider, detects when the player comes near the food and eats it
         private CircleCollider2D triggerCollider2D;
@@ -45,8 +48,13 @@ namespace SnakeGame.Foods
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag(Settings.playerTag))
+            if (other.CompareTag(Settings.PlayerTag))
             {
+                if (m_IsColliding) return;
+
+                m_IsColliding = true;
+                CallOnFoodEatenEvent();
+
                 PlaySoundEffect();
 
                 DisableFood();
@@ -98,8 +106,14 @@ namespace SnakeGame.Foods
 
         private void DisableFood()
         {
+            m_IsColliding = false;
             DestroyEvent destroyEvent = GetComponent<DestroyEvent>();
             destroyEvent.CallOnDestroy(true, score);
+        }
+
+        private void CallOnFoodEatenEvent()
+        {
+            OnFoodEaten?.Invoke(this);
         }
     }
 }

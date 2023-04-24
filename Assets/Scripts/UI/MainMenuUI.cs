@@ -1,4 +1,5 @@
 using SnakeGame.AudioSystem;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,20 +7,24 @@ namespace SnakeGame.UI
 {
     public class MainMenuUI : SingletonMonoBehaviour<MainMenuUI>
     {
-        internal enum LoadedScene { None, Settings, HighScores, HowToPlay}
+        internal enum LoadedScene { None, Settings, HighScores, HowToPlay }
 
-
+        #region Header Button References
         [Header("Button References")]
         [Space(5)]
+        #endregion
+        
         [SerializeField] private GameObject playButton;
         [SerializeField] private GameObject returnButton;
         [SerializeField] private GameObject settingsButton;
         [SerializeField] private GameObject instructionsButton;
         [SerializeField] private GameObject highScoresButton;
         [SerializeField] private GameObject quitButton;
-
+        
+        #region Header Audio References
         [Header("Audio References")]
         [Space(5)]
+        #endregion
         [SerializeField] private MusicSO mainMenuMusic;
 
         private LoadedScene m_loadedScene;
@@ -82,7 +87,6 @@ namespace SnakeGame.UI
 
         /// <summary>
         /// Returns to the main Menu unloading the scene that was open additively.
-        /// Recomended to use on the buttons that are on the Main Menu Scene
         /// </summary>
         public void LoadMainMenu()
         {
@@ -117,6 +121,7 @@ namespace SnakeGame.UI
         /// Returns to the main menu without unloading the scene that was opened additively.
         /// Recomended to use on the buttons or gameobjects that are outside the Main Menu Scene.
         /// </summary>
+        [Obsolete("Use the LoadMainMenu() instead.")]
         public void ReturnButtonMainMenu()
         {
             returnButton.SetActive(false);

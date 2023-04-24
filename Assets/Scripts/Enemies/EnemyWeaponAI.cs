@@ -132,7 +132,7 @@ namespace SnakeGame.Enemies
         {
             RaycastHit2D raycastHit2D = Physics2D.Raycast(m_WeaponShootPosition.position, (Vector2)weaponDirection, enemyAmmoRange, m_LayerMask);
 
-            if (raycastHit2D && raycastHit2D.transform.CompareTag(Settings.playerTag))
+            if (raycastHit2D && raycastHit2D.transform.CompareTag(Settings.PlayerTag))
             {
                 return true;
             }

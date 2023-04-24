@@ -270,7 +270,7 @@ namespace SnakeGame.SaveAndLoadSystem
         /// </summary>
         /// <param name="message"></param>
         /// <param name="timeToDisplay"></param>
-        public IEnumerator DisplayMessage(string message, float timeToDisplay)
+        private IEnumerator DisplayMessage(string message, float timeToDisplay)
         {
             messageToDisplay.gameObject.SetActive(true);
             messageToDisplay.text = message;

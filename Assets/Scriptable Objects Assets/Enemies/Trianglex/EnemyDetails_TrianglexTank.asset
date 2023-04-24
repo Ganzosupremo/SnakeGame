@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Trianglex
   enemyPrefab: {fileID: 7249687755293974846, guid: ad5aa271ada6a3749a7407cfcf6291da, type: 3}
+  IsBoss: 0
   MovementDetails: {fileID: 11400000, guid: b6a83e2d1448c214da7c2df9851db35b, type: 2}
   hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
   deathSoundEffect: {fileID: 11400000, guid: 8788a05de1c66b9448de653c9c90edf6, type: 2}
@@ -31,16 +32,16 @@ MonoBehaviour:
   lineOfSightRequired: 1
   enemyHealthDetailsArray:
   - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
-    healthAmount: 500
+    healthAmount: 600
     defaultHealthAmount: 500
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
-    healthAmount: 750
+    healthAmount: 850
     defaultHealthAmount: 750
   - gameLevel: {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
-    healthAmount: 1000
+    healthAmount: 1100
     defaultHealthAmount: 1000
   - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-    healthAmount: 1500
+    healthAmount: 1600
     defaultHealthAmount: 1500
   immuneAfterHit: 0
   immunityTime: 0

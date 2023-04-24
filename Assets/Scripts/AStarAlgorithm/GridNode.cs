@@ -1,4 +1,5 @@
 using SnakeGame.Debuging;
+using System;
 using UnityEngine;
 
 namespace SnakeGame.AStarPathfinding
@@ -39,7 +40,15 @@ namespace SnakeGame.AStarPathfinding
         {
             if (xPosition < gridWidth && yPosition < gridHeight)
             {
-                return gridNode[xPosition, yPosition];
+                try
+                {
+                    return gridNode[xPosition, yPosition];
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    return gridNode[1, 1];
+                    throw new Exception($"Out of Range: {e.Message} \n Source: {e.Source}.");
+                }
             }
             else
             {
