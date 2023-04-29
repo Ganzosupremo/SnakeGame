@@ -3,11 +3,11 @@ using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace SnakeGame.AudioSystem
 {
-    [RequireComponent(typeof(AudioSource))]
     [DisallowMultipleComponent]
     public class MusicManager : SingletonMonoBehaviour<MusicManager>, IPersistenceData
     {
@@ -19,13 +19,12 @@ namespace SnakeGame.AudioSystem
         public static event Action OnMusicVolumeDecreased;
         public static event Action<MusicSO, float> OnMusicClipChanged;
 
-        [SerializeField] private AudioSource _MusicSource01 = null, _MusicSource02 = null;
+        [SerializeField] internal AudioSource _MusicSource01, _MusicSource02;
         private AudioClip m_CurrentmusicClip = null;
-        private bool m_IsMusicSource01Playing = true;
+        private bool m_IsMusicSource01Playing = false;
 
         // On the final build use this int internally and the property will fetch the value
         //private int m_MusicVolume;
-        private Coroutine m_FadeMusicCoroutine;
 
         protected override void Awake()
         {
@@ -43,7 +42,7 @@ namespace SnakeGame.AudioSystem
         private void Start()
         {
             SetMusicVolume(MusicVolume);
-            m_IsMusicSource01Playing = true;
+            m_IsMusicSource01Playing = false;
             _MusicSource02.enabled = true;
         }
 
@@ -52,6 +51,7 @@ namespace SnakeGame.AudioSystem
             OnMusicVolumeIncreased += MusicManager_OnMusicVolumeIncreased;
             OnMusicVolumeDecreased += MusicManager_OnMusicVolumeDecreased;
             OnMusicClipChanged += MusicManager_OnMusicClipChanged;
+            _MusicSource02.enabled = false;
             _MusicSource02.enabled = true;
 
             if (_MusicSource02 == null)
@@ -59,6 +59,7 @@ namespace SnakeGame.AudioSystem
                 _MusicSource02 = gameObject.AddComponent<AudioSource>();
                 _MusicSource02.loop = true;
                 _MusicSource02.outputAudioMixerGroup = GameResources.Instance.musicMixerGroup;
+                _MusicSource02.enabled = false;
                 _MusicSource02.enabled = true;
             }
 
@@ -114,11 +115,8 @@ namespace SnakeGame.AudioSystem
 
         private void OnMusicChanged(MusicSO musicSO, float timeToFade)
         {
-            if (m_FadeMusicCoroutine != null)
-                StopCoroutine(m_FadeMusicCoroutine);
-
             // If the audio clip changed, play the new audio
-            if (musicSO.musicClip != m_CurrentmusicClip)
+            if (m_CurrentmusicClip != musicSO.musicClip)
             {
                 m_CurrentmusicClip = musicSO.musicClip;
                 m_IsMusicSource01Playing = !m_IsMusicSource01Playing;
@@ -132,20 +130,6 @@ namespace SnakeGame.AudioSystem
             float timeElapsed = 0f;
             if (m_IsMusicSource01Playing)
             {
-                _MusicSource02.clip = musicTrack.musicClip;
-                _MusicSource02.Play();
-
-                while (timeElapsed < timeToFade)
-                {
-                    _MusicSource02.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
-                    _MusicSource01.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
-                    timeElapsed += Time.deltaTime;
-                    await UniTask.Yield();
-                }
-                _MusicSource01.Pause();
-            }
-            else
-            {
                 _MusicSource01.clip = musicTrack.musicClip;
                 _MusicSource01.Play();
 
@@ -157,6 +141,20 @@ namespace SnakeGame.AudioSystem
                     await UniTask.Yield();
                 }
                 _MusicSource02.Pause();
+            }
+            else
+            {
+                _MusicSource02.clip = musicTrack.musicClip;
+                _MusicSource02.Play();
+
+                while (timeElapsed < timeToFade)
+                {
+                    _MusicSource02.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
+                    _MusicSource01.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+                    timeElapsed += Time.deltaTime;
+                    await UniTask.Yield();
+                }
+                _MusicSource01.Pause();
             }
         }
 

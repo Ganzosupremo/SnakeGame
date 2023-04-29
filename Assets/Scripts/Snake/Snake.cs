@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using SnakeGame.AbwehrSystem;
+using SnakeGame.Debuging;
 using SnakeGame.Foods;
 using SnakeGame.PlayerSystem.AbilitySystem;
 using SnakeGame.TimeSystem;
@@ -159,6 +160,7 @@ namespace SnakeGame.PlayerSystem
 
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
         {
+            this.Log(healthEventArgs.healthAmount);
             if (healthEventArgs.healthAmount <= 0f)
             {
                 destroyEvent.CallOnDestroy(true, 0);
@@ -289,8 +291,9 @@ namespace SnakeGame.PlayerSystem
                 SnakeSegmentsList.Add(segmentTransform);
                 snakeSegmentCount++;
             }
-            health.IncreaseHealth(increaseHealth);
             IsSnakeColliding = false;
+            health.IncreaseHealth(increaseHealth);
+            this.Log(health.CurrentHealth);
         }
 
         public void UpdateSnakeSegments()

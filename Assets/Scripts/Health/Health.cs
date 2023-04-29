@@ -8,7 +8,7 @@ namespace SnakeGame
     [DisallowMultipleComponent]
     public class Health : MonoBehaviour
     {
-        [Tooltip("Here goes the health bar prefab on the enemies")]
+        [Tooltip("Here goes the health bar prefab for the enemies")]
         [SerializeField] private HealthBar healthBar;
 
         public int CurrentHealth { get; private set; }

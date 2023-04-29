@@ -34,7 +34,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &4730270264773809023
 TrailRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -75,6 +75,7 @@ TrailRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 10
   m_Time: 5
+  m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -120,17 +121,21 @@ TrailRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 0
+    textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
   m_MinVertexDistance: 0.1
+  m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1
+  m_ApplyActiveColorSpace: 0
 --- !u!1 &8740502524224239974
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,7 +145,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4115567812921692725}
-  - component: {fileID: 487911593099118944}
+  - component: {fileID: 1925316195470675469}
   - component: {fileID: 9142345832759894126}
   - component: {fileID: 7238273981159682823}
   - component: {fileID: 7704925794994691758}
@@ -169,7 +174,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &487911593099118944
+--- !u!114 &1925316195470675469
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -178,10 +183,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8740502524224239974}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24cc2ceb9647b7443b0238df098c900e, type: 3}
+  m_Script: {fileID: 11500000, guid: f56513dfd91b4b84fa43017825e2954c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trailRenderer: {fileID: 4730270264773809023}
+  _TrailRenderer: {fileID: 4730270264773809023}
+  _ExplosionRadius: 5
+  _ExplosionMask:
+    serializedVersion: 2
+    m_Bits: 66560
 --- !u!212 &9142345832759894126
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -244,6 +253,25 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -267,6 +295,7 @@ PolygonCollider2D:
       - {x: 0.45, y: -0.4}
       - {x: 0.45, y: 0.4}
       - {x: 0.4, y: 0.45}
+  m_UseDelaunayMesh: 0
 --- !u!50 &7704925794994691758
 Rigidbody2D:
   serializedVersion: 4
@@ -284,6 +313,12 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -298,12 +333,13 @@ ConstantForce2D:
   m_Enabled: 1
   m_Force: {x: 6, y: 6}
   m_RelativeForce: {x: 10, y: 10}
-  m_Torque: 0
+  m_Torque: 2
 --- !u!1001 &8905545290804950933
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4115567812921692725}
     m_Modifications:
     - target: {fileID: 2597215846638513672, guid: 91f3285f2fb8e604f85865c0125b31e9, type: 3}
@@ -391,6 +427,9 @@ PrefabInstance:
       value: Light
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91f3285f2fb8e604f85865c0125b31e9, type: 3}
 --- !u!4 &5605362549823828666 stripped
 Transform:
