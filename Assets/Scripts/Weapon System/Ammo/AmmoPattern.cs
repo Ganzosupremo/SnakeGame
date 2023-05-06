@@ -15,7 +15,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         private float m_ammoSpeed;
         private Vector3 m_fireDirectionVector;
         private float m_fireDirectionAngle;
-        private AmmoDetailsSO m_ammoDetails;
+        private BaseAmmoSO m_ammoDetails;
         private float m_ammoChargeTimer;
 
         private void Update()
@@ -46,7 +46,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             return gameObject;
         }
 
-        public void InitialiseAmmo(AmmoDetailsSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
+        public void InitialiseAmmo(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
         {
             this.m_ammoDetails = ammoDetails;
             this.m_ammoSpeed = ammoSpeed;
@@ -78,7 +78,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         /// <summary>
         /// Set The Ammo Fire Direction Based On The Direction Adjusted By The Random Spread
         /// </summary>
-        private void SetFireDirection(AmmoDetailsSO ammoDetails, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
+        private void SetFireDirection(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
         {
             float spreadRandomAngle = Random.Range(ammoDetails.ammoSpreadMin, ammoDetails.ammoSpreadMax);
 

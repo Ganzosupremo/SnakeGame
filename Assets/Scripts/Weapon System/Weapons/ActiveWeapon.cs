@@ -76,7 +76,7 @@ namespace SnakeGame.AbwehrSystem
         /// <summary>
         /// Gets The Ammo Corresponding To The Specific Weapon
         /// </summary>
-        public AmmoDetailsSO GetCurrentAmmo()
+        public BaseAmmoSO GetCurrentAmmo()
         {
             return currentWeapon.weaponDetails.weaponCurrentAmmo;
         }

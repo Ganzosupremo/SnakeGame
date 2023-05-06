@@ -81,7 +81,7 @@ namespace SnakeGame.AbwehrSystem
         /// </summary>
         private void FireAmmo(float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
         {
-            AmmoDetailsSO currentAmmo = activeWeapon.GetCurrentAmmo();
+            BaseAmmoSO currentAmmo = activeWeapon.GetCurrentAmmo();
 
             if (currentAmmo != null)
             {
@@ -97,7 +97,7 @@ namespace SnakeGame.AbwehrSystem
         /// <param name="weaponAimAngle">The aim angle used to rotate the weapon</param>
         /// <param name="weaponAimDirectionVector">The vector aim angle for initializing the ammo</param>
         /// <returns></returns>
-        private IEnumerator FireAmmoRoutine(AmmoDetailsSO currentAmmo, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
+        private IEnumerator FireAmmoRoutine(BaseAmmoSO currentAmmo, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
         {
             int ammoCounter = 0;
 

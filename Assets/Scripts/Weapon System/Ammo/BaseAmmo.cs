@@ -17,7 +17,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         protected Vector3 aimDirectionVector;
         protected float fireDirectionAngle;
         protected SpriteRenderer spriteRenderer;
-        protected AmmoDetailsSO ammoDetails;
+        protected BaseAmmoSO ammoDetails;
         protected float ammoChargeTimer;
         protected bool hasAmmoMaterialSet = false;
         protected bool overrideAmmoMovement;
@@ -83,7 +83,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         /// This Method Initialises The Ammo So It Can Be Fired, Using The Specified Variables.
         /// If This Ammo Is Part Of An Ammo Pattern, The Ammo Movement Can Be Overriden By Setting The Bool overrideAmmoMovement To True
         /// </summary>
-        public void InitialiseAmmo(AmmoDetailsSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
+        public void InitialiseAmmo(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
         {
             #region Ammo
             this.ammoDetails = ammoDetails;
@@ -138,7 +138,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         /// <summary>
         /// Set The Ammo Fire Direction Based On The Input Angle And Direction Adjusted By The Random Spread.
         /// </summary>
-        private void SetFireDirection(AmmoDetailsSO ammoDetails, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
+        private void SetFireDirection(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
         {
             float spreadRandomAngle = Random.Range(ammoDetails.ammoSpreadMin, ammoDetails.ammoSpreadMax);
 

@@ -15,11 +15,11 @@ namespace SnakeGame.AbwehrSystem.Ammo
         #endregion
         [SerializeField] private LayerMask _ExplosionMask;
 
-        //// Start is called before the first frame update
-        //void Awake()
-        //{
-        //   m_SpriteRenderer = GetComponent<SpriteRenderer>();
-        //}
+        private ExplosiveAmmoDetailsSO m_ExplosiveAmmoDetail;
+        private void Start()
+        {
+            m_ExplosiveAmmoDetail = (ExplosiveAmmoDetailsSO)ammoDetails;
+        }
 
         // Update is called once per frame
         void Update()
@@ -31,7 +31,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         {
             if (isColliding) return;
 
-            Implode(Physics2D.OverlapCircleAll(transform.position, _ExplosionRadius, _ExplosionMask));
+            Implode(Physics2D.OverlapCircleAll(transform.position, m_ExplosiveAmmoDetail.ExplosionRadius, m_ExplosiveAmmoDetail.ExplosionMask));
 
             ActivateAmmoEffects();
 
