@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Text;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 
@@ -11,13 +13,14 @@ namespace SnakeGame.UI
         [SerializeField] private TextMeshProUGUI _ObjectiveText;
         [SerializeField] private CanvasGroup _CanvasGroup;
 
+        private CancellationTokenSource m_CancellationToken;
 
         private void Awake()
         {
             if (_CanvasGroup == null)
-            {
                 _CanvasGroup = GetComponent<CanvasGroup>();
-            }
+
+            m_CancellationToken = new();
         }
         private void Start()
         {
@@ -27,7 +30,7 @@ namespace SnakeGame.UI
         private void OnEnable()
         {
             StaticEventHandler.OnDisplayObjectives += StaticEventHandler_OnDisplayObjectivesEvent;
-          StaticEventHandler.OnRoomEnemiesDefeated += StaticEventHandler_OnRoomEnemiesDefeated;
+            StaticEventHandler.OnRoomEnemiesDefeated += StaticEventHandler_OnRoomEnemiesDefeated;
         }
 
         private void OnDisable()
@@ -38,34 +41,38 @@ namespace SnakeGame.UI
 
         private void StaticEventHandler_OnDisplayObjectivesEvent(DisplayObjectivesUIArgs args)
         {
-            DisplayObjectives(args.CurrentAlpha, args.TargetAlpha, args.DisplayTime, args.DisplayTexts);
+            DisplayObjectives(args.CurrentAlpha, args.TargetAlpha, args.DisplayTime, destroyCancellationToken, args.DisplayTexts);
         }
 
         private void StaticEventHandler_OnRoomEnemiesDefeated(RoomEnemiesDefeatedArgs args)
         {
             if (GameManager.CurrentGameState == GameState.Playing)
             {
-                DisplayObjectives(0f, 1f, Settings.DisplayObjectivesTime, $"Go to the next Room and Defeat the Enemies.");
+                DisplayObjectives(0f, 1f, Settings.DisplayObjectivesTime, m_CancellationToken.Token,$"Go to the next Room and Defeat the Enemies.");
             }
         }
 
-        public async UniTask Display(float currentAlpha, float targetAlpha, float displayTime, params string[] displayTexts)
+        [Obsolete]
+        public async UniTask Display(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken, params string[] displayTexts)
         {
             _ObjectiveBackground.SetActive(true);
             InitializeText(displayTexts);
 
-            await DisplayObjectivesAsync(currentAlpha, targetAlpha, displayTime);
+            await DisplayObjectivesAsync(currentAlpha, targetAlpha, displayTime, destroyCancellationToken);
 
             InitializeText("");
             _ObjectiveBackground.SetActive(false);
         }
 
-        private async void DisplayObjectives(float currentAlpha, float targetAlpha, float displayTime, params string[] displayTexts)
+        private async void DisplayObjectives(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken, params string[] displayTexts)
         {
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
             _ObjectiveBackground.SetActive(true);
             InitializeText(displayTexts);
 
-            await DisplayObjectivesAsync(currentAlpha, targetAlpha, displayTime);
+            await DisplayObjectivesAsync(currentAlpha, targetAlpha, displayTime, cancellationToken);
             
             InitializeText("");
             _ObjectiveBackground.SetActive(false);
@@ -81,8 +88,11 @@ namespace SnakeGame.UI
             _ObjectiveText.text = builder.ToString();
         }
 
-        private async UniTask DisplayObjectivesAsync(float currentAlpha, float targetAlpha, float displayTime)
+        private async UniTask DisplayObjectivesAsync(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
             float timer = 0f;
             while (timer <= displayTime)
             {
@@ -93,11 +103,14 @@ namespace SnakeGame.UI
 
             await UniTask.Delay((int)displayTime * 1000);
 
-            await HideUI(displayTime);
+            await HideUI(displayTime, cancellationToken);
         }
 
-        private async UniTask HideUI(float displayTime)
+        private async UniTask HideUI(float displayTime, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
             float hideTimer = 0f;
             while (hideTimer <= displayTime)
             {

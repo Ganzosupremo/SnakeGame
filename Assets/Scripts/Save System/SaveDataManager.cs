@@ -19,17 +19,14 @@ namespace SnakeGame.SaveAndLoadSystem
         [Tooltip("Initialize the data when there's no data, i.e. When the Persistence Manager is in another scene that is not the main menu, use only when developing.")]
         #endregion
         [SerializeField] private bool initializeDataIfNull = false;
-
         #region Tooltip
         [Tooltip("Disable the Persistence Data Manager, use only when developing, don't include in the final build.")]
         #endregion
         [SerializeField] private bool disablePersistenceManager = false;
-
         #region Tooltip
         [Tooltip("Check if you want the profile ID to be overriden, just use when developing, don't include in the final build.")]
         #endregion
         [SerializeField] private bool overrideProfileID = false;
-
         #region Tooltip
         [Tooltip("Write the text that will be used to override the profile ID, use only if the above field is set to true.")]
         #endregion
@@ -68,7 +65,6 @@ namespace SnakeGame.SaveAndLoadSystem
         #endregion
         [SerializeField] private TextMeshProUGUI messageToDisplay;
 
-
         private GameData gameData;
         public List<IPersistenceData> persistenceDataobjects;
         public int Count;
@@ -83,9 +79,7 @@ namespace SnakeGame.SaveAndLoadSystem
             DontDestroyOnLoad(this.gameObject);
 
             if (disablePersistenceManager)
-            {
                 this.LogWarning("The persistence data manager is currently disabled");
-            }
 
             this.fileDataHandler = new(Application.persistentDataPath, fileName, useEncryption);
 
@@ -229,7 +223,6 @@ namespace SnakeGame.SaveAndLoadSystem
         private List<IPersistenceData> FindAllPersistenceObjects()
         {
             IEnumerable<IPersistenceData> persistenceDataObjects = FindObjectsOfType<MonoBehaviour>().OfType<IPersistenceData>();
-
             return new List<IPersistenceData>(persistenceDataObjects);
         }
 

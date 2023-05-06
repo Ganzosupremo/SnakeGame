@@ -3,6 +3,7 @@ using SnakeGame.Decorations;
 using SnakeGame.Dungeon.NoiseGenerator;
 using SnakeGame.GameUtilities;
 using SnakeGame.PlayerSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,7 +27,7 @@ namespace SnakeGame.ProceduralGenerationSystem
 
         [HideInInspector] public int[,] aStarMovementPenalty; // This is used to store the movement penalties for the AStar Pathfinding
         [HideInInspector] public int[,] aStarItemObstacles; // Store the position of moveable items which acts as an obstacle
-                                                            // ***** test code
+        // ***** test code
         [HideInInspector] public int[,] aStarSnakeSegmentsObstacles;
         // *****
 
@@ -66,9 +67,12 @@ namespace SnakeGame.ProceduralGenerationSystem
             {
                 room.isPreviouslyVisited = true;
                 StaticEventHandler.CallRoomChangedEvent(room);
+                AddExitToRoom();
             }
 
         }
+
+
 
         //private void OnTriggerExit2D(Collider2D other)
         //{
@@ -368,6 +372,14 @@ namespace SnakeGame.ProceduralGenerationSystem
                         bossRoomCue.transform.localPosition = door.transform.localPosition;
                     }
                 }
+            }
+        }
+
+        private void AddExitToRoom()
+        {
+            if (room.roomNodeType.isExit)
+            {
+                Instantiate(GameResources.Instance.ExitPrefab, transform.position, Quaternion.identity, environmentGameObject.transform);
             }
         }
 

@@ -74,6 +74,11 @@ namespace SnakeGame.PlayerSystem
             WeaponInputs();
 
             SnakeDashCooldownTimer();
+
+            if (snakeInputActions.Snake.test.IsPressed())
+            {
+                snake.health.IncreaseHealth(3);
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D other)

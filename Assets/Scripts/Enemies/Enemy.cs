@@ -190,7 +190,7 @@ namespace SnakeGame.Enemies
         {
             EnableEnemy(false);
 
-            await materializeEffect.Materialize(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
+            await materializeEffect.MaterializeAsync(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
                 enemyDetails.enemyMaterializeTime, enemyDetails.standardEnemyMaterial, enemySpriteRenderer);
 
             EnableEnemy(true);

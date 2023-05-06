@@ -33,6 +33,10 @@ namespace SnakeGame
         [Tooltip("This Must Be Populated With The Dungeon RoomNodeTypeListSO")]
         #endregion
         public RoomNodeTypeListSO roomNodeTypeList;
+        #region Tooltip
+        [Tooltip("The prefab for the exit, this will spawn automatically if the instantiated room is the Exit.")]
+        #endregion
+        public GameObject ExitPrefab;
 
         #region Tooltip
         [Tooltip("The current player Scriptable object - this is used to reference the current player between scenes")]
@@ -100,21 +104,22 @@ namespace SnakeGame
         [Tooltip("Dimmed Materials")]
         #endregion
         public Material dimmedMaterial;
-
         #region Tooltip
         [Tooltip("The Default Sprite Lit Material")]
         #endregion
         public Material litMaterial;
-
         #region Tooltip
         [Tooltip("The material for the sprite outlines")]
         #endregion
         public Material outlineMaterial;
-
         #region Tooltip
         [Tooltip("Populate with tha variable lit shader")]
         #endregion
         public Shader variableLitShader;
+        #region Tooltip
+        [Tooltip("Populate with tha Materialize Shader")]
+        #endregion
+        public Shader MaterializeShader;
 
         #region Header Special Tilemap Tiles
         [Header("SPECIAL TILES")]
@@ -179,10 +184,12 @@ namespace SnakeGame
             HelperUtilities.ValidateCheckNullValue(this, nameof(dimmedMaterial), dimmedMaterial);
             HelperUtilities.ValidateCheckNullValue(this, nameof(litMaterial), litMaterial);
             HelperUtilities.ValidateCheckNullValue(this, nameof(variableLitShader), variableLitShader);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(MaterializeShader), MaterializeShader);
             HelperUtilities.ValidateCheckNullValue(this, nameof(ammoIconPrefab), ammoIconPrefab);
             HelperUtilities.ValidateCheckNullValue(this, nameof(ScorePrefab), ScorePrefab);
             HelperUtilities.ValidateCheckNullValue(this, nameof(bossRoomCuePrefab), bossRoomCuePrefab);
             HelperUtilities.ValidateCheckNullValue(this, nameof(globalLight), globalLight);
+            HelperUtilities.ValidateCheckNullValue(this, nameof(ExitPrefab), ExitPrefab);
 
             HelperUtilities.ValidateCheckNullValue(this, nameof(musicMasterMixerGroup), musicMasterMixerGroup);
             HelperUtilities.ValidateCheckNullValue(this, nameof(musicOnFull), musicOnFull);

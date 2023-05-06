@@ -13,14 +13,15 @@ GameObject:
   - component: {fileID: 3691106722380239502}
   - component: {fileID: 3032972114675141518}
   - component: {fileID: 3863177461285935145}
+  - component: {fileID: 3282014220227501570}
   - component: {fileID: 5510669262809041541}
   - component: {fileID: 4589647218673212187}
   - component: {fileID: 1421078527872679476}
   - component: {fileID: 7013239912598023992}
   - component: {fileID: -3899169694466271323}
   - component: {fileID: 5345043490643907597}
-  - component: {fileID: 3282014220227501570}
   - component: {fileID: 4735871700485877374}
+  - component: {fileID: 8205121981267417242}
   m_Layer: 18
   m_Name: Tumbleweed
   m_TagString: Untagged
@@ -174,6 +175,33 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!50 &3282014220227501570
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247257897759034753}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 10
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &5510669262809041541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,33 +281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810ba8ce264dbaa498f7f12d941e9a66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!50 &3282014220227501570
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247257897759034753}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 10
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!114 &4735871700485877374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,5 +291,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a09f65caad207e48a1300d1360193d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8205121981267417242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247257897759034753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d3b8f2f9724e5940a6faa51c69522fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

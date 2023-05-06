@@ -9,7 +9,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         #region Tooltip
         [Tooltip("Populate the array with individual child ammo gameobjects")]
         #endregion
-        [SerializeField] private Ammo[] ammoArray;
+        [SerializeField] private BaseAmmo[] ammoArray;
 
         private float m_ammoRange;
         private float m_ammoSpeed;
