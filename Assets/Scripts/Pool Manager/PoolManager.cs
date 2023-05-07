@@ -98,7 +98,6 @@ namespace SnakeGame
             string componentNamespace = Type.GetType(componentType).Namespace;
             string dot = ".";
             string complete = componentNamespace + dot + componentType;
-            this.Log(complete);
             return complete;
         }
 
