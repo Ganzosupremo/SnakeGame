@@ -17,11 +17,10 @@ namespace SnakeGame.UI
 
         private void Awake()
         {
-            if (_CanvasGroup == null)
-                _CanvasGroup = GetComponent<CanvasGroup>();
-
+            _CanvasGroup = GetComponent<CanvasGroup>();
             m_CancellationToken = new();
         }
+
         private void Start()
         {
             _ObjectiveBackground.SetActive(false);
@@ -41,51 +40,35 @@ namespace SnakeGame.UI
 
         private void StaticEventHandler_OnDisplayObjectivesEvent(DisplayObjectivesUIArgs args)
         {
-            DisplayObjectives(args.CurrentAlpha, args.TargetAlpha, args.DisplayTime, destroyCancellationToken, args.DisplayTexts);
+            Run(args.CurrentAlpha, args.TargetAlpha, args.DisplayTime, destroyCancellationToken, args.DisplayTexts);
         }
 
         private void StaticEventHandler_OnRoomEnemiesDefeated(RoomEnemiesDefeatedArgs args)
         {
             if (GameManager.CurrentGameState == GameState.Playing)
             {
-                DisplayObjectives(0f, 1f, Settings.DisplayObjectivesTime, m_CancellationToken.Token,$"Go to the next Room and Defeat the Enemies.");
+                Run(0f, 1f, Settings.DisplayObjectivesTime, m_CancellationToken.Token,$"Go to the next Room and Defeat the Enemies.");
             }
         }
 
-        [Obsolete]
-        public async UniTask Display(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken, params string[] displayTexts)
-        {
-            _ObjectiveBackground.SetActive(true);
-            InitializeText(displayTexts);
-
-            await DisplayObjectivesAsync(currentAlpha, targetAlpha, displayTime, destroyCancellationToken);
-
-            InitializeText("");
-            _ObjectiveBackground.SetActive(false);
-        }
-
-        private async void DisplayObjectives(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken, params string[] displayTexts)
+        private async void Run(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken, params string[] texts)
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
 
             _ObjectiveBackground.SetActive(true);
-            InitializeText(displayTexts);
+            BuildText(texts);
 
-            await DisplayObjectivesAsync(currentAlpha, targetAlpha, displayTime, cancellationToken);
-            
-            InitializeText("");
+            //await DisplayObjectivesAsync(currentAlpha, targetAlpha, displayTime, cancellationToken);
+
+            await ControlUIFadingAsync(currentAlpha, targetAlpha, displayTime, cancellationToken);
+
+            await UniTask.Delay((int)displayTime * 1000, false, PlayerLoopTiming.Update, cancellationToken);
+
+            await ControlUIFadingAsync(targetAlpha, currentAlpha, displayTime, cancellationToken);
+
+            BuildText(string.Empty);
             _ObjectiveBackground.SetActive(false);
-        }
-
-        private void InitializeText(params string[] displayTexts)
-        {
-            StringBuilder builder = new();
-            for (int i = 0; i < displayTexts.Length; i++)
-            {
-                builder.Append(displayTexts[i]);
-            }
-            _ObjectiveText.text = builder.ToString();
         }
 
         private async UniTask DisplayObjectivesAsync(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken)
@@ -98,12 +81,27 @@ namespace SnakeGame.UI
             {
                 timer += Time.deltaTime;
                 _CanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / 1.2f);
-                await UniTask.NextFrame();
+                await UniTask.NextFrame(cancellationToken);
             }
 
-            await UniTask.Delay((int)displayTime * 1000);
+            await UniTask.Delay((int)displayTime * 1000, false, PlayerLoopTiming.Update, cancellationToken);
 
             await HideUI(displayTime, cancellationToken);
+        }
+
+        private async UniTask ControlUIFadingAsync(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested) return;
+
+            float timer = 0f;
+            // Control the fade of the canvas group
+            while (timer <= displayTime)
+            {
+                timer += Time.deltaTime;
+                _CanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / 1.2f);
+                await UniTask.NextFrame(cancellationToken);
+            }
+            await UniTask.NextFrame(cancellationToken);
         }
 
         private async UniTask HideUI(float displayTime, CancellationToken cancellationToken)
@@ -116,8 +114,19 @@ namespace SnakeGame.UI
             {
                 hideTimer += Time.deltaTime;
                 _CanvasGroup.alpha = Mathf.Lerp(1f, 0f, hideTimer / 1.2f);
-                await UniTask.NextFrame();
+                await UniTask.NextFrame(cancellationToken);
             }
+            await UniTask.NextFrame(cancellationToken);
+        }
+
+        private void BuildText(params string[] displayTexts)
+        {
+            StringBuilder builder = new();
+            for (int i = 0; i < displayTexts.Length; i++)
+            {
+                builder.Append(displayTexts[i]);
+            }
+            _ObjectiveText.text = builder.ToString();
         }
     }
 }

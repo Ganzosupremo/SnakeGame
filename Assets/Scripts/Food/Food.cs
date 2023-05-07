@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace SnakeGame.Foods
+namespace SnakeGame.FoodSystem
 {
     [RequireComponent(typeof(MaterializeEffect))]
     [RequireComponent(typeof(Destroy))]

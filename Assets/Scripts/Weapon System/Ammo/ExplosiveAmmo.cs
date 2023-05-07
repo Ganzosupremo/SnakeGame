@@ -6,19 +6,16 @@ namespace SnakeGame.AbwehrSystem.Ammo
     [DisallowMultipleComponent]
     public class ExplosiveAmmo : BaseAmmo
     {
-        #region Tooltip
-        [Tooltip("The Radius this explosion will have.")]
-        #endregion
-        [SerializeField] private float _ExplosionRadius = 10f;
-        #region Tooltip
-        [Tooltip("Specify the layers this explosion will deal damage to.")]
-        #endregion
-        [SerializeField] private LayerMask _ExplosionMask;
-
         private ExplosiveAmmoDetailsSO m_ExplosiveAmmoDetail;
+
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
         private void Start()
         {
-            m_ExplosiveAmmoDetail = (ExplosiveAmmoDetailsSO)ammoDetails;
+            m_ExplosiveAmmoDetail = (ExplosiveAmmoDetailsSO)_AmmoDetails;
         }
 
         // Update is called once per frame
@@ -29,12 +26,10 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (isColliding) return;
+            if (_IsColliding) return;
 
-            Implode(Physics2D.OverlapCircleAll(transform.position, m_ExplosiveAmmoDetail.ExplosionRadius, m_ExplosiveAmmoDetail.ExplosionMask));
-
+            DealDamage(Physics2D.OverlapCircleAll(transform.position, m_ExplosiveAmmoDetail.ExplosionRadius, m_ExplosiveAmmoDetail.ExplosionMask));
             ActivateAmmoEffects();
-
             DisableAmmo();
         }
 
@@ -43,7 +38,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         //    Gizmos.DrawWireSphere(transform.position, _ExplosionRadius);
         //}
 
-        private void Implode(params Collider2D[] others)
+        protected override void DealDamage(params Collider2D[] others)
         {
             foreach (var hit in others)
             {
@@ -52,7 +47,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
                     // If the Health component is atached to an enemy
                     if (health.enemy != null)
                     {
-                        health.TakeDamage(ammoDetails.ammoDamage);
+                        health.TakeDamage(_AmmoDetails.ammoDamage);
                         if (health.enemy.enemyDetails.hitSoundEffect == null) return;
                         SoundEffectManager.CallOnSoundEffectSelectedEvent(health.enemy.enemyDetails.hitSoundEffect);
                     }

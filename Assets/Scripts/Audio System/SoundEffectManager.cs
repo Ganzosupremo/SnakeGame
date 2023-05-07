@@ -1,11 +1,9 @@
-using System.Collections;
-using UnityEngine;
-using SnakeGame;
+using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
-using SnakeGame.Debuging;
-using SnakeGame.GameUtilities;
 using System;
+using System.Collections;
+using UnityEngine;
 
 namespace SnakeGame.AudioSystem
 {
@@ -41,8 +39,6 @@ namespace SnakeGame.AudioSystem
             OnMinigunSFXVolumeDecreased += SoundEffectManager_OnMinigunSFXVolumeDecreased;
             OnSoundEffectSelected += SoundEffectManager_OnSoundEffectChanged;
         }
-
-
 
         private void OnDisable()
         {
@@ -83,8 +79,7 @@ namespace SnakeGame.AudioSystem
         /// </summary>
         private void PlaySoundEffect(SoundEffectSO soundEffect)
         {
-            SoundEffect sound = (SoundEffect)PoolManager.Instance.ReuseComponent(soundEffect.soundPrefab, Vector3.zero,
-                Quaternion.identity);
+            SoundEffect sound = (SoundEffect)PoolManager.Instance.ReuseComponent(soundEffect.soundPrefab, Vector3.zero);
             sound.SetSound(soundEffect);
             sound.gameObject.SetActive(true);
             StartCoroutine(DisableSound(sound, soundEffect.soundEffectClip.length));

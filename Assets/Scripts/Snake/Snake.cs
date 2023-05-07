@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using SnakeGame.AbwehrSystem;
 using SnakeGame.Debuging;
-using SnakeGame.Foods;
+using SnakeGame.FoodSystem;
 using SnakeGame.PlayerSystem.AbilitySystem;
 using SnakeGame.TimeSystem;
 using SnakeGame.VisualEffects;

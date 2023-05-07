@@ -1,16 +1,20 @@
 using SnakeGame.AudioSystem;
 using SnakeGame.GameUtilities;
+using SnakeGame.VisualEffects;
 using UnityEngine;
 
 namespace SnakeGame.AbwehrSystem.Ammo
 {
-    public class BaseAmmoSO : ScriptableObject
+    /// <summary>
+    /// The base Scriptable Object that all other Scriptable Ammo Objects can derive from.
+    /// Defines all the base parameters necessary to make the ammo work.
+    /// </summary>
+    public abstract class BaseAmmoSO : ScriptableObject
     {
         #region Header Base Ammo Details
         [Header("Base Ammo Details")]
         [Space(10)]
         #endregion
-
         public string ammoName;
         #region Tooltip
         [Tooltip("If this is set to true, the Increase and Decrease methods of this class," +
@@ -24,24 +28,20 @@ namespace SnakeGame.AbwehrSystem.Ammo
         [Space(10)]
         #endregion
         public Sprite ammoSprite;
-
         #region Tooltip
         [Tooltip("This can be populated with the prefab that will be used for the ammo, multiple prefabs can be used and " +
             "they will be randomly selected. The prefab can be an ammo pattern as long it is compatible with the IFireable interface.")]
         #endregion
         public GameObject[] ammoPrefabArray;
-
         #region Tooltip
         [Tooltip("The material used for the ammo")]
         #endregion
         public Material ammoMaterial;
-
         #region Tooltip
         [Tooltip("The ammo charge time - If the ammo should charge briefly before it can move. For example when creating an ammo pattern, the ammo should charge first before moving")]
         [Range(0f, 2f)]
         #endregion
         public float ammoChargeTime = 0.1f;
-
         #region Tooltip
         [Tooltip("If the ammo has a charge time, then specify the material that should be used to render the ammo while it's charging")]
         #endregion
@@ -62,13 +62,11 @@ namespace SnakeGame.AbwehrSystem.Ammo
         [Header("Base Ammo Parameters")]
         [Space(10)]
         #endregion
-
         #region Tooltip
         [Tooltip("The damage for each individual ammo")]
         [Range(1, 1000)]
         #endregion
         public int ammoDamage = 1;
-
         #region Tooltip
         [Tooltip("As the damage of the weapon will increase in runtime, this variable sets the damage" +
             " to it's original value when exiting the app or restarting the game" +
@@ -76,31 +74,26 @@ namespace SnakeGame.AbwehrSystem.Ammo
         [Range(1, 1000)]
         #endregion
         public int originalAmmoDamage = 1;
-
         #region Tooltip
         [Tooltip("The max damage this weapon will do in this entire playtrough")]
         [Range(1, 1000)]
         #endregion
         public int maxAmmoDamage = 100;
-
         #region Tooltip
         [Tooltip("The min speed for each ammo - the speed will be a random value between the min and max speed")]
         [Range(1f, 100f)]
         #endregion
         public float minAmmoSpeed = 20f;
-
         #region Tooltip
         [Tooltip("The max speed for each ammo - the speed will be a random value between the min and max speed")]
         [Range(1f, 100f)]
         #endregion
         public float maxAmmoSpeed = 20f;
-
         #region Tooltip
         [Tooltip("The range of the ammo, or ammo patterns, in unity units")]
         [Range(1f, 200f)]
         #endregion
         public float ammoRange = 20f;
-
         #region Tooltip
         [Tooltip("The rotation speed for the ammo, it only works with ammo patterns - in degrees per second")]
         [Range(1f, 20f)]
@@ -111,43 +104,37 @@ namespace SnakeGame.AbwehrSystem.Ammo
         [Header("Base Ammo Spreed Details")]
         [Space(10)]
         #endregion
-
         #region Tooltip
         [Tooltip("This is the min spread angle for the ammo. A higher spread means less accuracy. A random value is calculated between the min and the max spread values")]
         [Range(0f, 50f)]
         #endregion
         public float ammoSpreadMin = 0f;
-
         #region Tooltip
         [Tooltip("This is the max spread angle for the ammo. A higher spread means less accuracy. A random value is calculated between the min and the max spread values")]
         [Range(0f, 50f)]
         #endregion
         public float ammoSpreadMax = 1f;
-
+        
         #region Header Ammo Spawn Details
         [Header("Ammo Spawn Settings")]
         [Space(10)]
         #endregion
-
         #region Tooltip
         [Tooltip("This is the min number of bullets that will spawn per shoot. A random value is calculated between the min and the max values")]
         [Range(1, 10)]
         #endregion
         public int MinBulletsPerShoot = 1;
-
         #region Tooltip
         [Tooltip("This is the max number of bullets that will spawn per shoot. A random value is calculated between the min and the max values." +
             " One is added in the FireWeapon class logic, so if the max ammo to spawn is 2, the final max ammo will be 3.")]
         [Range(1, 10)]
         #endregion
         public int MaxBulletsPerShoot = 1;
-
         #region Tooltip
         [Tooltip("The ammo spawn interval between them so they don't appear all at once. It is randomly calculated with the min and max values")]
         [Range(0f, 0.1f)]
         #endregion
         public float minSpawnInterval = 0f;
-
         #region Tooltip
         [Tooltip("The ammo spawn interval between them so they don't appear all at once. It is randomly calculated with the min and max values")]
         [Range(0f, 0.1f)]
@@ -158,31 +145,38 @@ namespace SnakeGame.AbwehrSystem.Ammo
         [Header("Base Ammo Trail Details")]
         [Space(10)]
         #endregion
-
         #region Tooltip
         [Tooltip("Select if the ammo should have a trail, if not deselect")]
         #endregion
         public bool hasAmmoTrail = false;
-
         #region Tooltip
         [Tooltip("The ammo trail lifetime in seconds")]
         #endregion
         public float ammoTrailLifetime = 3f;
-
         #region Tooltip
         [Tooltip("The ammo trail material")]
         #endregion
         public Material ammoTrailMaterial;
-
         #region Tooltip
         [Tooltip("The starting width for the trail")]
+        [Range(0f, 2f)]
         #endregion
-        [Range(0f, 2f)] public float ammoTrailStartWidth;
-
+        public float ammoTrailStartWidth;
         #region Tooltip
         [Tooltip("The ending width for the trail")]
+        [Range(0f, 2f)]
         #endregion
-        [Range(0f, 2f)] public float ammoTrailEndWidth;
+        public float ammoTrailEndWidth;
+
+        protected virtual void OnEnable()
+        {
+            ammoDamage = originalAmmoDamage;
+        }
+
+        protected virtual void OnDisable()
+        {
+            ammoDamage = originalAmmoDamage;
+        }
 
         /// <summary>
         /// Sets the spread of the current ammo.
@@ -232,6 +226,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             if (isPlayerAmmo)
             {
                 int increase = ammoDamage * damageIncrease / 100;
+                ammoDamage += increase;
 
                 if (ammoDamage > maxAmmoDamage)
                 {
@@ -283,7 +278,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
         #region Validation
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             HelperUtilities.ValidateCheckEmptyString(this, nameof(ammoName), ammoName);
             HelperUtilities.ValidateCheckNullValue(this, nameof(ammoSprite), ammoSprite);

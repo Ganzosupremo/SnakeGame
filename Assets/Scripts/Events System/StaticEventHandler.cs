@@ -133,8 +133,6 @@ namespace SnakeGame
 
     public class DisplayObjectivesUIArgs : EventArgs
     {
-        public GameState CurrentGameState;
-        public GameState PreviousGameState;
         public float CurrentAlpha;
         public float TargetAlpha;
         public float DisplayTime;

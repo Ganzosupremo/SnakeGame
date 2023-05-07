@@ -1383,7 +1383,7 @@ MonoBehaviour:
   - name: SnakeBody
     PoolSize: 100
     prefabToUse: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
-    componentType: SnakeGame.PlayerSystem.SnakeBody
+    componentType: SnakeBody
   - name: Bullet4x4
     PoolSize: 100
     prefabToUse: {fileID: 8740502524224239974, guid: 56480e3e174a52742bb7ec6b595da317, type: 3}
@@ -1467,11 +1467,11 @@ MonoBehaviour:
   - name: AmmoHitEffect
     PoolSize: 20
     prefabToUse: {fileID: 8467163931044552805, guid: fdea5c72d8ade9e40834d6c093aa4e29, type: 3}
-    componentType: AmmoHitEffect
+    componentType: SnakeGame.VisualEffects.AmmoHitEffect
   - name: Food
     PoolSize: 20
     prefabToUse: {fileID: 7338082217808987913, guid: aa068fa4ec15301499092874ada9112f, type: 3}
-    componentType: SnakeGame.Foods.Food
+    componentType: SnakeGame.FoodSystem.Food
   - name: Sound Effect
     PoolSize: 100
     prefabToUse: {fileID: 2906756793259760893, guid: a9838337f883dea48b2cfde7fda9e005, type: 3}

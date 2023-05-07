@@ -1,63 +1,78 @@
 using SnakeGame.AudioSystem;
 using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
+using SnakeGame.VisualEffects;
 using UnityEngine;
 
 namespace SnakeGame.AbwehrSystem.Ammo
 {
-    public class BaseAmmo : MonoBehaviour, IFireable
+    /// <summary>
+    /// This is the base ammo class that all the different ammo classes can derive from.
+    /// It handles the repetitive and necessary code for the different ammo types to work.
+    /// </summary>
+    public abstract class BaseAmmo : MonoBehaviour, IFireable
     {
         #region Tooltip
         [Tooltip("Populate with the child component TrailRenderer, that is found in the ammo prefab")]
         #endregion
         [SerializeField] private TrailRenderer trailRenderer;
 
-        protected float ammoRange = 0;
-        protected float ammoSpeed;
-        protected Vector3 aimDirectionVector;
-        protected float fireDirectionAngle;
-        protected SpriteRenderer spriteRenderer;
-        protected BaseAmmoSO ammoDetails;
-        protected float ammoChargeTimer;
-        protected bool hasAmmoMaterialSet = false;
-        protected bool overrideAmmoMovement;
-        protected bool isColliding = false;
+        [Tooltip("The max range of the ammo, once the ammo reaches this range, it'll be disabled.")]
+        protected float _AmmoRange = 0;
+        [Tooltip("The speed of the ammo. A random value is calculated between the min and max speed.")]
+        protected float _AmmoSpeed;
+        [Tooltip("The fire direction.")]
+        protected Vector3 _AimDirectionVector;
+        [Tooltip("The angle in which the ammo was fired.")]
+        protected float _FireDirectionAngle;
+        protected SpriteRenderer _SpriteRenderer;
+        protected BaseAmmoSO _AmmoDetails;
+        protected float _AmmoChargeTimer;
+        protected bool _HasAmmoMaterialSet = false;
+        protected bool _OverrideAmmoMovement;
+        [Tooltip("As OnTriggerEnter2D can be called several times in a second, this is used " +
+            "to avoid dealing double damage to the same entity.")]
+        protected bool _IsColliding = false;
 
-        private void Awake()
+        protected virtual void Awake()
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            _SpriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        private void Update()
-        {
-            MoveAmmo();
-        }
+        //private void Update()
+        //{
+        //    MoveAmmo();
+        //}
 
-        public void MoveAmmo()
+        /// <summary>
+        /// Moves the ammo.
+        /// Disables the ammo automatically if it has not hit a collision object and when it has reached it's max range.
+        /// </summary>
+        protected virtual void MoveAmmo()
         {
-            if (ammoChargeTimer > 0)
+            if (_AmmoChargeTimer > 0)
             {
-                ammoChargeTimer -= Time.deltaTime;
+                _AmmoChargeTimer -= Time.deltaTime;
                 return;
             }
-            else if (!hasAmmoMaterialSet)
+            else if (!_HasAmmoMaterialSet)
             {
-                SetAmmoMaterial(ammoDetails.ammoMaterial);
-                hasAmmoMaterialSet = true;
+                SetAmmoMaterial(_AmmoDetails.ammoMaterial == null ? GameResources.Instance.litMaterial : _AmmoDetails.ammoMaterial);
+                _HasAmmoMaterialSet = true;
             }
 
             //Don't move the ammo if the movement has been overriden, meaning this ammo is part of an ammo pattern
-            if (!overrideAmmoMovement)
+            if (!_OverrideAmmoMovement)
             {
                 //Calculate distance vector to move the bullet
-                Vector3 distanceVector = ammoSpeed * Time.deltaTime * aimDirectionVector;
+                Vector3 distanceVector = _AmmoSpeed * Time.deltaTime * _AimDirectionVector;
 
                 transform.position += distanceVector;
 
                 //Disable after the max range has been reached
-                ammoRange -= distanceVector.magnitude;
+                _AmmoRange -= distanceVector.magnitude;
 
-                if (ammoRange < 0)
+                if (_AmmoRange < 0)
                 {
                     //if (ammoDetails.isPlayerAmmo)
                     //    //Call the multiply score event
@@ -68,51 +83,40 @@ namespace SnakeGame.AbwehrSystem.Ammo
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (isColliding) return;
-
-            DealDamage(other);
-
-            ActivateAmmoEffects();
-
-            DisableAmmo();
-        }
-
         /// <summary>
         /// This Method Initialises The Ammo So It Can Be Fired, Using The Specified Variables.
         /// If This Ammo Is Part Of An Ammo Pattern, The Ammo Movement Can Be Overriden By Setting The Bool overrideAmmoMovement To True
         /// </summary>
-        public void InitialiseAmmo(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
+        public virtual void InitialiseAmmo(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
         {
             #region Ammo
-            this.ammoDetails = ammoDetails;
+            this._AmmoDetails = ammoDetails;
 
-            isColliding = false;
+            _IsColliding = false;
 
             //Sets the fire direction
             SetFireDirection(ammoDetails, aimAngle, weaponAimAngle, weaponAimDirectionVector);
 
-            spriteRenderer.sprite = ammoDetails.ammoSprite;
+            _SpriteRenderer.sprite = ammoDetails.ammoSprite;
 
             if (ammoDetails.ammoChargeTime > 0)
             {
-                ammoChargeTimer = ammoDetails.ammoChargeTime;
+                _AmmoChargeTimer = ammoDetails.ammoChargeTime;
                 SetAmmoMaterial(ammoDetails.ammoChargeMaterial);
-                hasAmmoMaterialSet = false;
+                _HasAmmoMaterialSet = false;
             }
             else
             {
-                ammoChargeTimer = 0f;
+                _AmmoChargeTimer = 0f;
                 SetAmmoMaterial(ammoDetails.ammoMaterial);
-                hasAmmoMaterialSet = true;
+                _HasAmmoMaterialSet = true;
             }
             // Set the ammo Range
-            ammoRange = ammoDetails.ammoRange;
+            _AmmoRange = ammoDetails.ammoRange;
             // Set ammo speed
-            this.ammoSpeed = ammoSpeed;
+            this._AmmoSpeed = ammoSpeed;
             // Override the ammo movement
-            this.overrideAmmoMovement = overrideAmmoMovement;
+            this._OverrideAmmoMovement = overrideAmmoMovement;
 
             gameObject.SetActive(true);
             #endregion
@@ -138,40 +142,43 @@ namespace SnakeGame.AbwehrSystem.Ammo
         /// <summary>
         /// Set The Ammo Fire Direction Based On The Input Angle And Direction Adjusted By The Random Spread.
         /// </summary>
-        private void SetFireDirection(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
+        protected virtual void SetFireDirection(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
         {
             float spreadRandomAngle = Random.Range(ammoDetails.ammoSpreadMin, ammoDetails.ammoSpreadMax);
 
-            //Get a random toggle between 1 or -1
+            // Get a random toggle between 1 or -1
             int spreadRandomToggle = Random.Range(0, 2) * 2 - 1;
 
             if (weaponAimDirectionVector.magnitude < Settings.useAimAngleDistance)
             {
-                fireDirectionAngle = aimAngle;
+                _FireDirectionAngle = aimAngle;
             }
             else
             {
-                fireDirectionAngle = weaponAimAngle;
+                _FireDirectionAngle = weaponAimAngle;
             }
 
             // Adjust the bullet fire angle with the random spread
-            fireDirectionAngle += spreadRandomToggle * spreadRandomAngle;
+            _FireDirectionAngle += spreadRandomToggle * spreadRandomAngle;
 
             //Set the bullet rotation if any
-            transform.eulerAngles = new Vector3(0f, 0f, fireDirectionAngle);
+            transform.eulerAngles = new Vector3(0f, 0f, _FireDirectionAngle);
 
             //Set the bullet fire direction
-            aimDirectionVector = HelperUtilities.GetDirectionVectorFromAngle(fireDirectionAngle);
+            _AimDirectionVector = HelperUtilities.GetDirectionVectorFromAngle(_FireDirectionAngle);
         }
 
-        public void DealDamage(Collider2D other)
+        /// <summary>
+        /// Deals damage on collision.
+        /// Deals damage on a single entity.
+        /// </summary>
+        /// <param name="other"></param>
+        protected virtual void DealDamage(Collider2D other)
         {
-            //other.TryGetComponent(out Health health);
-
             if (!other.TryGetComponent(out Health health)) return;
             //bool enemyHit = false;
-            isColliding = true;
-            health.TakeDamage(ammoDetails.ammoDamage);
+            _IsColliding = true;
+            health.TakeDamage(_AmmoDetails.ammoDamage);
 
             //if (health.enemy != null)
             //    enemyHit = true;
@@ -195,17 +202,45 @@ namespace SnakeGame.AbwehrSystem.Ammo
             //    }
             //}
         }
-        public void ActivateAmmoEffects()
+
+        /// <summary>
+        /// Deals damage on collision.
+        /// Deals damage on more than one entity at the same time.
+        /// </summary>
+        /// <param name="others"></param>
+        protected virtual void DealDamage(params Collider2D[] others)
+        {
+            foreach (Collider2D other in others)
+            {
+                _IsColliding = true;
+
+                if (other.TryGetComponent(out Health health))
+                {
+                    // If the Health component is atached to an enemy
+                    if (health.enemy != null)
+                    {
+                        health.TakeDamage(_AmmoDetails.ammoDamage);
+                        if (health.enemy.enemyDetails.hitSoundEffect == null) return;
+                        SoundEffectManager.CallOnSoundEffectSelectedEvent(health.enemy.enemyDetails.hitSoundEffect);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enables, if any, the ammo hit visual and sound effects
+        /// </summary>
+        protected virtual void ActivateAmmoEffects()
         {
             // Process if there is a hit effect & prefab
-            if (ammoDetails.ammoHitEffect != null && ammoDetails.ammoHitEffect.ammoHitEffectPrefab != null)
+            if (_AmmoDetails.ammoHitEffect != null && _AmmoDetails.ammoHitEffect.ammoHitEffectPrefab != null)
             {
                 // Get ammo hit effect gameobject from the pool with particle system component
                 AmmoHitEffect hitEffect = (AmmoHitEffect)PoolManager.Instance.ReuseComponent
-                    (ammoDetails.ammoHitEffect.ammoHitEffectPrefab, transform.position, Quaternion.identity);
+                    (_AmmoDetails.ammoHitEffect.ammoHitEffectPrefab, transform.position, Quaternion.identity);
 
                 // Set hit effect
-                hitEffect.SetAmmoHitEffect(ammoDetails.ammoHitEffect);
+                hitEffect.SetAmmoHitEffect(_AmmoDetails.ammoHitEffect);
 
                 // Set gameobject active (the particle system is set to automatically disable the
                 // gameobject once finished)
@@ -215,22 +250,26 @@ namespace SnakeGame.AbwehrSystem.Ammo
             }
         }
 
-        private void PlayCollisionSoundEffect()
+        protected virtual void PlayCollisionSoundEffect()
         {
-            if (ammoDetails.CollisionSoundEffect != null)
+            if (_AmmoDetails.CollisionSoundEffect != null)
             {
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(ammoDetails.CollisionSoundEffect);
+                SoundEffectManager.CallOnSoundEffectSelectedEvent(_AmmoDetails.CollisionSoundEffect);
             }
         }
 
-        public void DisableAmmo()
+        protected virtual void DisableAmmo()
         {
             gameObject.SetActive(false);
         }
 
-        private void SetAmmoMaterial(Material ammoMaterial)
+        /// <summary>
+        /// Sets the ammo material to the specified material
+        /// </summary>
+        /// <param name="ammoMaterial"></param>
+        protected virtual void SetAmmoMaterial(Material ammoMaterial)
         {
-            spriteRenderer.material = ammoMaterial;
+            _SpriteRenderer.material = ammoMaterial;
         }
 
         public GameObject GetGameObject()
@@ -240,7 +279,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
         #region Validation
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             HelperUtilities.ValidateCheckNullValue(this, nameof(trailRenderer), trailRenderer);
         }

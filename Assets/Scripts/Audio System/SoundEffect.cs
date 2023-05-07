@@ -1,8 +1,9 @@
 using UnityEngine;
+
 namespace SnakeGame.AudioSystem
 {
     /// <summary>
-    /// The SFX's for the game, it populater the <see cref="audioSource"/> with the variables in the <seealso cref="SoundEffectSO"/> class.
+    /// The SFX's for the game, it populates the <see cref="audioSource"/> with the variables in the <seealso cref="SoundEffectSO"/> class.
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     [DisallowMultipleComponent]

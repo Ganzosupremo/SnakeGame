@@ -1,6 +1,4 @@
-using SnakeGame.AudioSystem;
-using SnakeGame.Foods;
-using SnakeGame.GameUtilities;
+using SnakeGame.FoodSystem;
 using UnityEngine;
 
 namespace SnakeGame.AbwehrSystem.Ammo
@@ -8,15 +6,15 @@ namespace SnakeGame.AbwehrSystem.Ammo
     [CreateAssetMenu(fileName = "AmmoDetails_", menuName = "Scriptable Objects/Weapon System/Ammo Details")]
     public class AmmoDetailsSO : BaseAmmoSO
     {
-        private void OnEnable()
+        protected override void OnEnable()
         {
-            ammoDamage = originalAmmoDamage;
+            base.OnEnable();
             Food.OnFoodEaten += Food_OnFoodEaten;
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
-            ammoDamage = originalAmmoDamage;
+            base.OnDisable();
             Food.OnFoodEaten -= Food_OnFoodEaten;
         }
 
