@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using SnakeGame.Foods;
+using SnakeGame.FoodSystem;
 
 namespace SnakeGame.ObsoleteClasses
 {

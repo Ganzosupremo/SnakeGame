@@ -27,8 +27,6 @@ namespace SnakeGame.UI
             {
                 OnDropValueChange(difficultyDropdown);
             });
-
-            DifficultyManager.ChangeDifficulty(selectedDifficulty);
         }
 
         private void OnDropValueChange(TMP_Dropdown difficultyDropdown)
@@ -93,7 +91,6 @@ namespace SnakeGame.UI
 
         public void SaveChanges()
         {
-            DifficultyManager.ChangeDifficulty(selectedDifficulty);
             SaveDataManager.Instance.SaveGame();
             StartCoroutine(DisplayMessage("Changes Saved", 2f));
         }

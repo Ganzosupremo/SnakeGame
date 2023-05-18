@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SnakeGame.Foods
+namespace SnakeGame.FoodSystem
 {
     public class UniversalFood : ScriptableObject
     {

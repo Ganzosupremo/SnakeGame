@@ -4,7 +4,7 @@ using static SnakeGame.PoolManager;
 
 namespace SnakeGame
 {
-    [CustomPropertyDrawer(typeof(Pool))]
+    [CustomPropertyDrawer(typeof(PoolObject))]
     public class PoolDrawer : Editor
     {
         public override void OnInspectorGUI()

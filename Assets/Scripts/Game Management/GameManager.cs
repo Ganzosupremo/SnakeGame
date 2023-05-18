@@ -21,7 +21,6 @@ namespace SnakeGame
     public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         public static event Action<int> OnLevelChanged;
-        //public static event Action<GameState, GameState> OnGameStateChanged;
 
         #region Header GAME LEVELS
         [Header("GAME LEVELS")]
@@ -68,27 +67,26 @@ namespace SnakeGame
         /// </summary>
         public int LevelCount { get { return gameLevelList.Count; } }
         public bool IsFading { get; private set; } = false;
-        public static GameState CurrentGameState { get { return m_currentGameState; } set { m_currentGameState = value; } }
-        public static GameState PreviousGameState { get { return m_previousGameState; } set { m_previousGameState = value; } }
+        public static GameState CurrentGameState { get { return m_CurrentGameState; } set { m_CurrentGameState = value; } }
+        public static GameState PreviousGameState { get { return m_PreviousGameState; } set { m_PreviousGameState = value; } }
 
-        private Room m_currentRoom;
-        private Room m_previousRoom;
+        private Room m_CurrentRoom;
+        private Room m_PreviousRoom;
 
-        private static GameState m_currentGameState;
-        private static GameState m_previousGameState;
+        private static GameState m_CurrentGameState;
+        private static GameState m_PreviousGameState;
 
-        private InstantiatedRoom m_bossRoom;
-        private SnakeDetailsSO m_snakeDetails;
-        private Snake m_snake;
-        private long m_gameScore;
-        private int m_scoreMultiplier;
+        private InstantiatedRoom m_BossRoom;
+        private SnakeDetailsSO m_SnakeDetails;
+        private Snake m_Snake;
+        private long m_GameScore;
+        private int m_ScoreMultiplier;
         private CancellationTokenSource m_CancellationTokenSource = new();
-        private List<UniTask> m_TaskList = new();
 
         protected override void Awake()
         {
             base.Awake();
-            m_snakeDetails = GameResources.Instance.currentSnake.snakeDetails;
+            m_SnakeDetails = GameResources.Instance.currentSnake.snakeDetails;
 
             InstantiatePlayer();
         }
@@ -98,10 +96,10 @@ namespace SnakeGame
         /// </summary>
         private async void InstantiatePlayer()
         {
-            GameObject snakeGameObject = Instantiate(m_snakeDetails.snakePrefab);
-            m_snake = snakeGameObject.GetComponent<Snake>();
+            GameObject snakeGameObject = Instantiate(m_SnakeDetails.snakePrefab);
+            m_Snake = snakeGameObject.GetComponent<Snake>();
 
-            await m_snake.Initialize(m_snakeDetails);
+            await m_Snake.Initialise(m_SnakeDetails);
 
             StaticEventHandler.CallOnDisplayObjectivesEvent(
                 Settings.DisplayObjectivesTime, 0f, 1f, $"Welcome! Find The Next Room.");
@@ -109,10 +107,10 @@ namespace SnakeGame
 
         private async void Start()
         {
-            m_previousGameState = GameState.Started;
-            m_currentGameState = GameState.Started;
-            m_gameScore = 0;
-            m_scoreMultiplier = 0;
+            m_PreviousGameState = GameState.Started;
+            m_CurrentGameState = GameState.Started;
+            m_GameScore = 0;
+            m_ScoreMultiplier = 0;
 
             //StartCoroutine(FadeScreen(0f, 1f, 0f, Color.black));
             await FadeScreenAsync(0f,1f, 0f, Color.black);
@@ -129,7 +127,7 @@ namespace SnakeGame
             StaticEventHandler.OnRoomEnemiesDefeated += StaticEventHandler_OnRoomEnemiesDefeated;
             StaticEventHandler.OnPointsScored += StaticEventHandler_OnPointsScored;
             StaticEventHandler.OnMultiplier += StaticEventHandler_OnMultiplier;
-            m_snake.destroyEvent.OnDestroy += Snake_OnDestroy;
+            m_Snake.destroyEvent.OnDestroy += Snake_OnDestroy;
         }
 
         private void OnDisable()
@@ -139,13 +137,18 @@ namespace SnakeGame
             StaticEventHandler.OnRoomEnemiesDefeated -= StaticEventHandler_OnRoomEnemiesDefeated;
             StaticEventHandler.OnPointsScored -= StaticEventHandler_OnPointsScored;
             StaticEventHandler.OnMultiplier -= StaticEventHandler_OnMultiplier;
-            m_snake.destroyEvent.OnDestroy -= Snake_OnDestroy;
+            m_Snake.destroyEvent.OnDestroy -= Snake_OnDestroy;
+        }
+
+        private void OnDestroy()
+        {
+            m_CancellationTokenSource.Dispose();
         }
 
         private void Snake_OnDestroy(DestroyEvent destroyEvent, DestroyedEventArgs destroyedEventArgs)
         {
-            m_previousGameState = m_currentGameState;
-            m_currentGameState = GameState.GameLost;
+            m_PreviousGameState = m_CurrentGameState;
+            m_CurrentGameState = GameState.GameLost;
         }
 
         private void StaticEventHandler_OnRoomEnemiesDefeated(RoomEnemiesDefeatedArgs roomEnemiesDefeatedArgs)
@@ -156,18 +159,18 @@ namespace SnakeGame
         private void StaticEventHandler_OnMultiplier(MultiplierArgs multiplierArgs)
         {
             if (multiplierArgs.multiplier)
-                m_scoreMultiplier++;
+                m_ScoreMultiplier++;
             else
-                m_scoreMultiplier--;
+                m_ScoreMultiplier--;
 
-            m_scoreMultiplier = Mathf.Clamp(m_scoreMultiplier, 1, 69);
-            StaticEventHandler.CallScoreChangedEvent(m_gameScore, m_scoreMultiplier);
+            m_ScoreMultiplier = Mathf.Clamp(m_ScoreMultiplier, 1, 69);
+            StaticEventHandler.CallScoreChangedEvent(m_GameScore, m_ScoreMultiplier);
         }
 
         private void StaticEventHandler_OnPointsScored(PointsScoredArgs pointsScoredArgs)
         {
-            m_gameScore += pointsScoredArgs.score * m_scoreMultiplier;
-            StaticEventHandler.CallScoreChangedEvent(m_gameScore, m_scoreMultiplier);
+            m_GameScore += pointsScoredArgs.score * m_ScoreMultiplier;
+            StaticEventHandler.CallScoreChangedEvent(m_GameScore, m_ScoreMultiplier);
         }
 
         private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
@@ -180,12 +183,12 @@ namespace SnakeGame
         /// </summary>
         private void HandleGameStates()
         {
-            switch (m_currentGameState)
+            switch (m_CurrentGameState)
             {
                 case GameState.Started:
 
                     PlayGameLevel(currentDungeonLevelListIndex);
-                    m_currentGameState = GameState.Playing;
+                    m_CurrentGameState = GameState.Playing;
                     EnemiesDefeated();
 
                     break;
@@ -226,14 +229,14 @@ namespace SnakeGame
                     break;
                 case GameState.GameWon:
                     // Just call this once
-                    if (m_previousGameState != GameState.GameWon)
+                    if (m_PreviousGameState != GameState.GameWon)
                         //GameWonAsync();
                         StartCoroutine(GameWon());
 
                     break;
                 case GameState.GameLost:
                     // Just call this once
-                    if (m_previousGameState != GameState.GameLost)
+                    if (m_PreviousGameState != GameState.GameLost)
                     {
                         m_CancellationTokenSource.Cancel();
                         StopAllCoroutines();
@@ -267,11 +270,11 @@ namespace SnakeGame
 
         private async void HandleGameStatesAsync()
         {
-            switch (m_currentGameState)
+            switch (m_CurrentGameState)
             {
                 case GameState.Started:
                     PlayGameLevel(currentDungeonLevelListIndex);
-                    m_currentGameState = GameState.Playing;
+                    m_CurrentGameState = GameState.Playing;
                     EnemiesDefeated();
                     break;
                 case GameState.Playing:
@@ -301,12 +304,12 @@ namespace SnakeGame
                     break;
                 case GameState.GameWon:
                     // Just call this once
-                    if (m_previousGameState != GameState.GameWon)
+                    if (m_PreviousGameState != GameState.GameWon)
                         await GameWonAsync(m_CancellationTokenSource.Token);
                     break;
                 case GameState.GameLost:
                     // Just call this once
-                    if (m_previousGameState != GameState.GameLost)
+                    if (m_PreviousGameState != GameState.GameLost)
                     {
                         //StopAllCoroutines();
                         await GameLostAsync(m_CancellationTokenSource.Token);
@@ -345,14 +348,14 @@ namespace SnakeGame
                 Debug.LogError("Couldn't build dungeon from the specified node graphs");
 
             // Trigger the room changed event on the first load
-            StaticEventHandler.CallRoomChangedEvent(m_currentRoom);
+            StaticEventHandler.CallRoomChangedEvent(m_CurrentRoom);
 
             // Set the snake position roughly in the middle of the room
-            m_snake.gameObject.transform.position = new Vector3((m_currentRoom.lowerBounds.x + m_currentRoom.upperBounds.x) / 2f,
-                (m_currentRoom.lowerBounds.y + m_currentRoom.upperBounds.y) / 2f, 0f);
+            m_Snake.gameObject.transform.position = new Vector3((m_CurrentRoom.lowerBounds.x + m_CurrentRoom.upperBounds.x) / 2f,
+                (m_CurrentRoom.lowerBounds.y + m_CurrentRoom.upperBounds.y) / 2f, 0f);
 
             // Get the nearest spawn point position of the room, so the snake doesn't spawn in walls or something
-            m_snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(m_snake.gameObject.transform.position);
+            m_Snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(m_Snake.gameObject.transform.position);
 
             CallOnLevelChangedEvent();
             GetSnake().GetSnakeControler().EnableSnake();
@@ -492,7 +495,7 @@ namespace SnakeGame
         private async void EnemiesDefeated()
         {
             bool isDungeonClearOfNormalEnemies = true;
-            m_bossRoom = null;
+            m_BossRoom = null;
 
             // See if all rooms have been cleared of enemies
             foreach (KeyValuePair<string, Room> keyValuePair in DungeonBuilder.Instance.dungeonBuilderRoomDictionary)
@@ -500,7 +503,7 @@ namespace SnakeGame
                 // Skip the boos room for the moment
                 if (keyValuePair.Value.roomNodeType.isBossRoom)
                 {
-                    m_bossRoom = keyValuePair.Value.instantiatedRoom;
+                    m_BossRoom = keyValuePair.Value.instantiatedRoom;
                     continue;
                 }
 
@@ -516,18 +519,18 @@ namespace SnakeGame
             // If the dungeon level has been cleared completely - all the normal rooms have been cleared except the boss room,
             // Or if there's no boss room
             // Or all rooms and the boss room have been cleared
-            if ((isDungeonClearOfNormalEnemies && m_bossRoom == null) || (isDungeonClearOfNormalEnemies && m_bossRoom.room.isClearOfEnemies))
+            if ((isDungeonClearOfNormalEnemies && m_BossRoom == null) || (isDungeonClearOfNormalEnemies && m_BossRoom.room.isClearOfEnemies))
             {
                 // If there are more dungeon level, then 
                 if (currentDungeonLevelListIndex < gameLevelList.Count - 1)
-                    m_currentGameState = GameState.LevelCompleted;
+                    m_CurrentGameState = GameState.LevelCompleted;
                 else
-                    m_currentGameState = GameState.GameWon;
+                    m_CurrentGameState = GameState.GameWon;
             }
             //If just the boss room is not cleared yet
             else if (isDungeonClearOfNormalEnemies)
             {
-                m_currentGameState = GameState.BossStage;
+                m_CurrentGameState = GameState.BossStage;
                 await BossStageAsync(m_CancellationTokenSource.Token);
             }
         }
@@ -621,9 +624,9 @@ namespace SnakeGame
         #region Different Game States
         private IEnumerator BossStage()
         {
-            m_bossRoom.gameObject.SetActive(true);
+            m_BossRoom.gameObject.SetActive(true);
             //await m_bossRoom.UnlockDoorsAsync(0f);
-            m_bossRoom.UnlockDoors(0f);
+            m_BossRoom.UnlockDoors(0f);
 
             yield return new WaitForSeconds(1f);
 
@@ -639,8 +642,8 @@ namespace SnakeGame
         {
             if (cancellationToken.IsCancellationRequested) return;
             
-            m_bossRoom.gameObject.SetActive(true);
-            await m_bossRoom.UnlockDoorsAsync(0f);
+            m_BossRoom.gameObject.SetActive(true);
+            await m_BossRoom.UnlockDoorsAsync(0f);
 
             await UniTask.Delay(1000);
 
@@ -661,7 +664,7 @@ namespace SnakeGame
 
         private IEnumerator LevelCompleted()
         {
-            m_currentGameState = GameState.Playing;
+            m_CurrentGameState = GameState.Playing;
 
             yield return new WaitForSeconds(1f);
 
@@ -670,7 +673,7 @@ namespace SnakeGame
             currentDungeonLevelListIndex++;
 
             string name = GameResources.Instance.currentSnake.snakeName;
-            if (name == "") name = m_snakeDetails.snakeName.ToUpper();
+            if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
 
             //Display the level complete message
             yield return StartCoroutine(DisplayMessageRoutine("Well Done " + name + "!" +
@@ -695,7 +698,7 @@ namespace SnakeGame
         {
             if (cancellationToken.IsCancellationRequested) return;
 
-            m_currentGameState = GameState.Playing;
+            m_CurrentGameState = GameState.Playing;
             await UniTask.Delay(1000);
             await FadeScreenAsync(0f, 1f, 2f, new(0f, 0f, 0f, 0.4f));
 
@@ -703,7 +706,7 @@ namespace SnakeGame
             CallOnLevelChangedEvent();
 
             string name = GameResources.Instance.currentSnake.snakeName;
-            if (name == "") name = m_snakeDetails.snakeName.ToUpper();
+            if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
 
             await DisplayMessageAsync($"Well Done {name}!" +
                 $"\n You defeated the boss on this biome, but there are more out there...", Color.white, 3.5f, cancellationToken);
@@ -724,14 +727,14 @@ namespace SnakeGame
 
         private IEnumerator GameWon()
         {
-            m_previousGameState = GameState.GameWon;
+            m_PreviousGameState = GameState.GameWon;
 
             //Fade in the canvas to display a message
             yield return StartCoroutine(FadeScreen(0f, 1f, 2f, Color.black));
 
             //GetSnake().GetSnakeControler().DisableSnake();
 
-            int rank = HighScoreManager.Instance.GetRank(m_gameScore);
+            int rank = HighScoreManager.Instance.GetRank(m_GameScore);
             string rankText;
 
             if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
@@ -740,7 +743,7 @@ namespace SnakeGame
 
                 string playerName = GameResources.Instance.currentSnake.snakeName;
                 if (playerName == "")
-                    playerName = m_snakeDetails.snakeName.ToUpper();
+                    playerName = m_SnakeDetails.snakeName.ToUpper();
 
                 //Update the score
                 HighScoreManager.Instance.AddScore(new Score()
@@ -748,7 +751,7 @@ namespace SnakeGame
                     PlayerName = playerName,
                     LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
                     $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
-                    PlayerScore = m_gameScore
+                    PlayerScore = m_GameScore
                 }, rank);
             }
             else
@@ -762,7 +765,7 @@ namespace SnakeGame
             yield return StartCoroutine(DisplayMessageRoutine($"Well Done {GameResources.Instance.currentSnake.snakeName}!\n You Defeated every Boss on Every Biome. " +
                 $"\n\nYou're now the Ultimate Snake.", Color.white, 5.5f));
 
-            yield return StartCoroutine(DisplayMessageRoutine($"Your final Score: {m_gameScore:###,###}. \n\n{rankText}", Color.white, 6f));
+            yield return StartCoroutine(DisplayMessageRoutine($"Your final Score: {m_GameScore:###,###}. \n\n{rankText}", Color.white, 6f));
             yield return StartCoroutine(DisplayMessageRoutine($"Thanks For Playing. Head to the Exit or Press 'Enter' to restart the game", Color.white, 4f));
             yield return StartCoroutine(FadeScreen(1f, 0f, 1.5f, Color.black));
 
@@ -770,18 +773,18 @@ namespace SnakeGame
             while (!Input.GetKeyDown(KeyCode.Return))
                 yield return null;
 
-            m_currentGameState = GameState.Restarted;
+            m_CurrentGameState = GameState.Restarted;
         }
 
         private async UniTask GameWonAsync(CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return;
 
-            m_previousGameState = GameState.GameWon;
+            m_PreviousGameState = GameState.GameWon;
 
             await FadeScreenAsync(0f, 1f, 2f, Color.black);
 
-            int rank = HighScoreManager.Instance.GetRank(m_gameScore);
+            int rank = HighScoreManager.Instance.GetRank(m_GameScore);
             string rankText;
 
             if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
@@ -790,7 +793,7 @@ namespace SnakeGame
 
                 string playerName = GameResources.Instance.currentSnake.snakeName;
                 if (playerName == "")
-                    playerName = m_snakeDetails.snakeName.ToUpper();
+                    playerName = m_SnakeDetails.snakeName.ToUpper();
 
                 //Update the score
                 HighScoreManager.Instance.AddScore(new Score()
@@ -798,7 +801,7 @@ namespace SnakeGame
                     PlayerName = playerName,
                     LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
                     $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
-                    PlayerScore = m_gameScore
+                    PlayerScore = m_GameScore
                 }, rank);
             }
             else
@@ -808,7 +811,7 @@ namespace SnakeGame
 
             await DisplayMessageAsync($"Well Done {GameResources.Instance.currentSnake.snakeName}!\n You Defeated every Boss on Every Biome. " +
                 $"\n\nYou're now the Ultimate Snake.", Color.white, 5.5f, m_CancellationTokenSource.Token);
-            await DisplayMessageAsync($"Your final Score: {m_gameScore:###,###}. \n\n{rankText}", Color.white, 6f, m_CancellationTokenSource.Token);
+            await DisplayMessageAsync($"Your final Score: {m_GameScore:###,###}. \n\n{rankText}", Color.white, 6f, m_CancellationTokenSource.Token);
             await DisplayMessageAsync($"Thanks For Playing. Head to the Exit or Press 'Enter' to restart the game", Color.white, 4f, m_CancellationTokenSource.Token);
             await FadeScreenAsync(1f, 0f, 1.5f, Color.black);
 
@@ -816,15 +819,15 @@ namespace SnakeGame
             while (!Input.GetKeyDown(KeyCode.Return))
                 await UniTask.NextFrame();
 
-            m_currentGameState = GameState.Restarted;
+            m_CurrentGameState = GameState.Restarted;
         }
 
         private IEnumerator GameLost()
         {
-            m_previousGameState = GameState.GameLost;
+            m_PreviousGameState = GameState.GameLost;
             GetSnake().GetSnakeControler().DisableSnake();
 
-            int rank = HighScoreManager.Instance.GetRank(m_gameScore);
+            int rank = HighScoreManager.Instance.GetRank(m_GameScore);
             string rankText;
 
             if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
@@ -833,7 +836,7 @@ namespace SnakeGame
 
                 string playerName = GameResources.Instance.currentSnake.snakeName;
                 if (playerName == "")
-                    playerName = m_snakeDetails.snakeName.ToUpper();
+                    playerName = m_SnakeDetails.snakeName.ToUpper();
 
                 //Update the score
                 HighScoreManager.Instance.AddScore(new Score()
@@ -841,7 +844,7 @@ namespace SnakeGame
                     PlayerName = playerName,
                     LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
                     $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
-                    PlayerScore = m_gameScore
+                    PlayerScore = m_GameScore
                 }, rank);
             }
             else
@@ -861,26 +864,26 @@ namespace SnakeGame
             }
 
             string name = GameResources.Instance.currentSnake.snakeName;
-            if (name == "") name = m_snakeDetails.snakeName.ToUpper();
+            if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
 
             yield return StartCoroutine(DisplayMessageRoutine($"You Died {name}!" +
                     $"\nYou Failed (Miserably), But Are YOU Gonna Give Up?", Color.white, 3.5f));
 
-            yield return StartCoroutine(DisplayMessageRoutine($"Your Final Score: {m_gameScore:###.###}\n\n {rankText}", Color.white, 4f));
+            yield return StartCoroutine(DisplayMessageRoutine($"Your Final Score: {m_GameScore:###.###}\n\n {rankText}", Color.white, 4f));
 
             yield return StartCoroutine(DisplayMessageRoutine("Press 'Enter' to Try Again", Color.white, 0f));
 
-            m_currentGameState = GameState.Restarted;
+            m_CurrentGameState = GameState.Restarted;
         }
 
         private async UniTask GameLostAsync(CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return;
 
-            m_previousGameState = GameState.GameLost;
+            m_PreviousGameState = GameState.GameLost;
             GetSnake().GetSnakeControler().DisableSnake();
 
-            int rank = HighScoreManager.Instance.GetRank(m_gameScore);
+            int rank = HighScoreManager.Instance.GetRank(m_GameScore);
             string rankText;
 
             if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
@@ -889,7 +892,7 @@ namespace SnakeGame
 
                 string playerName = GameResources.Instance.currentSnake.snakeName;
                 if (playerName == "")
-                    playerName = m_snakeDetails.snakeName.ToUpper();
+                    playerName = m_SnakeDetails.snakeName.ToUpper();
 
                 //Update the score
                 HighScoreManager.Instance.AddScore(new Score()
@@ -897,7 +900,7 @@ namespace SnakeGame
                     PlayerName = playerName,
                     LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
                     $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
-                    PlayerScore = m_gameScore
+                    PlayerScore = m_GameScore
                 }, rank);
             }
             else
@@ -916,35 +919,35 @@ namespace SnakeGame
             }
 
             string name = GameResources.Instance.currentSnake.snakeName;
-            if (name == "") name = m_snakeDetails.snakeName.ToUpper();
+            if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
 
             await DisplayMessageAsync($"You Died {name}!" +
                     $"\nYou Failed (Miserably), But Are YOU Gonna Give Up?", Color.white, 3.5f, m_CancellationTokenSource.Token);
-            await DisplayMessageAsync($"Your Final Score: {m_gameScore:###.###}\n\n {rankText}", Color.white, 4f, m_CancellationTokenSource.Token);
+            await DisplayMessageAsync($"Your Final Score: {m_GameScore:###.###}\n\n {rankText}", Color.white, 4f, m_CancellationTokenSource.Token);
             await DisplayMessageAsync("Press 'Enter' to Try Again", Color.white, 0f,m_CancellationTokenSource.Token);
 
-            m_currentGameState = GameState.Restarted;
+            m_CurrentGameState = GameState.Restarted;
         }
 
         public void PauseGameMenu()
         {
-            if (m_currentGameState != GameState.Paused)
+            if (m_CurrentGameState != GameState.Paused)
             {
                 pauseMenuUI.SetActive(true);
                 GetSnake().GetSnakeControler().DisableSnake();
 
                 // Set the game states
-                m_previousGameState = m_currentGameState;
-                m_currentGameState = GameState.Paused;
+                m_PreviousGameState = m_CurrentGameState;
+                m_CurrentGameState = GameState.Paused;
             }
-            else if (m_currentGameState == GameState.Paused)
+            else if (m_CurrentGameState == GameState.Paused)
             {
                 pauseMenuUI.SetActive(false);
                 GetSnake().GetSnakeControler().EnableSnake();
 
                 // Restore the game states
-                m_currentGameState = m_previousGameState;
-                m_previousGameState = GameState.Paused;
+                m_CurrentGameState = m_PreviousGameState;
+                m_PreviousGameState = GameState.Paused;
             }
         }
 
@@ -973,8 +976,8 @@ namespace SnakeGame
         /// <param name="room">The room to set as the current room</param>
         public void SetCurrentRoom(Room room)
         {
-            m_previousRoom = m_currentRoom;
-            m_currentRoom = room;
+            m_PreviousRoom = m_CurrentRoom;
+            m_CurrentRoom = room;
         }
         #endregion
 
@@ -985,7 +988,7 @@ namespace SnakeGame
         /// <returns>The room the player currently is in</returns>
         public Room GetCurrentRoom()
         {
-            return m_currentRoom;
+            return m_CurrentRoom;
         }
 
         /// <summary>
@@ -999,12 +1002,12 @@ namespace SnakeGame
 
         public Snake GetSnake()
         {
-            return m_snake;
+            return m_Snake;
         }
 
         public Sprite GetMinimapIcon()
         {
-            return m_snakeDetails.snakeMinimapIcon;
+            return m_SnakeDetails.snakeMinimapIcon;
         }
         #endregion
 

@@ -1,24 +1,28 @@
 using SnakeGame.GameUtilities;
-using SnakeGame.Interfaces;
 using UnityEngine;
 
 namespace SnakeGame.AbwehrSystem.Ammo
 {
-    public class AmmoPattern : MonoBehaviour, IFireable
+    public class AmmoPattern : BaseAmmo
     {
         #region Tooltip
         [Tooltip("Populate the array with individual child ammo gameobjects")]
         #endregion
-        [SerializeField] private Ammo[] ammoArray;
+        [SerializeField] private BaseAmmo[] ammoArray;
 
         private float m_ammoRange;
         private float m_ammoSpeed;
         private Vector3 m_fireDirectionVector;
         private float m_fireDirectionAngle;
-        private AmmoDetailsSO m_ammoDetails;
+        private BaseAmmoSO m_ammoDetails;
         private float m_ammoChargeTimer;
 
         private void Update()
+        {
+            MoveAmmo();
+        }
+
+        protected override void MoveAmmo()
         {
             if (m_ammoChargeTimer > 0f)
             {
@@ -41,12 +45,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             }
         }
 
-        public GameObject GetGameObject()
-        {
-            return gameObject;
-        }
-
-        public void InitialiseAmmo(AmmoDetailsSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
+        public override void InitialiseAmmo(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
         {
             this.m_ammoDetails = ammoDetails;
             this.m_ammoSpeed = ammoSpeed;
@@ -59,7 +58,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             gameObject.SetActive(true);
 
             //Loop through all ammo objects and initialise them
-            foreach (Ammo ammo in ammoArray)
+            foreach (BaseAmmo ammo in ammoArray)
             {
                 ammo.InitialiseAmmo(ammoDetails, aimAngle, weaponAimAngle, ammoSpeed, weaponAimDirectionVector, true);
             }
@@ -78,7 +77,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         /// <summary>
         /// Set The Ammo Fire Direction Based On The Direction Adjusted By The Random Spread
         /// </summary>
-        private void SetFireDirection(AmmoDetailsSO ammoDetails, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
+        protected override void SetFireDirection(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
         {
             float spreadRandomAngle = Random.Range(ammoDetails.ammoSpreadMin, ammoDetails.ammoSpreadMax);
 
@@ -101,14 +100,9 @@ namespace SnakeGame.AbwehrSystem.Ammo
             m_fireDirectionVector = HelperUtilities.GetDirectionVectorFromAngle(m_fireDirectionAngle);
         }
 
-        private void DisableAmmo()
-        {
-            gameObject.SetActive(false);
-        }
-
         #region Validation
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected override void OnValidate()
         {
             HelperUtilities.ValidateCheckEnumerableValues(this, nameof(ammoArray), ammoArray);
         }

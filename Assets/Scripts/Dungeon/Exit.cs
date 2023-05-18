@@ -77,7 +77,7 @@ namespace SnakeGame.ProceduralGenerationSystem
         {
             EnableExit(false);
 
-            await m_MaterializeEffect.Materialize
+            await m_MaterializeEffect.MaterializeAsync
                 (materializeShader,materializeColor,materializeTime, defaultLitMaterial, m_SpriteRenderer);
 
             EnableExit(true);

@@ -1,6 +1,8 @@
+using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace SnakeGame
@@ -11,13 +13,13 @@ namespace SnakeGame
         #region Tooltip
         [Tooltip("This array is populated with the prefabs that are gonna be added to the pool, also specify the number of gameobjects to be created for each prefab")]
         #endregion
-        public Pool[] poolArray = null;
+        public PoolObject[] poolArray = null;
         private Transform objectPoolTransform;
 
         private readonly Dictionary<int, Queue<Component>> poolDictionary = new();
 
         [Serializable]
-        public struct Pool
+        public struct PoolObject
         {
             public string name;
             [Tooltip("The pool size this object will have, the number of gameobjects created in the pool" +
@@ -26,7 +28,8 @@ namespace SnakeGame
             [Tooltip("The prefab to instantiate in the pool")]
             public GameObject prefabToUse;
             [Tooltip("Type exactly the type of component that the prefab is," +
-                "otherwise it won't work.")]
+                "otherwise it won't work. If the component it's on a namespace " +
+                "also include the namespace.")]
             public string componentType;
         }
 
@@ -42,10 +45,29 @@ namespace SnakeGame
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                RegeneratePool();
+            }
+        }
+
+        private void RegeneratePool()
+        {
+            poolDictionary.Clear();
+
+            for (int i = 0; i < poolArray.Length; i++)
+            {
+                CreatePool(poolArray[i].prefabToUse, poolArray[i].PoolSize, poolArray[i].componentType);
+            }
+            this.Log("Pool Regenerated");
+        }
+
         /// <summary>
         /// Creates The Object Pool With The Specified Prefabs, The PoolSize And the Type Of Component For Each One
         /// </summary>
-        private void CreatePool(GameObject prefabToUse, int poolSize, string typeOfComponent)
+        private void CreatePool(GameObject prefabToUse, int poolSize, string componentType)
         {
             int poolKey = prefabToUse.GetInstanceID();
             // Gets the name of the prefab
@@ -65,9 +87,18 @@ namespace SnakeGame
 
                     newObject.SetActive(false);
 
-                    poolDictionary[poolKey].Enqueue(newObject.GetComponent(Type.GetType(typeOfComponent)));
+                    poolDictionary[poolKey].Enqueue(newObject.GetComponent(Type.GetType(componentType)));
+                    this.Log(BuildCompenent(componentType));
                 }
             }
+        }
+
+        private string BuildCompenent(string componentType)
+        {
+            string componentNamespace = Type.GetType(componentType).Namespace;
+            string dot = ".";
+            string complete = componentNamespace + dot + componentType;
+            return complete;
         }
 
         /// <summary>
@@ -92,7 +123,7 @@ namespace SnakeGame
             }
             else
             {
-                Debug.Log("No Object Pool For " + prefabToUse);
+                this.LogError($"No Object Pool For {prefabToUse}");
                 return null;
             }
         }

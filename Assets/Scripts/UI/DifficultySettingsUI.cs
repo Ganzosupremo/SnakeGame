@@ -12,11 +12,12 @@ namespace SnakeGame.UI
 {
     public class DifficultySettingsUI : MonoBehaviour, IPersistenceData
     {
-        public static Difficulty CurrentDifficulty { get { return m_SelectedDifficulty; } }
+        public static Difficulty Difficulty { get => m_SelectedDifficulty; }
+
         [SerializeField] TextMeshProUGUI _DisplayMessage;
         public TMP_Dropdown dropdown;
 
-        private static Difficulty m_SelectedDifficulty = Difficulty.Medium;
+        private static Difficulty m_SelectedDifficulty = Difficulty.DarkSouls;
         private CancellationTokenSource m_CancellationToken;
         private void Start()
         {
@@ -42,9 +43,23 @@ namespace SnakeGame.UI
             dropdown.onValueChanged.RemoveAllListeners();
         }
 
+        private void OnDestroy()
+        {
+            m_CancellationToken.Dispose();
+        }
+
         private void OnDropValueChanged()
         {
             m_SelectedDifficulty = (Difficulty)dropdown.value;
+            DifficultyManager.CallOnDifficultyChangedEvent(m_SelectedDifficulty);
+        }
+
+        /// <summary>
+        /// Calls the <seealso cref="DifficultyManager.OnDifficultyChanged"/> event.
+        /// </summary>
+        public static void ApplyDifficulty()
+        {
+            SaveDataManager.Instance.LoadGame();
             DifficultyManager.CallOnDifficultyChangedEvent(m_SelectedDifficulty);
         }
 
@@ -72,13 +87,13 @@ namespace SnakeGame.UI
 
         public void Load(GameData data)
         {
-            m_SelectedDifficulty = data.SavedDifficulty;
-            dropdown.value = (int)data.SavedDifficulty;
+            m_SelectedDifficulty = data.DifficultyData.DifficultyToSave;
+            dropdown.value = (int)data.DifficultyData.DifficultyToSave;
         }
 
         public void Save(GameData data)
         {
-            data.SavedDifficulty = m_SelectedDifficulty;
+            data.DifficultyData.DifficultyToSave = m_SelectedDifficulty;
         }
     }
 }

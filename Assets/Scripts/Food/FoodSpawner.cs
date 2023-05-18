@@ -6,7 +6,7 @@ using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace SnakeGame.Foods
+namespace SnakeGame.FoodSystem
 {
     [DisallowMultipleComponent]
     public class FoodSpawner : MonoBehaviour

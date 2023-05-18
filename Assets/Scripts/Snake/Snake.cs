@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using SnakeGame.AbwehrSystem;
 using SnakeGame.Debuging;
-using SnakeGame.Foods;
+using SnakeGame.FoodSystem;
 using SnakeGame.PlayerSystem.AbilitySystem;
 using SnakeGame.TimeSystem;
 using SnakeGame.VisualEffects;
@@ -168,21 +168,11 @@ namespace SnakeGame.PlayerSystem
             }
         }
 
-        //private void OnTriggerEnter2D(Collider2D other)
-        //{
-        //    if (other.TryGetComponent(out Food food) && other.CompareTag("Food") && !IsSnakeColliding)
-        //    {
-        //        IsSnakeColliding = true;
-        //        GrowSnake(food.foodSO.HealthIncrease);
-        //        IncreaseWeaponDamage(food.foodSO.DamageIncreasePercentage);
-        //    }
-        //}
-
         /// <summary>
         /// Initialises the snake
         /// </summary>
         /// <param name="snakeDetails">The snake details to initialize</param>
-        public async UniTask Initialize(SnakeDetailsSO snakeDetails)
+        public async UniTask Initialise(SnakeDetailsSO snakeDetails)
         {
             this.snakeDetails = snakeDetails;
 
@@ -217,7 +207,7 @@ namespace SnakeGame.PlayerSystem
             // Disable snake while the effect is in progress
             EnableSnake(false);
             
-            await materializeEffect.Materialize(snakeDetails.materializeShader,
+            await materializeEffect.MaterializeAsync(snakeDetails.materializeShader,
                 snakeDetails.materializeColor, snakeDetails.materializeTime, snakeDetails.defaultLitMaterial, spriteRenderer);
             
             // Enable the snake again
@@ -275,25 +265,22 @@ namespace SnakeGame.PlayerSystem
         /// <param name="increaseHealth">Can grow more than one segment if the passed int is greather than one.</param>
         private void GrowSnake(int increaseHealth)
         {
-            for (int i = 0; i <= increaseHealth; i++)
-            {
-                SnakeBody snakeBody = (SnakeBody)PoolManager.Instance.ReuseComponent(GameResources.Instance.snakeBodyPrefab.gameObject,
-                    SnakeSegmentsList[^1].position, Quaternion.identity);
+            SnakeBody snakeBody = (SnakeBody)PoolManager.Instance.ReuseComponent(GameResources.Instance.snakeBodyPrefab.gameObject,
+                SnakeSegmentsList[^1].position, Quaternion.identity);
 
-                snakeBody.gameObject.SetActive(true);
-                SnakeBodyList.Add(snakeBody);
+            snakeBody.gameObject.SetActive(true);
+            SnakeBodyList.Add(snakeBody);
 
-                snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -SnakeBodyList.Count;
-                SnakeBodyList[snakeSegmentCount].WaitHeadUpdateCycle(SnakeBodyList.Count);
+            snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -SnakeBodyList.Count;
+            SnakeBodyList[snakeSegmentCount].WaitHeadUpdateCycle(SnakeBodyList.Count);
 
-                Transform segmentTransform = snakeBody.transform;
-                segmentTransform.position = SnakeSegmentsList[snakeSegmentCount].position;
-                SnakeSegmentsList.Add(segmentTransform);
-                snakeSegmentCount++;
-            }
+            Transform segmentTransform = snakeBody.transform;
+            segmentTransform.position = SnakeSegmentsList[snakeSegmentCount].position;
+            SnakeSegmentsList.Add(segmentTransform);
+            snakeSegmentCount++;
+            
             IsSnakeColliding = false;
             health.IncreaseHealth(increaseHealth);
-            this.Log(health.CurrentHealth);
         }
 
         public void UpdateSnakeSegments()
@@ -358,33 +345,8 @@ namespace SnakeGame.PlayerSystem
         private void DecreaseWeaponDamage()
         {
             Weapon currentWeapon = activeWeapon.GetCurrentWeapon();
-            if (currentWeapon.weaponDetails.weaponCurrentAmmo.DecreaseDamage(20))
-            {
-                StartCoroutine(GameManager.Instance.ShowMessageRoutine($"Damage Decreased By {20}%.", 1.5f));
-            }
-            else
-            {
-                StartCoroutine(GameManager.Instance.ShowMessageRoutine($"Damage of this Weapon At Lowest Posible.", 1.5f));
-            }
+            currentWeapon.weaponDetails.weaponCurrentAmmo.DecreaseDamage(20);
         }
-
-        /// <summary>
-        /// Increase the damage of the weapon when a food was eated.
-        /// </summary>
-        //private void IncreaseWeaponDamage(int percentageToincrease)
-        //{
-        //    Weapon currentWeapon = activeWeapon.GetCurrentWeapon();
-        //    UniTask<bool> ds = currentWeapon.weaponDetails.weaponCurrentAmmo.IncreaseDamage(percentageToincrease);
-        //    if (ds.)
-        //    {
-        //        StartCoroutine(GameManager.Instance.ShowMessage($"Damage of this Weapon Increased By {percentageToincrease}%", 1.5f));
-        //    }
-        //    else
-        //    {
-        //        StartCoroutine(GameManager.Instance.ShowMessage($"Max Damage with this Weapon Reached!", 1.5f));
-        //    }
-        //    IsSnakeColliding = false;
-        //}
 
         private void EnableSnake(bool isActive)
         {

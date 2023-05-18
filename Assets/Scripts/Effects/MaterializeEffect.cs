@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace SnakeGame.VisualEffects
@@ -49,18 +50,21 @@ namespace SnakeGame.VisualEffects
             }
         }
 
-        public async UniTask Materialize(Shader materializeShader, Color materializeColor, float materializeTime,
+#nullable enable
+        public async UniTask MaterializeAsync(Shader? materializeShader, Color materializeColor, float materializeTime,
             Material defaultMaterial, params SpriteRenderer[] spriteRendererArray)
         {
-            Material materializeMaterial = new(materializeShader);
+            Material materializeMaterial;
+            if (IsNotNull(materializeShader))
+                materializeMaterial = new(materializeShader);
+            else
+                materializeMaterial = new Material(defaultMaterial);
 
             materializeMaterial.SetColor("_EmissionColor", materializeColor);
 
             // Set the material for each sprite renderer
             foreach (SpriteRenderer spriteRenderer in spriteRendererArray)
-            {
                 spriteRenderer.material = materializeMaterial;
-            }
 
             float dissolveAmount = 0f;
 
@@ -80,5 +84,8 @@ namespace SnakeGame.VisualEffects
                 spriteRenderer.material = defaultMaterial;
             }
         }
+
+        private static bool IsNotNull([NotNullWhen(true)] object? obj) => obj != null;
+#nullable disable
     }
 }

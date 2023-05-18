@@ -88,6 +88,10 @@ namespace SnakeGame
             }
         }
 
+        /// <summary>
+        /// Increases the Health with the amount specified
+        /// </summary>
+        /// <param name="amountToIncrease">The amount to increase the health to.</param>
         public void IncreaseHealth(int amountToIncrease)
         {
             CurrentHealth += amountToIncrease;

@@ -2,7 +2,7 @@ using SnakeGame;
 using SnakeGame.AudioSystem;
 using UnityEngine;
 
-namespace SnakeGame.Foods
+namespace SnakeGame.FoodSystem
 {
     [CreateAssetMenu(fileName = "Food_", menuName = "Scriptable Objects/Food/Snake Food")]
     public class FoodSO : UniversalFood

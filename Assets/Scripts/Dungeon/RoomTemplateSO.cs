@@ -1,6 +1,6 @@
 using SnakeGame.Debuging;
 using SnakeGame.Enemies;
-using SnakeGame.Foods;
+using SnakeGame.FoodSystem;
 using SnakeGame.GameUtilities;
 using SnakeGame.AudioSystem;
 using System.Collections.Generic;

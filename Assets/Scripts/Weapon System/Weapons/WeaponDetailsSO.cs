@@ -40,7 +40,7 @@ namespace SnakeGame.AbwehrSystem
         #region Tooltip
         [Tooltip("The current ammo for the weapon")]
         #endregion
-        public AmmoDetailsSO weaponCurrentAmmo;
+        public BaseAmmoSO weaponCurrentAmmo;
 
         #region Tooltip
         [Tooltip("The current shoot effect for the weapon")]

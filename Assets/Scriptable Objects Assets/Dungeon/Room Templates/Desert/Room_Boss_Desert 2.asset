@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a8fb4c36dfaba64e87aad3e3e730398, type: 3}
+  m_Name: Room_Boss_Desert 2
+  m_EditorClassIdentifier: 
+  guid: 37f06d73f764f0c4baed243801259ab7
+  prefab: {fileID: 4154312413488295907, guid: 450d1184885f9914894718852e0f665d, type: 3}
+  previousPrefab: {fileID: 4154312413488295907, guid: 450d1184885f9914894718852e0f665d, type: 3}
+  normalMusic: {fileID: 11400000, guid: 95fbb1d1ab3942646874d35f23ca139f, type: 2}
+  battleMusic: {fileID: 11400000, guid: 17b09e48df52f73468bc5fc2ec4a3205, type: 2}
+  roomNodeType: {fileID: 11400000, guid: 0f280553dd5924b4eafa074fa9feabdb, type: 2}
+  lowerBounds: {x: -30, y: -46}
+  upperBounds: {x: 48, y: 28}
+  doorwayList:
+  - doorPosition: {x: 23, y: 28}
+    doorOrientation: 0
+    doorPrefab: {fileID: 5249997635963020509, guid: 2f9115c8954b84840b8fb2b35697d6c0, type: 3}
+    doorwayStartCopyPosition: {x: 20, y: 28}
+    doorwayCopyTileWidth: 6
+    doorwayCopyTileHeight: 9
+    isConnected: 0
+    isUnavailable: 0
+  - doorPosition: {x: 48, y: -10}
+    doorOrientation: 1
+    doorPrefab: {fileID: 2875601794430873091, guid: 152b54e3910c8d840a65a1d589cd0968, type: 3}
+    doorwayStartCopyPosition: {x: 39, y: -7}
+    doorwayCopyTileWidth: 10
+    doorwayCopyTileHeight: 6
+    isConnected: 0
+    isUnavailable: 0
+  - doorPosition: {x: -5, y: -46}
+    doorOrientation: 2
+    doorPrefab: {fileID: 5249997635963020509, guid: 2f9115c8954b84840b8fb2b35697d6c0, type: 3}
+    doorwayStartCopyPosition: {x: -8, y: -38}
+    doorwayCopyTileWidth: 6
+    doorwayCopyTileHeight: 9
+    isConnected: 0
+    isUnavailable: 0
+  - doorPosition: {x: -30, y: -21}
+    doorOrientation: 3
+    doorPrefab: {fileID: 2875601794430873091, guid: 152b54e3910c8d840a65a1d589cd0968, type: 3}
+    doorwayStartCopyPosition: {x: -30, y: -18}
+    doorwayCopyTileWidth: 13
+    doorwayCopyTileHeight: 6
+    isConnected: 0
+    isUnavailable: 0
+  spawnPositionArray:
+  - {x: 23, y: 13}
+  - {x: 30, y: 4}
+  - {x: 16, y: -2}
+  - {x: 23, y: -16}
+  - {x: 3, y: -11}
+  - {x: -9, y: 0}
+  - {x: -10, y: 13}
+  - {x: -14, y: 0}
+  - {x: -10, y: -22}
+  - {x: -1, y: -30}
+  enemiesByLevelList:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: a67840dd00d71514ca3ac4bb78b114e9, type: 2}
+      spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
+      spawnRatio: 10
+  - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: a67840dd00d71514ca3ac4bb78b114e9, type: 2}
+      spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
+      spawnRatio: 10
+  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: a67840dd00d71514ca3ac4bb78b114e9, type: 2}
+      spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
+      spawnRatio: 10
+  roomEnemySpawnParemetersList:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    minTotalItemsToSpawn: 1
+    maxTotalItemsToSpawn: 3
+    minConcurrentItems: 1
+    maxConcurrentItems: 2
+    minSpawnInterval: 3
+    maxSpawnInterval: 5
+  - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
+    minTotalItemsToSpawn: 1
+    maxTotalItemsToSpawn: 2
+    minConcurrentItems: 1
+    maxConcurrentItems: 2
+    minSpawnInterval: 2
+    maxSpawnInterval: 4
+  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
+    minTotalItemsToSpawn: 2
+    maxTotalItemsToSpawn: 3
+    minConcurrentItems: 1
+    maxConcurrentItems: 2
+    minSpawnInterval: 3
+    maxSpawnInterval: 5
+  foodByLevelList:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: 2827d98fc2373654d8806d09a86d3eae, type: 2}
+      spawnRatio: 500
+    - dungeonObject: {fileID: 11400000, guid: 71e7527ecdfb15b4c812b4cc704a3ff7, type: 2}
+      spawnRatio: 5
+    - dungeonObject: {fileID: 11400000, guid: f806310c89831d54db3a82a8aac3f8d5, type: 2}
+      spawnRatio: 1
+  - gameLevel: {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: 2827d98fc2373654d8806d09a86d3eae, type: 2}
+      spawnRatio: 500
+    - dungeonObject: {fileID: 11400000, guid: 71e7527ecdfb15b4c812b4cc704a3ff7, type: 2}
+      spawnRatio: 5
+    - dungeonObject: {fileID: 11400000, guid: f806310c89831d54db3a82a8aac3f8d5, type: 2}
+      spawnRatio: 1
+  - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: 2827d98fc2373654d8806d09a86d3eae, type: 2}
+      spawnRatio: 500
+    - dungeonObject: {fileID: 11400000, guid: 71e7527ecdfb15b4c812b4cc704a3ff7, type: 2}
+      spawnRatio: 5
+    - dungeonObject: {fileID: 11400000, guid: f806310c89831d54db3a82a8aac3f8d5, type: 2}
+      spawnRatio: 1
+  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: 2827d98fc2373654d8806d09a86d3eae, type: 2}
+      spawnRatio: 500
+    - dungeonObject: {fileID: 11400000, guid: 71e7527ecdfb15b4c812b4cc704a3ff7, type: 2}
+      spawnRatio: 5
+    - dungeonObject: {fileID: 11400000, guid: f806310c89831d54db3a82a8aac3f8d5, type: 2}
+      spawnRatio: 1
+  roomFoodSpawnParametersList:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    minTotalItemsToSpawn: 4
+    maxTotalItemsToSpawn: 5
+    minConcurrentItems: 1
+    maxConcurrentItems: 3
+    minSpawnInterval: 1
+    maxSpawnInterval: 2
+  - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
+    minTotalItemsToSpawn: 5
+    maxTotalItemsToSpawn: 6
+    minConcurrentItems: 2
+    maxConcurrentItems: 3
+    minSpawnInterval: 1
+    maxSpawnInterval: 2
+  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
+    minTotalItemsToSpawn: 4
+    maxTotalItemsToSpawn: 5
+    minConcurrentItems: 1
+    maxConcurrentItems: 3
+    minSpawnInterval: 1
+    maxSpawnInterval: 2

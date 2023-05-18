@@ -89,6 +89,8 @@ namespace SnakeGame.Enemies
 
         private void Update()
         {
+            EnemyDetailsSO.StartTimer();
+
             if (health.IsDamageable)
             {
                 ResetEnemyColor();
@@ -190,7 +192,7 @@ namespace SnakeGame.Enemies
         {
             EnableEnemy(false);
 
-            await materializeEffect.Materialize(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
+            await materializeEffect.MaterializeAsync(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
                 enemyDetails.enemyMaterializeTime, enemyDetails.standardEnemyMaterial, enemySpriteRenderer);
 
             EnableEnemy(true);

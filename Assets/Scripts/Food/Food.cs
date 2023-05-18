@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace SnakeGame.Foods
+namespace SnakeGame.FoodSystem
 {
     [RequireComponent(typeof(MaterializeEffect))]
     [RequireComponent(typeof(Destroy))]
@@ -78,7 +78,7 @@ namespace SnakeGame.Foods
         {
             EnableFood(false);
 
-            await materializeEffect.Materialize(foodSO.materializeShader, foodSO.materiliazeColor,
+            await materializeEffect.MaterializeAsync(foodSO.materializeShader, foodSO.materiliazeColor,
                 foodSO.materializeTime, foodSO.defaultLitMaterial, spriteRenderer);
 
             EnableFood(true);
