@@ -1,3 +1,4 @@
+using SnakeGame.Debuging;
 using SnakeGame.ProceduralGenerationSystem;
 using UnityEngine;
 
@@ -19,5 +20,23 @@ namespace SnakeGame
         [Tooltip("The health amount will change based on the difficulty, " +
             "so to reset the health amount to it's original value, this variable will be used")]
         public int defaultHealthAmount;
+
+        public void ResetToDefault()
+        {
+            healthAmount = defaultHealthAmount;
+        }
+
+        public void IncreaseHealth(int increase)
+        {
+            healthAmount += increase;
+        }
+
+        public int GetHealthPercentage(float percent)
+        {
+            Debuger.Log($"Before Cal: {percent}");
+            int valueToReturn = Mathf.RoundToInt( defaultHealthAmount * percent / 100);
+            Debuger.Log($"Returned Value: {valueToReturn}");
+            return valueToReturn;
+        }
     }
 }

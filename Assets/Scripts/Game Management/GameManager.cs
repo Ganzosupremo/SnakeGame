@@ -99,7 +99,7 @@ namespace SnakeGame
             GameObject snakeGameObject = Instantiate(m_SnakeDetails.snakePrefab);
             m_Snake = snakeGameObject.GetComponent<Snake>();
 
-            await m_Snake.Initialize(m_SnakeDetails);
+            await m_Snake.Initialise(m_SnakeDetails);
 
             StaticEventHandler.CallOnDisplayObjectivesEvent(
                 Settings.DisplayObjectivesTime, 0f, 1f, $"Welcome! Find The Next Room.");
@@ -138,6 +138,11 @@ namespace SnakeGame
             StaticEventHandler.OnPointsScored -= StaticEventHandler_OnPointsScored;
             StaticEventHandler.OnMultiplier -= StaticEventHandler_OnMultiplier;
             m_Snake.destroyEvent.OnDestroy -= Snake_OnDestroy;
+        }
+
+        private void OnDestroy()
+        {
+            m_CancellationTokenSource.Dispose();
         }
 
         private void Snake_OnDestroy(DestroyEvent destroyEvent, DestroyedEventArgs destroyedEventArgs)

@@ -3,11 +3,13 @@ using SnakeGame.AStarPathfinding;
 using SnakeGame.Debuging;
 using SnakeGame.ProceduralGenerationSystem;
 using SnakeGame.VisualEffects;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace SnakeGame.Decorations
 {
@@ -23,6 +25,7 @@ namespace SnakeGame.Decorations
         private Room m_CurrentRoom;
         private Animator m_Animator;
         private MaterializeEffect m_MaterializeEffect;
+        private CancellationTokenSource m_CancellationTokenSource;
 
         private static int Idle = Animator.StringToHash("idle");
 
@@ -32,6 +35,7 @@ namespace SnakeGame.Decorations
             m_Animator = GetComponent<Animator>();
             m_MovementSteps = new Stack<Vector3>();
             m_MaterializeEffect = GetComponent<MaterializeEffect>();
+            m_CancellationTokenSource = new CancellationTokenSource();
         }
 
         private async void Start()
@@ -47,6 +51,12 @@ namespace SnakeGame.Decorations
         private void Update()
         {
             Move();
+        }
+
+        private void OnDestroy()
+        {
+            m_CancellationTokenSource.Cancel();
+            m_CancellationTokenSource.Dispose();
         }
 
         private async UniTask MaterializeDecoration()
@@ -71,16 +81,17 @@ namespace SnakeGame.Decorations
 
             CreatePath();
 
-            if (m_MovementSteps != null)
+            try
             {
-                //if (m_MoveCoroutine != null)
-                //    StopCoroutine(m_MoveCoroutine);
-                //m_MoveCoroutine = StartCoroutine(MoveDecorationRoutine(m_MovementSteps));
-                await MoveDecorationAsync(m_MovementSteps, destroyCancellationToken);
+                await MoveDecorationAsync(m_MovementSteps, m_CancellationTokenSource.Token);
             }
-            else
+            catch (NullReferenceException)
             {
                 m_Animator.SetBool(Idle, true);
+            }
+            catch (OperationCanceledException)
+            {
+                Debuger.Log("Object was Destroyed");
             }
         }
 
@@ -104,6 +115,8 @@ namespace SnakeGame.Decorations
 
         private async UniTask MoveDecorationAsync(Stack<Vector3> movementSteps, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested) return;
+
             m_Animator.SetBool(Idle, false);
             while (movementSteps.Count > 0)
             {
@@ -125,7 +138,7 @@ namespace SnakeGame.Decorations
             Grid grid = m_CurrentRoom.instantiatedRoom.grid;
 
             // Gets the target position on the grid
-            Vector3Int targetGridPosition = GetNearestNonObstaclePosition(m_CurrentRoom);
+            Vector3Int targetGridPosition = GetNearestPosition(m_CurrentRoom);
 
             // Gets this objects position on the grid
             Vector3Int objectGridPosition = grid.WorldToCell(transform.position);
@@ -137,14 +150,14 @@ namespace SnakeGame.Decorations
                 // Take off the first step on path
                 m_MovementSteps?.Pop();
             }
-            catch (System.Exception e)
+            catch (NullReferenceException)
             {
-                this.LogError(e.Message);
+                this.LogWarning("No path could be Built");
                 return;
             }
         }
 
-        private Vector3Int GetNearestNonObstaclePosition(Room currentRoom)
+        private Vector3Int GetNearestPosition(Room currentRoom)
         {
             return (Vector3Int)currentRoom.spawnPositionArray[Random.Range(0, currentRoom.spawnPositionArray.Length)];
         }

@@ -1383,7 +1383,7 @@ MonoBehaviour:
   - name: SnakeBody
     PoolSize: 100
     prefabToUse: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
-    componentType: SnakeBody
+    componentType: SnakeGame.PlayerSystem.SnakeBody
   - name: Bullet4x4
     PoolSize: 100
     prefabToUse: {fileID: 8740502524224239974, guid: 56480e3e174a52742bb7ec6b595da317, type: 3}
@@ -4294,8 +4294,8 @@ CanvasGroup:
   m_GameObject: {fileID: 1486121319}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &1543405417
 GameObject:

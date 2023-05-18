@@ -43,6 +43,11 @@ namespace SnakeGame.UI
             dropdown.onValueChanged.RemoveAllListeners();
         }
 
+        private void OnDestroy()
+        {
+            m_CancellationToken.Dispose();
+        }
+
         private void OnDropValueChanged()
         {
             m_SelectedDifficulty = (Difficulty)dropdown.value;
@@ -82,13 +87,13 @@ namespace SnakeGame.UI
 
         public void Load(GameData data)
         {
-            m_SelectedDifficulty = data.SavedDifficulty;
-            dropdown.value = (int)data.SavedDifficulty;
+            m_SelectedDifficulty = data.DifficultyData.DifficultyToSave;
+            dropdown.value = (int)data.DifficultyData.DifficultyToSave;
         }
 
         public void Save(GameData data)
         {
-            data.SavedDifficulty = m_SelectedDifficulty;
+            data.DifficultyData.DifficultyToSave = m_SelectedDifficulty;
         }
     }
 }

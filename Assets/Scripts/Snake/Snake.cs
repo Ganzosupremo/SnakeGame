@@ -168,21 +168,11 @@ namespace SnakeGame.PlayerSystem
             }
         }
 
-        //private void OnTriggerEnter2D(Collider2D other)
-        //{
-        //    if (other.TryGetComponent(out Food food) && other.CompareTag("Food") && !IsSnakeColliding)
-        //    {
-        //        IsSnakeColliding = true;
-        //        GrowSnake(food.foodSO.HealthIncrease);
-        //        IncreaseWeaponDamage(food.foodSO.DamageIncreasePercentage);
-        //    }
-        //}
-
         /// <summary>
         /// Initialises the snake
         /// </summary>
         /// <param name="snakeDetails">The snake details to initialize</param>
-        public async UniTask Initialize(SnakeDetailsSO snakeDetails)
+        public async UniTask Initialise(SnakeDetailsSO snakeDetails)
         {
             this.snakeDetails = snakeDetails;
 
@@ -357,24 +347,6 @@ namespace SnakeGame.PlayerSystem
             Weapon currentWeapon = activeWeapon.GetCurrentWeapon();
             currentWeapon.weaponDetails.weaponCurrentAmmo.DecreaseDamage(20);
         }
-
-        /// <summary>
-        /// Increase the damage of the weapon when a food was eated.
-        /// </summary>
-        //private void IncreaseWeaponDamage(int percentageToincrease)
-        //{
-        //    Weapon currentWeapon = activeWeapon.GetCurrentWeapon();
-        //    UniTask<bool> ds = currentWeapon.weaponDetails.weaponCurrentAmmo.IncreaseDamage(percentageToincrease);
-        //    if (ds.)
-        //    {
-        //        StartCoroutine(GameManager.Instance.ShowMessage($"Damage of this Weapon Increased By {percentageToincrease}%", 1.5f));
-        //    }
-        //    else
-        //    {
-        //        StartCoroutine(GameManager.Instance.ShowMessage($"Max Damage with this Weapon Reached!", 1.5f));
-        //    }
-        //    IsSnakeColliding = false;
-        //}
 
         private void EnableSnake(bool isActive)
         {

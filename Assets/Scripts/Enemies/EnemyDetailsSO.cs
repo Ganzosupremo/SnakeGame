@@ -1,5 +1,8 @@
+using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
 using System;
+using System.Runtime.CompilerServices;
+using System.Timers;
 using UnityEngine;
 
 namespace SnakeGame.Enemies
@@ -7,6 +10,12 @@ namespace SnakeGame.Enemies
     [CreateAssetMenu(fileName = "Enemy_", menuName = "Scriptable Objects/Enemy/Enemy Details")]
     public class EnemyDetailsSO : UniversalEnemy
     {
+        private static float m_DifficultyAdjustmentTimeSeconds = 60f;
+        private static float m_HealthIncreasePercentage = 10f;
+
+        public static float DifficultyAdjustemtTimeSeconds { get => m_DifficultyAdjustmentTimeSeconds; set => m_DifficultyAdjustmentTimeSeconds = value; }
+        public static float HealthIncreasePercentage { get => m_HealthIncreasePercentage; set => m_HealthIncreasePercentage = value; }
+
         private void OnEnable()
         {
             DifficultyManager.OnDifficultyChanged += DifficultyManager_OnDifficultyChanged;
@@ -26,6 +35,7 @@ namespace SnakeGame.Enemies
         private void OnDisable()
         {
             DifficultyManager.OnDifficultyChanged -= DifficultyManager_OnDifficultyChanged;
+
             // Reset the health amount to it's original value
             ResetEnemyHealthToDefault();
             ResetWeaponValues();
@@ -58,7 +68,7 @@ namespace SnakeGame.Enemies
 
                     ReconfigureWeapon(0.2f, 0.6f, 1f, 2f);
                     IncreaseEnemyMoveSpeed(0.5f);
-                    ReconfigureEnemyHealth(50);
+                    ReconfigureEnemyHealth(10);
                     SetEnemyImmunityTime();
 
                     break;
@@ -66,7 +76,7 @@ namespace SnakeGame.Enemies
 
                     ReconfigureWeapon(0.3f, 0.8f, 1.5f, 2.5f);
                     IncreaseEnemyMoveSpeed(0.8f);
-                    ReconfigureEnemyHealth(100);
+                    ReconfigureEnemyHealth(20);
                     SetEnemyImmunityTime();
 
                     break;
@@ -74,7 +84,7 @@ namespace SnakeGame.Enemies
 
                     ReconfigureWeapon(0.5f, 1f, 2f, 2.8f);
                     IncreaseEnemyMoveSpeed(1f);
-                    ReconfigureEnemyHealth(150);
+                    ReconfigureEnemyHealth(40);
                     SetEnemyImmunityTime();
 
                     break;
@@ -84,7 +94,7 @@ namespace SnakeGame.Enemies
                     IncreaseEnemyMoveSpeed(1.2f);
 
                     // Add extra health
-                    ReconfigureEnemyHealth(250);
+                    ReconfigureEnemyHealth(50);
                     SetEnemyImmunityTime(true, 0.25f);
 
                     break;
@@ -92,7 +102,7 @@ namespace SnakeGame.Enemies
 
                     ReconfigureWeapon(0.8f, 1.4f, 3f, 4.5f, false, true, 2);
                     IncreaseEnemyMoveSpeed(1.5f);
-                    ReconfigureEnemyHealth(500);
+                    ReconfigureEnemyHealth(60);
                     SetEnemyImmunityTime(true, 0.5f);
 
                     break;
@@ -137,16 +147,23 @@ namespace SnakeGame.Enemies
         /// <summary>
         /// Adds the specified extra health on top of the enemy health
         /// </summary>
-        /// <param name="extraHealth"></param>
-        private void ReconfigureEnemyHealth(int extraHealth)
+        /// <param name="healthIncrease">The percentage to increase the health.</param>
+        private void ReconfigureEnemyHealth(float healthIncrease)
         {
             ResetEnemyHealthToDefault();
 
             for (int i = 0; i < enemyHealthDetailsArray.Length; i++)
             {
-                // And now the health can be increased
-                enemyHealthDetailsArray[i].healthAmount += extraHealth;
+                int percent = enemyHealthDetailsArray[i].GetHealthPercentage(healthIncrease);
+                for (int y = 0; y < enemyHealthDetailsArray.Length; y++)
+                {
+                    enemyHealthDetailsArray[i].IncreaseHealth(percent);
+                }
             }
+            //for (int i = 0; i < enemyHealthDetailsArray.Length; i++)
+            //{
+            //    // And now the health can be increased
+            //}
         }
 
         /// <summary>
@@ -198,24 +215,18 @@ namespace SnakeGame.Enemies
             }
         }
 
-        private void ResetWeaponValuesToDefault(float fireMinDelay, float fireMaxDelay,
-            float fireMinDuration, float fireMaxDuration)
+        public static void StartTimer()
         {
-            firingMinDelay = fireMinDelay;
-            firingMaxDelay = fireMaxDelay;
-            firingMinDuration = fireMinDuration;
-            firingMaxDuration = fireMaxDuration;
+            m_DifficultyAdjustmentTimeSeconds -= Time.deltaTime;
+
+            if (m_DifficultyAdjustmentTimeSeconds <= 0f)
+            {
+                
+            }
         }
 
-        protected override void PowerUpEnemy(GameObject parent)
-        {
-            
-        }
 
-        protected override void DowngradeEnemy(GameObject parent)
-        {
-            
-        }
+
 
         #region Validation
 #if UNITY_EDITOR

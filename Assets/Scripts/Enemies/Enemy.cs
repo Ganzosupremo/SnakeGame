@@ -89,6 +89,8 @@ namespace SnakeGame.Enemies
 
         private void Update()
         {
+            EnemyDetailsSO.StartTimer();
+
             if (health.IsDamageable)
             {
                 ResetEnemyColor();

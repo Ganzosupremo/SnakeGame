@@ -3,6 +3,7 @@ using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
 using System;
+using System.Threading;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,20 +24,15 @@ namespace SnakeGame.AudioSystem
         private AudioClip m_CurrentmusicClip = null;
         private bool m_IsMusicSource01Playing = false;
 
+        private CancellationTokenSource m_CancellationTokenSource;
+
         // On the final build use this int internally and the property will fetch the value
         //private int m_MusicVolume;
 
         protected override void Awake()
         {
             base.Awake();
-
-            //_MusicSource01 = GetComponent<AudioSource>();
-            //_MusicSource02 = gameObject.AddComponent<AudioSource>();
-            //_MusicSource02.loop = true;
-            //_MusicSource02.outputAudioMixerGroup = GameResources.Instance.musicMixerGroup;
-            
-            // Start with the music off
-            //GameResources.Instance.musicOff.TransitionTo(0f);
+            m_CancellationTokenSource = new CancellationTokenSource();
         }
 
         private void Start()
@@ -62,20 +58,19 @@ namespace SnakeGame.AudioSystem
                 _MusicSource02.enabled = false;
                 _MusicSource02.enabled = true;
             }
-
-
-            //SnakeAbilityManager.OnAbilityActive += SnakeAbilityManager_OnAbilityActive;
-            //SnakeAbilityManager.OnAbilityInactive += SnakeAbilityManager_OnAbilityInactive;
         }
 
         private void OnDisable()
         {
+            m_CancellationTokenSource.Cancel();
             OnMusicVolumeIncreased -= MusicManager_OnMusicVolumeIncreased;
             OnMusicVolumeDecreased -= MusicManager_OnMusicVolumeDecreased;
             OnMusicClipChanged -= MusicManager_OnMusicClipChanged;
+        }
 
-            //SnakeAbilityManager.OnAbilityActive -= SnakeAbilityManager_OnAbilityActive;
-            //SnakeAbilityManager.OnAbilityInactive -= SnakeAbilityManager_OnAbilityInactive;
+        private void OnDestroy()
+        {
+            m_CancellationTokenSource.Dispose();
         }
 
         private void MusicManager_OnMusicVolumeIncreased()
@@ -121,40 +116,49 @@ namespace SnakeGame.AudioSystem
                 m_CurrentmusicClip = musicSO.musicClip;
                 m_IsMusicSource01Playing = !m_IsMusicSource01Playing;
 
-                FadeMusic(musicSO, timeToFade);
+                FadeMusicAsync(musicSO, timeToFade, m_CancellationTokenSource.Token);
             }
         }
 
-        private async void FadeMusic(MusicSO musicTrack, float timeToFade)
+        private async void FadeMusicAsync(MusicSO musicTrack, float timeToFade, CancellationToken cancellationToken = default)
         {
-            float timeElapsed = 0f;
-            if (m_IsMusicSource01Playing)
-            {
-                _MusicSource01.clip = musicTrack.musicClip;
-                _MusicSource01.Play();
+            if (cancellationToken.IsCancellationRequested || !gameObject.activeSelf) return;
 
-                while (timeElapsed < timeToFade)
+            try
+            {
+                float timeElapsed = 0f;
+                if (m_IsMusicSource01Playing)
                 {
-                    _MusicSource01.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
-                    _MusicSource02.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
-                    timeElapsed += Time.deltaTime;
-                    await UniTask.Yield();
+                    _MusicSource01.clip = musicTrack.musicClip;
+                    _MusicSource01.Play();
+
+                    while (timeElapsed < timeToFade)
+                    {
+                        _MusicSource01.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
+                        _MusicSource02.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+                        timeElapsed += Time.deltaTime;
+                        await UniTask.Yield(cancellationToken);
+                    }
+                    _MusicSource02.Pause();
                 }
-                _MusicSource02.Pause();
+                else
+                {
+                    _MusicSource02.clip = musicTrack.musicClip;
+                    _MusicSource02.Play();
+
+                    while (timeElapsed < timeToFade)
+                    {
+                        _MusicSource02.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
+                        _MusicSource01.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+                        timeElapsed += Time.deltaTime;
+                        await UniTask.Yield(cancellationToken);
+                    }
+                    _MusicSource01.Pause();
+                }
             }
-            else
+            catch (OperationCanceledException)
             {
-                _MusicSource02.clip = musicTrack.musicClip;
-                _MusicSource02.Play();
-
-                while (timeElapsed < timeToFade)
-                {
-                    _MusicSource02.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
-                    _MusicSource01.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
-                    timeElapsed += Time.deltaTime;
-                    await UniTask.Yield();
-                }
-                _MusicSource01.Pause();
+                return;
             }
         }
 

@@ -11,10 +11,9 @@ namespace SnakeGame.UI
     {
         [SerializeField] private GameObject _ObjectiveBackground;
         [SerializeField] private TextMeshProUGUI _ObjectiveText;
-        [SerializeField] private CanvasGroup _CanvasGroup;
-
+        
+        private CanvasGroup _CanvasGroup;
         private CancellationTokenSource m_CancellationToken;
-
         private void Awake()
         {
             _CanvasGroup = GetComponent<CanvasGroup>();
@@ -34,8 +33,14 @@ namespace SnakeGame.UI
 
         private void OnDisable()
         {
+            m_CancellationToken.Cancel();
             StaticEventHandler.OnDisplayObjectives -= StaticEventHandler_OnDisplayObjectivesEvent;
             StaticEventHandler.OnRoomEnemiesDefeated -= StaticEventHandler_OnRoomEnemiesDefeated;
+        }
+
+        private void OnDestroy()
+        {
+            m_CancellationToken.Dispose();
         }
 
         private void StaticEventHandler_OnDisplayObjectivesEvent(DisplayObjectivesUIArgs args)
@@ -51,24 +56,29 @@ namespace SnakeGame.UI
             }
         }
 
-        private async void Run(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken, params string[] texts)
+        private async void Run(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken = default, params string[] texts)
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            _ObjectiveBackground.SetActive(true);
-            BuildText(texts);
+            try
+            {
+                _ObjectiveBackground.SetActive(true);
+                BuildText(texts);
 
-            //await DisplayObjectivesAsync(currentAlpha, targetAlpha, displayTime, cancellationToken);
+                await ControlUIFadingAsync(currentAlpha, targetAlpha, displayTime, cancellationToken);
 
-            await ControlUIFadingAsync(currentAlpha, targetAlpha, displayTime, cancellationToken);
+                await UniTask.Delay((int)displayTime * 1000, false, PlayerLoopTiming.Update, cancellationToken);
 
-            await UniTask.Delay((int)displayTime * 1000, false, PlayerLoopTiming.Update, cancellationToken);
+                await ControlUIFadingAsync(targetAlpha, currentAlpha, displayTime, cancellationToken);
 
-            await ControlUIFadingAsync(targetAlpha, currentAlpha, displayTime, cancellationToken);
-
-            BuildText(string.Empty);
-            _ObjectiveBackground.SetActive(false);
+                BuildText(string.Empty);
+                _ObjectiveBackground.SetActive(false);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
         }
 
         private async UniTask DisplayObjectivesAsync(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken)
@@ -91,7 +101,7 @@ namespace SnakeGame.UI
 
         private async UniTask ControlUIFadingAsync(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) return;
+            if (cancellationToken.IsCancellationRequested || !gameObject.activeSelf) return;
 
             float timer = 0f;
             // Control the fade of the canvas group
