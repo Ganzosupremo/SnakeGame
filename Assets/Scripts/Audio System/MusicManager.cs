@@ -201,12 +201,12 @@ namespace SnakeGame.AudioSystem
 
         public void Load(GameData data)
         {
-            MusicVolume = data.MusicVolume;
+            MusicVolume = data.VolumeDataSaved.MusicVolume;
         }
 
         public void Save(GameData data)
         {
-            data.MusicVolume = MusicVolume;
+            data.VolumeDataSaved.MusicVolume = MusicVolume;
         }
     }
 }

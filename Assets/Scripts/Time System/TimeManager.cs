@@ -10,6 +10,7 @@ namespace SnakeGame.TimeSystem
     public class TimeManager : SingletonMonoBehaviour<TimeManager>, IPersistenceData
     {
         public static event Action<DayCicle> OnTimeChanged;
+
         public DayCicle CurrentTime { get; private set; } = DayCicle.Morning;
         private Light2D globalLight;
 

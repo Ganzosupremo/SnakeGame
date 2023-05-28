@@ -1,8 +1,8 @@
-using SnakeGame.ProceduralGenerationSystem;
 using SnakeGame.AudioSystem;
+using SnakeGame.HealthSystem;
+using SnakeGame.ProceduralGenerationSystem;
 using SnakeGame.VisualEffects;
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace SnakeGame.FoodSystem

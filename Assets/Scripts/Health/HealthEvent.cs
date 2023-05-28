@@ -4,25 +4,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[DisallowMultipleComponent]
-public class HealthEvent : MonoBehaviour
+namespace SnakeGame.HealthSystem
 {
-    public event Action<HealthEvent, HealthEventArgs> OnHealthChanged;
-
-    public void CallOnHealthChanged(float healthPercent, int healthAmount, int damageAmount)
+    [DisallowMultipleComponent]
+    public class HealthEvent : MonoBehaviour
     {
-        OnHealthChanged?.Invoke(this, new HealthEventArgs()
+        public event Action<HealthEvent, HealthEventArgs> OnHealthChanged;
+
+        public void CallOnHealthChanged(float healthPercent, int healthAmount, int damageAmount)
         {
-            healthPercent = healthPercent,
-            healthAmount = healthAmount,
-            damageAmount = damageAmount
-        });
+            OnHealthChanged?.Invoke(this, new HealthEventArgs()
+            {
+                healthPercent = healthPercent,
+                healthAmount = healthAmount,
+                damageAmount = damageAmount
+            });
+        }
+    }
+
+    public class HealthEventArgs : EventArgs
+    {
+        public float healthPercent;
+        public int healthAmount;
+        public int damageAmount;
     }
 }
 
-public class HealthEventArgs : EventArgs
-{
-    public float healthPercent;
-    public int healthAmount;
-    public int damageAmount;
-}

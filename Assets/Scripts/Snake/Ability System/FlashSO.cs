@@ -1,4 +1,4 @@
-using SnakeGame.UI;
+using SnakeGame.HealthSystem;
 using UnityEngine;
 
 namespace SnakeGame.PlayerSystem.AbilitySystem

@@ -1,22 +1,26 @@
 using System;
 using UnityEngine;
 
-public class DestroyEvent : MonoBehaviour
+namespace SnakeGame.HealthSystem
 {
-    public event Action<DestroyEvent, DestroyedEventArgs> OnDestroy;
-
-    public void CallOnDestroy(bool disableGameobject, long points)
+    public class DestroyEvent : MonoBehaviour
     {
-        OnDestroy?.Invoke(this, new DestroyedEventArgs()
-        {
-            disableGameobject = disableGameobject,
-            points = points
-        });
-    }
-}
+        public event Action<DestroyEvent, DestroyedEventArgs> OnDestroy;
 
-public class DestroyedEventArgs : EventArgs
-{
-    public bool disableGameobject;
-    public long points;
+        public void CallOnDestroy(bool disableGameobject, long points)
+        {
+            OnDestroy?.Invoke(this, new DestroyedEventArgs()
+            {
+                disableGameobject = disableGameobject,
+                points = points
+            });
+        }
+    }
+
+    public class DestroyedEventArgs : EventArgs
+    {
+        public bool disableGameobject;
+        public long points;
+    }
+
 }

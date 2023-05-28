@@ -1,6 +1,8 @@
 using Cysharp.Threading.Tasks;
+using SnakeGame.Debuging;
 using SnakeGame.Enemies;
 using SnakeGame.GameUtilities;
+using SnakeGame.HealthSystem;
 using SnakeGame.HighscoreSystem;
 using SnakeGame.Minimap;
 using SnakeGame.PlayerSystem;
@@ -20,7 +22,12 @@ namespace SnakeGame
     [DisallowMultipleComponent]
     public class GameManager : SingletonMonoBehaviour<GameManager>
     {
-        public static event Action<int> OnLevelChanged;
+        /// <summary>
+        /// Triggers when the player completes a level.
+        /// Passes the dungeon level index, if needed, so the susbcriber can know what level should load next. 
+        /// </summary>
+        public static event Action<int> OnLevelCompleted;
+        private bool m_ShouldTriggerOnLevelCompletedEvent = true;
 
         #region Header GAME LEVELS
         [Header("GAME LEVELS")]
@@ -118,6 +125,9 @@ namespace SnakeGame
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.P))
+                CurrentGameState = GameState.Started;
+
             HandleGameStatesAsync();
         }
 
@@ -303,6 +313,12 @@ namespace SnakeGame
                     await LevelCompletedAsync(m_CancellationTokenSource.Token);
                     break;
                 case GameState.GameWon:
+                    if (GetSnake().GetSnakeControler().GetInputActions().Snake.Pause.WasPressedThisFrame())
+                        PauseGameMenu();
+
+                    if (GetSnake().GetSnakeControler().GetInputActions().Snake.DisplayMap.IsPressed())
+                        DisplayOverviewMap();
+
                     // Just call this once
                     if (m_PreviousGameState != GameState.GameWon)
                         await GameWonAsync(m_CancellationTokenSource.Token);
@@ -340,12 +356,12 @@ namespace SnakeGame
             PlayGameLevel(indexLevel);
         }
 
-        private void PlayGameLevel(int currentDungeonLevelListIndex)
+        private async void PlayGameLevel(int currentDungeonLevelListIndex)
         {
             bool dungeonBuiltSuccesfully = DungeonBuilder.Instance.GenerateDungeon(gameLevelList[currentDungeonLevelListIndex]);
 
             if (!dungeonBuiltSuccesfully)
-                Debug.LogError("Couldn't build dungeon from the specified node graphs");
+                this.LogError("Couldn't build dungeon from the specified node graphs");
 
             // Trigger the room changed event on the first load
             StaticEventHandler.CallRoomChangedEvent(m_CurrentRoom);
@@ -357,10 +373,9 @@ namespace SnakeGame
             // Get the nearest spawn point position of the room, so the snake doesn't spawn in walls or something
             m_Snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(m_Snake.gameObject.transform.position);
 
-            CallOnLevelChangedEvent();
-            GetSnake().GetSnakeControler().EnableSnake();
+            CallOnLevelCompletedEvent();
 
-            StartCoroutine(ShowLevelName());
+            await ShowLevelNameAsync(m_CancellationTokenSource.Token);
         }
 
         private IEnumerator ShowLevelName()
@@ -523,9 +538,15 @@ namespace SnakeGame
             {
                 // If there are more dungeon level, then 
                 if (currentDungeonLevelListIndex < gameLevelList.Count - 1)
+                {
+                    m_ShouldTriggerOnLevelCompletedEvent = true;
                     m_CurrentGameState = GameState.LevelCompleted;
+                }
                 else
+                {
+                    m_ShouldTriggerOnLevelCompletedEvent = false;
                     m_CurrentGameState = GameState.GameWon;
+                }
             }
             //If just the boss room is not cleared yet
             else if (isDungeonClearOfNormalEnemies)
@@ -647,19 +668,7 @@ namespace SnakeGame
 
             await UniTask.Delay(1000);
 
-            await FadeScreenAsync(0f, 1f, 2f, new Color(0f, 0f, 0f, 0.45f));
-
-            //List<UniTask> tasks = new List<UniTask>
-            //{
-            //    DisplayCurrentObjectiveAsync(1.5f, $"Defeat the Boss! {this.name}"),
-            //    FadeScreenAsync(1f, 0f, 2f, new Color(0f, 0f, 0f, 0.45f))
-            //};
-
-            //await UniTask.WhenAll(tasks);
-
             StaticEventHandler.CallOnDisplayObjectivesEvent(Settings.DisplayObjectivesTime, 0f, 1f, $"Defeat the Boss!");
-
-            await FadeScreenAsync(1f, 0f, 2f, new Color(0f, 0f, 0f, 0.45f));
         }
 
         private IEnumerator LevelCompleted()
@@ -703,7 +712,7 @@ namespace SnakeGame
             await FadeScreenAsync(0f, 1f, 2f, new(0f, 0f, 0f, 0.4f));
 
             currentDungeonLevelListIndex++;
-            CallOnLevelChangedEvent();
+            CallOnLevelCompletedEvent();
 
             string name = GameResources.Instance.currentSnake.snakeName;
             if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
@@ -963,9 +972,11 @@ namespace SnakeGame
             SceneManager.LoadScene((int)SceneIndex.MainMenu);
         }
 
-        private void CallOnLevelChangedEvent()
+        private void CallOnLevelCompletedEvent()
         {
-            OnLevelChanged?.Invoke(currentDungeonLevelListIndex);
+            if (!m_ShouldTriggerOnLevelCompletedEvent) return;
+
+            OnLevelCompleted?.Invoke(currentDungeonLevelListIndex);
         }
         #endregion
 

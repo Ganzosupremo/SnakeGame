@@ -220,14 +220,14 @@ namespace SnakeGame.AudioSystem
 
         public void Load(GameData data)
         {
-            SoundsVolume = data.SoundsVolume;
-            MinigunFireVolume = data.MinigunVolume;
+            SoundsVolume = data.VolumeDataSaved.GetSoundsVolume();
+            MinigunFireVolume = data.VolumeDataSaved.GetMinigunVolume();
         }
 
         public void Save(GameData data)
         {
-            data.SoundsVolume = SoundsVolume;
-            data.MinigunVolume = MinigunFireVolume;
+            data.VolumeDataSaved.SoundsVolume = SoundsVolume;
+            data.VolumeDataSaved.MinigunVolume = MinigunFireVolume;
         }
     }
 }

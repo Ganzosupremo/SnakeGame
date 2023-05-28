@@ -3,7 +3,7 @@ using UnityEngine;
 using SnakeGame.Enemies;
 using SnakeGame.PlayerSystem;
 
-namespace SnakeGame
+namespace SnakeGame.HealthSystem
 {
     [DisallowMultipleComponent]
     public class Health : MonoBehaviour

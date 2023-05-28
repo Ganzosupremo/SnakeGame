@@ -1,5 +1,6 @@
 using SnakeGame.AbwehrSystem;
 using SnakeGame.AudioSystem;
+using SnakeGame.HealthSystem;
 using SnakeGame.ProceduralGenerationSystem;
 using SnakeGame.VisualEffects;
 using System.Collections.Generic;
@@ -60,24 +61,29 @@ namespace SnakeGame.Enemies
 
         private MaterializeEffect materializeEffect;
         private PolygonCollider2D triggerCollider;
-        //private CircleCollider2D solidCollider;
 
 
-        private SetActiveWeaponEvent setActiveWeaponEvent;
-        private HealthEvent healthEvent;
-        private Health health;
+        private SetActiveWeaponEvent m_SetActiveWeaponEvent;
+        private HealthEvent m_HealthEvent;
+        private Health m_Health;
+
+        // Difficulty Adjustment
+        //[Header("Difficulty Adjustment")]
+        //[SerializeField] private float m_DiffAdjustmentTimeSeconds = 30f;
+        //[SerializeField] private float m_HealthIncreasePercentage = 20f;
+        //private float timer;
 
         private void Awake()
         {
             enemyMovementAI = GetComponent<EnemyMovementAI>();
-            healthEvent = GetComponent<HealthEvent>();
-            health = GetComponent<Health>();
+            m_HealthEvent = GetComponent<HealthEvent>();
+            m_Health = GetComponent<Health>();
             movementToPositionEvent = GetComponent<MovementToPositionEvent>();
 
             aimWeaponEvent = GetComponent<AimWeaponEvent>();
             fireWeaponEvent = GetComponent<FireWeaponEvent>();
             fireWeapon = GetComponent<FireWeapon>();
-            setActiveWeaponEvent = GetComponent<SetActiveWeaponEvent>();
+            m_SetActiveWeaponEvent = GetComponent<SetActiveWeaponEvent>();
             idleEvent = GetComponent<IdleEvent>();
 
             enemySpriteRenderer = GetComponent<SpriteRenderer>();
@@ -85,13 +91,21 @@ namespace SnakeGame.Enemies
             //solidCollider = GetComponentInChildren<CircleCollider2D>();
             triggerCollider = GetComponent<PolygonCollider2D>();
             spriteRendererArray = GetComponentsInChildren<SpriteRenderer>();
+
+            //timer = m_DiffAdjustmentTimeSeconds;
         }
 
         private void Update()
         {
-            EnemyDetailsSO.StartTimer();
+            //m_DiffAdjustmentTimeSeconds -= Time.deltaTime;
 
-            if (health.IsDamageable)
+            //if (m_DiffAdjustmentTimeSeconds <= 0f)
+            //{
+            //    enemyDetails.ReconfigureEnemyHealth(m_HealthIncreasePercentage, false);
+            //    m_DiffAdjustmentTimeSeconds = timer;
+            //}
+
+            if (m_Health.IsDamageable)
             {
                 ResetEnemyColor();
             }
@@ -99,12 +113,12 @@ namespace SnakeGame.Enemies
 
         private void OnEnable()
         {
-            healthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
+            m_HealthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
         }
 
         private void OnDisable()
         {
-            healthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
+            m_HealthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
         }
 
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
@@ -113,7 +127,7 @@ namespace SnakeGame.Enemies
                 EnemyDestroyed();
         }
 
-        public void InitializeEnemy(EnemyDetailsSO enemyDetails, int enemySpawnNumber, GameLevelSO gameLevel)
+        public void InitialiseEnemy(EnemyDetailsSO enemyDetails, int enemySpawnNumber, GameLevelSO gameLevel)
         {
             this.enemyDetails = enemyDetails;
 
@@ -147,12 +161,12 @@ namespace SnakeGame.Enemies
             {
                 if (itemHealth.gameLevel == gameLevel)
                 {
-                    health.SetStartingHealth(itemHealth.healthAmount);
+                    m_Health.SetStartingHealth(itemHealth.healthAmount);
                     return;
                 }
             }
 
-            health.SetStartingHealth(Settings.defaultEnemyHealth);
+            m_Health.SetStartingHealth(Settings.defaultEnemyHealth);
         }
 
         /// <summary>
@@ -173,7 +187,7 @@ namespace SnakeGame.Enemies
                 };
 
                 //Set the weapon for the enemy
-                setActiveWeaponEvent.CallSetActiveWeaponEvent(weapon);
+                m_SetActiveWeaponEvent.CallSetActiveWeaponEvent(weapon);
             }
         }
 

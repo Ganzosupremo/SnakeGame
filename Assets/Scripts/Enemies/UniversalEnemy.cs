@@ -1,6 +1,7 @@
 using SnakeGame.AbwehrSystem;
 using SnakeGame.AudioSystem;
 using SnakeGame.GameUtilities;
+using SnakeGame.HealthSystem;
 using UnityEngine;
 
 namespace SnakeGame.Enemies

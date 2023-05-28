@@ -2,7 +2,7 @@ using SnakeGame.Debuging;
 using SnakeGame.ProceduralGenerationSystem;
 using UnityEngine;
 
-namespace SnakeGame
+namespace SnakeGame.HealthSystem
 {
     /// <summary>
     /// This struct define the amount of health an item can have
@@ -33,10 +33,7 @@ namespace SnakeGame
 
         public int GetHealthPercentage(float percent)
         {
-            Debuger.Log($"Before Cal: {percent}");
-            int valueToReturn = Mathf.RoundToInt( defaultHealthAmount * percent / 100);
-            Debuger.Log($"Returned Value: {valueToReturn}");
-            return valueToReturn;
+            return Mathf.RoundToInt(defaultHealthAmount * percent / 100);
         }
     }
 }

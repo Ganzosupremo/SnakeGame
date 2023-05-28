@@ -67,12 +67,9 @@ namespace SnakeGame.ProceduralGenerationSystem
             {
                 room.isPreviouslyVisited = true;
                 StaticEventHandler.CallRoomChangedEvent(room);
-                AddExitToRoom();
             }
 
         }
-
-
 
         //private void OnTriggerExit2D(Collider2D other)
         //{
@@ -163,12 +160,6 @@ namespace SnakeGame.ProceduralGenerationSystem
                     MinimapTilemap = tilemap;
                 }
             }
-        }
-
-        private void GenerateProceduralMap()
-        {
-            this.mapPreset = noiseMap.mapPreset;
-            noiseMap.GenerateMap(mapPreset);
         }
 
         /// <summary>
@@ -552,20 +543,20 @@ namespace SnakeGame.ProceduralGenerationSystem
             // Test code
             InitializeSegmentsArray();
 
-            foreach (SnakeBody snakeBody in GameManager.Instance.GetSnake().SnakeBodyList)
-            {
-                Vector3Int minColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.min);
-                Vector3Int maxColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.max);
+            //foreach (SnakeBody snakeBody in GameManager.Instance.GetSnake().SnakeBodyList)
+            //{
+            //    Vector3Int minColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.min);
+            //    Vector3Int maxColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.max);
 
-                // Loop through and add the snake body collider bounds to the snake segments array
-                for (int i = minColliderBounds.x; i <= maxColliderBounds.x; i++)
-                {
-                    for (int j = minColliderBounds.y; j <= maxColliderBounds.y; j++)
-                    {
-                        aStarSnakeSegmentsObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
-                    }
-                }
-            }
+            //    // Loop through and add the snake body collider bounds to the snake segments array
+            //    for (int i = minColliderBounds.x; i <= maxColliderBounds.x; i++)
+            //    {
+            //        for (int j = minColliderBounds.y; j <= maxColliderBounds.y; j++)
+            //        {
+            //            aStarSnakeSegmentsObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>

@@ -1,10 +1,11 @@
-using SnakeGame.GameUtilities;
-using SnakeGame.ProceduralGenerationSystem;
+using Cysharp.Threading.Tasks;
 using SnakeGame.AudioSystem;
+using SnakeGame.GameUtilities;
+using SnakeGame.HealthSystem;
+using SnakeGame.ProceduralGenerationSystem;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Cysharp.Threading.Tasks;
 
 namespace SnakeGame.Enemies
 {
@@ -178,7 +179,7 @@ namespace SnakeGame.Enemies
             GameObject enemy = Instantiate(enemyDetails.enemyPrefab, position, Quaternion.identity, transform);
 
             // Initialize the enemy parameters
-            enemy.GetComponent<Enemy>().InitializeEnemy(enemyDetails, enemiesSpawnedSoFar, gameLevel);
+            enemy.GetComponent<Enemy>().InitialiseEnemy(enemyDetails, enemiesSpawnedSoFar, gameLevel);
 
             // Suscribe to the destroy enemies event
             enemy.GetComponent<DestroyEvent>().OnDestroy += Enemy_OnDestroyed;

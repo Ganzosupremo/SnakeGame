@@ -10,7 +10,7 @@ namespace SnakeGame.UI
 {
     [Obsolete("This class is obsolete, now that there are different settings tabs," +
         " every setting is managed separately and not on the same class.")]
-    public class SettingsUI : MonoBehaviour, IPersistenceData
+    public class SettingsUI : MonoBehaviour
     {
         [SerializeField] private TMP_Dropdown difficultyDropdown;
         [SerializeField] private TextMeshProUGUI playerHealth;
@@ -101,17 +101,6 @@ namespace SnakeGame.UI
             messageToDisplay.text = message;
             yield return new WaitForSeconds(time);
             messageToDisplay.text = "";
-        }
-
-        public void Load(GameData data)
-        {
-            selectedDifficulty = data.SavedDifficulty;
-            difficultyDropdown.value = (int)selectedDifficulty;
-        }
-
-        public void Save(GameData data)
-        {
-            data.SavedDifficulty = selectedDifficulty;
         }
     }
 }

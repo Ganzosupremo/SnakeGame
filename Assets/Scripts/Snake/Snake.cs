@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using SnakeGame.AbwehrSystem;
-using SnakeGame.Debuging;
 using SnakeGame.FoodSystem;
+using SnakeGame.HealthSystem;
 using SnakeGame.PlayerSystem.AbilitySystem;
 using SnakeGame.TimeSystem;
 using SnakeGame.VisualEffects;
@@ -46,7 +46,7 @@ namespace SnakeGame.PlayerSystem
     #endregion
     public class Snake : MonoBehaviour
     {
-        #region Components
+        #region Public Components
         [HideInInspector] public Animator animator;
         [HideInInspector] public SnakeDetailsSO snakeDetails;
         [HideInInspector] public Health health;
@@ -69,6 +69,7 @@ namespace SnakeGame.PlayerSystem
         [HideInInspector] public SpriteRenderer spriteRenderer;
         [HideInInspector] public List<Weapon> weaponList = new();
         #endregion
+
         public List<SnakeBody> SnakeBodyList { get; private set; } = new();
         public List<Transform> SnakeSegmentsList { get; private set; } = new();
         public bool IsSnakeColliding { get; private set; }
@@ -77,7 +78,7 @@ namespace SnakeGame.PlayerSystem
         private MaterializeEffect materializeEffect;
         private SnakeControler snakeControler;
         private Light2D snakeLight;
-
+        private SnakePool snakePool;
         private void Awake()
         {
             #region Getting Component References
@@ -103,11 +104,13 @@ namespace SnakeGame.PlayerSystem
             spriteRenderer = GetComponent<SpriteRenderer>();
             materializeEffect = GetComponent<MaterializeEffect>();
             snakeLight = GetComponentInChildren<Light2D>();
+            snakePool = GetComponent<SnakePool>();
             #endregion
         }
 
-        private void Start()
+        private async void Start()
         {
+            await snakePool.Init();
             AddStartingSegments();
             ChangeLightIntensity(TimeManager.Instance.CurrentTime);
         }
@@ -122,9 +125,8 @@ namespace SnakeGame.PlayerSystem
                 snakeBody.gameObject.SetActive(true);
                 SnakeBodyList.Add(snakeBody);
 
-                Transform segment = snakeBody.transform;
-                segment.position = SnakeSegmentsList[snakeSegmentCount].position;
-                SnakeSegmentsList.Add(segment);
+                snakeBody.transform.position = SnakeSegmentsList[snakeSegmentCount].position;
+                SnakeSegmentsList.Add(snakeBody.transform);
                 snakeSegmentCount++;
             }
         }
@@ -160,7 +162,6 @@ namespace SnakeGame.PlayerSystem
 
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
         {
-            this.Log(healthEventArgs.healthAmount);
             if (healthEventArgs.healthAmount <= 0f)
             {
                 destroyEvent.CallOnDestroy(true, 0);
@@ -269,16 +270,16 @@ namespace SnakeGame.PlayerSystem
                 SnakeSegmentsList[^1].position, Quaternion.identity);
 
             snakeBody.gameObject.SetActive(true);
-            SnakeBodyList.Add(snakeBody);
-
-            snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -SnakeBodyList.Count;
-            SnakeBodyList[snakeSegmentCount].WaitHeadUpdateCycle(SnakeBodyList.Count);
-
-            Transform segmentTransform = snakeBody.transform;
-            segmentTransform.position = SnakeSegmentsList[snakeSegmentCount].position;
-            SnakeSegmentsList.Add(segmentTransform);
-            snakeSegmentCount++;
+            snakeBody.transform.position = SnakeSegmentsList[snakeSegmentCount].position;
             
+            // Add the new segment to both lists
+            SnakeBodyList.Add(snakeBody);
+            SnakeSegmentsList.Add(snakeBody.transform);
+            snakeSegmentCount++;
+
+            snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -SnakeSegmentsList.Count;
+            snakeBody.WaitHeadUpdateCycle(SnakeSegmentsList.Count);
+
             IsSnakeColliding = false;
             health.IncreaseHealth(increaseHealth);
         }
@@ -291,7 +292,8 @@ namespace SnakeGame.PlayerSystem
 
                 for (int index = SnakeSegmentsList.Count - 1; index > 0; index--)
                 {
-                    SnakeSegmentsList[index].GetComponent<SnakeBody>().SetTargetPosition(SnakeSegmentsList[index - 1].position);
+                    SnakeSegmentsList[index].TryGetComponent(out SnakeBody body);
+                    body.SetTargetPosition(SnakeSegmentsList[index - 1].position);
                 }
             }
         }
@@ -310,11 +312,12 @@ namespace SnakeGame.PlayerSystem
                 SnakeSegmentsList[snakeSegmentCount].TryGetComponent(out SnakeBody snakeBody);
 
                 snakeBody.gameObject.SetActive(false);
-                SnakeSegmentsList.RemoveAt(snakeSegmentCount);
+                SnakeSegmentsList.Remove(snakeBody.transform);
                 if (SnakeBodyList.Count > 0)
                     SnakeBodyList.Remove(snakeBody);
 
                 snakeSegmentCount--;
+
                 // Reduce the multiplier when the player gets hit,
                 // because the player at some point will run out of ammo
                 // we do it here, so the multiplier can still be updated
