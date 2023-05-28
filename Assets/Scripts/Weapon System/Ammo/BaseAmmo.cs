@@ -1,5 +1,6 @@
 using SnakeGame.AudioSystem;
 using SnakeGame.GameUtilities;
+using SnakeGame.HealthSystem;
 using SnakeGame.Interfaces;
 using SnakeGame.VisualEffects;
 using UnityEngine;
@@ -90,7 +91,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         public virtual void InitialiseAmmo(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
         {
             #region Ammo
-            this._AmmoDetails = ammoDetails;
+            _AmmoDetails = ammoDetails;
 
             _IsColliding = false;
 
@@ -228,10 +229,12 @@ namespace SnakeGame.AbwehrSystem.Ammo
         }
 
         /// <summary>
-        /// Enables, if any, the ammo hit visual and sound effects
+        /// Enables, if any, the ammo hit visual effects
         /// </summary>
-        protected virtual void ActivateAmmoEffects()
+        protected virtual void ActivatHitEffect()
         {
+            if (_AmmoDetails == null) return;
+
             // Process if there is a hit effect & prefab
             if (_AmmoDetails.ammoHitEffect != null && _AmmoDetails.ammoHitEffect.ammoHitEffectPrefab != null)
             {
@@ -245,21 +248,18 @@ namespace SnakeGame.AbwehrSystem.Ammo
                 // Set gameobject active (the particle system is set to automatically disable the
                 // gameobject once finished)
                 hitEffect.gameObject.SetActive(true);
-
-                PlayCollisionSoundEffect();
             }
         }
 
         protected virtual void PlayCollisionSoundEffect()
         {
             if (_AmmoDetails.CollisionSoundEffect != null)
-            {
                 SoundEffectManager.CallOnSoundEffectSelectedEvent(_AmmoDetails.CollisionSoundEffect);
-            }
         }
 
         protected virtual void DisableAmmo()
         {
+            ActivatHitEffect();
             gameObject.SetActive(false);
         }
 

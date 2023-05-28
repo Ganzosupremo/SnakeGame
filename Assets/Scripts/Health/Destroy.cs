@@ -1,35 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(DestroyEvent))]
-[DisallowMultipleComponent]
-public class Destroy : MonoBehaviour
+namespace SnakeGame.HealthSystem
 {
-    private DestroyEvent destroyEvent;
-
-    private void Awake()
+    [RequireComponent(typeof(DestroyEvent))]
+    [DisallowMultipleComponent]
+    public class Destroy : MonoBehaviour
     {
-        destroyEvent = GetComponent<DestroyEvent>();
-    }
+        private DestroyEvent destroyEvent;
 
-    private void OnEnable()
-    {
-        destroyEvent.OnDestroy += DestroyEvent_OnDestroy;
-    }
-
-    private void OnDisable()
-    {
-        destroyEvent.OnDestroy -= DestroyEvent_OnDestroy;
-    }
-
-    private void DestroyEvent_OnDestroy(DestroyEvent destroyEvent, DestroyedEventArgs destroyedEventArgs)
-    {
-        if (destroyedEventArgs.disableGameobject)
+        private void Awake()
         {
-            gameObject.SetActive(false);
+            destroyEvent = GetComponent<DestroyEvent>();
         }
-        else
-            Destroy(gameObject);
+
+        private void OnEnable()
+        {
+            destroyEvent.OnDestroy += DestroyEvent_OnDestroy;
+        }
+
+        private void OnDisable()
+        {
+            destroyEvent.OnDestroy -= DestroyEvent_OnDestroy;
+        }
+
+        private void DestroyEvent_OnDestroy(DestroyEvent destroyEvent, DestroyedEventArgs destroyedEventArgs)
+        {
+            if (destroyedEventArgs.disableGameobject)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+                Destroy(gameObject);
+        }
     }
 }

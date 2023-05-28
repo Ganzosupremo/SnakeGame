@@ -132,7 +132,8 @@ namespace SnakeGame.PlayerSystem
             // Check if there is movement
             if (moveDirection != Vector2.zero)
             {
-                //savedDirection = moveDirection;
+                // Update the segments before the snake moves, because
+                // the segments will stop moving if the under if-statement is true. and looks weird.
                 snake.UpdateSnakeSegments();
                 // Can't move in diagonal
                 if (moveDirection.x != 0f && moveDirection.y != 0f) return;

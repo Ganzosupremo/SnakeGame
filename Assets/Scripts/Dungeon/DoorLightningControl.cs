@@ -1,4 +1,3 @@
-using SnakeGame;
 using System.Collections;
 using UnityEngine;
 

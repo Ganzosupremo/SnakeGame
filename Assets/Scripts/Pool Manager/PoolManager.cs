@@ -45,25 +45,6 @@ namespace SnakeGame
             }
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                RegeneratePool();
-            }
-        }
-
-        private void RegeneratePool()
-        {
-            poolDictionary.Clear();
-
-            for (int i = 0; i < poolArray.Length; i++)
-            {
-                CreatePool(poolArray[i].prefabToUse, poolArray[i].PoolSize, poolArray[i].componentType);
-            }
-            this.Log("Pool Regenerated");
-        }
-
         /// <summary>
         /// Creates The Object Pool With The Specified Prefabs, The PoolSize And the Type Of Component For Each One
         /// </summary>
@@ -88,7 +69,6 @@ namespace SnakeGame
                     newObject.SetActive(false);
 
                     poolDictionary[poolKey].Enqueue(newObject.GetComponent(Type.GetType(componentType)));
-                    this.Log(BuildCompenent(componentType));
                 }
             }
         }

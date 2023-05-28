@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad842e14b0ab7e47987e3760d44519d, type: 3}
+  m_Name: ExplosiveAmmoDetails_RPG_Enemy
+  m_EditorClassIdentifier: 
+  ammoName: RPG Ammo
+  isPlayerAmmo: 0
+  ammoSprite: {fileID: -1475200873, guid: 679bf0e22664fa14f84bb2419114f274, type: 3}
+  ammoPrefabArray:
+  - {fileID: 3758273934219701999, guid: 97b88ac859e930b49825e8d59973669f, type: 3}
+  ammoMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  ammoChargeTime: 0
+  ammoChargeMaterial: {fileID: 0}
+  ammoHitEffect: {fileID: 11400000, guid: 1fc42aa7969eaf34bbea2817b1ea7446, type: 2}
+  CollisionSoundEffect: {fileID: 11400000, guid: 4a3f12f6026504344adae05db00fd5ac, type: 2}
+  ammoDamage: 3
+  originalAmmoDamage: 3
+  maxAmmoDamage: 3
+  minAmmoSpeed: 15
+  maxAmmoSpeed: 30
+  ammoRange: 30
+  ammoRotationSpeed: 1
+  ammoSpreadMin: 3.4
+  ammoSpreadMax: 6.8
+  MinBulletsPerShoot: 1
+  MaxBulletsPerShoot: 1
+  minSpawnInterval: 0.0308
+  maxSpawnInterval: 0.049
+  hasAmmoTrail: 1
+  ammoTrailLifetime: 0.2
+  ammoTrailMaterial: {fileID: 2100000, guid: 4b9e9e848d84a1b41828381ea5ef9969, type: 2}
+  ammoTrailStartWidth: 0.2
+  ammoTrailEndWidth: 0.6
+  ExplosionRadius: 6
+  ExplosionMask:
+    serializedVersion: 2
+    m_Bits: 66560

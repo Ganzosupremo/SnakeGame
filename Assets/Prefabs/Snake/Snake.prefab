@@ -305,6 +305,7 @@ GameObject:
   - component: {fileID: 8266277145047211156}
   - component: {fileID: 8266277145047211176}
   - component: {fileID: 5123153779636371124}
+  - component: {fileID: 8658067785164293708}
   - component: {fileID: 4336066559190943374}
   - component: {fileID: 8266277145047211177}
   - component: {fileID: 8266277145047211178}
@@ -440,8 +441,6 @@ MonoBehaviour:
   reloadWeapon: {fileID: 0}
   weaponReloadedEvent: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  snakeBody: {fileID: 0}
-  snakeLight: {fileID: 0}
 --- !u!114 &8266277145047211176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,6 +468,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AbilityEffectParticleSystem: {fileID: 3754341511128468287, guid: f9b3037f5fff0564c95d0f85829a1c9e, type: 3}
+--- !u!114 &8658067785164293708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266277145047211159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85d5a1f079fccb4408937442cadf0e56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Segments:
+  - PoolSize: 100
+    PrefabToUse: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
+    ComponentType: SnakeGame.PlayerSystem.SnakeBody
 --- !u!114 &4336066559190943374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,6 +515,12 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -538,6 +559,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -564,6 +604,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -631,7 +690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!95 &6039585080257860457
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -648,7 +707,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &880802308295495804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -844,7 +904,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a0b0f0aa9dd37448ac3569030e5823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dealDamageOnContact: 1
+  dealDamageOnContact: 5
   layerMask:
     serializedVersion: 2
     m_Bits: 262144

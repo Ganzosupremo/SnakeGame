@@ -84,9 +84,7 @@ namespace SnakeGame.AbwehrSystem
             BaseAmmoSO currentAmmo = activeWeapon.GetCurrentAmmo();
 
             if (currentAmmo != null)
-            {
                 StartCoroutine(FireAmmoRoutine(currentAmmo, aimAngle, weaponAimAngle, weaponAimDirectionVector));
-            }
         }
 
         /// <summary>

@@ -13,31 +13,10 @@ namespace SnakeGame.PlayerSystem
         private int m_WaitPreviousPart;
         private Snake m_Snake;
 
-        public BoxCollider2D boxCollider2D;
-        [HideInInspector] public Bounds segmentBounds;
-
         private void Awake()
         {
             m_Snake = GameManager.Instance.GetSnake();
             spriteRenderer = GetComponent<SpriteRenderer>();
-            boxCollider2D = GetComponentInChildren<BoxCollider2D>();
-            segmentBounds = boxCollider2D.bounds;
-        }
-
-        private void OnEnable()
-        {
-            GameManager.OnLevelChanged += GameManager_OnLevelChanged;
-        }
-
-        private void OnDisable()
-        {
-            GameManager.OnLevelChanged -= GameManager_OnLevelChanged;
-        }
-
-        private void GameManager_OnLevelChanged(int index)
-        {
-            // Send all snake segments to the head
-            transform.position = m_Snake.transform.position;
         }
 
         private void Start()

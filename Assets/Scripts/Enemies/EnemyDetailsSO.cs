@@ -1,8 +1,6 @@
 using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
-using System;
-using System.Runtime.CompilerServices;
-using System.Timers;
+using SnakeGame.TimeSystem;
 using UnityEngine;
 
 namespace SnakeGame.Enemies
@@ -10,15 +8,16 @@ namespace SnakeGame.Enemies
     [CreateAssetMenu(fileName = "Enemy_", menuName = "Scriptable Objects/Enemy/Enemy Details")]
     public class EnemyDetailsSO : UniversalEnemy
     {
-        private static float m_DifficultyAdjustmentTimeSeconds = 60f;
-        private static float m_HealthIncreasePercentage = 10f;
-
-        public static float DifficultyAdjustemtTimeSeconds { get => m_DifficultyAdjustmentTimeSeconds; set => m_DifficultyAdjustmentTimeSeconds = value; }
         public static float HealthIncreasePercentage { get => m_HealthIncreasePercentage; set => m_HealthIncreasePercentage = value; }
+        private static float m_HealthIncreasePercentage = 1f;
+
+        private DiffStatus m_CurrentStatus;
 
         private void OnEnable()
         {
-            DifficultyManager.OnDifficultyChanged += DifficultyManager_OnDifficultyChanged;
+            DifficultyManager.OnDifficultyChanged += OnUIDifficultyChanged;
+            Timer.OnStatusChanged += OnTimeElapsed;
+            m_CurrentStatus = DiffStatus.Easy;
             SetDefaultWeaponValues();
         }
 
@@ -34,10 +33,12 @@ namespace SnakeGame.Enemies
 
         private void OnDisable()
         {
-            DifficultyManager.OnDifficultyChanged -= DifficultyManager_OnDifficultyChanged;
+            DifficultyManager.OnDifficultyChanged -= OnUIDifficultyChanged;
+            Timer.OnStatusChanged -= OnTimeElapsed;
 
             // Reset the health amount to it's original value
             ResetEnemyHealthToDefault();
+            SetEnemySpeedToDefault();
             ResetWeaponValues();
         }
 
@@ -52,7 +53,7 @@ namespace SnakeGame.Enemies
             lineOfSightRequired = m_DefaultRequireLineOfSight;
         }
 
-        private void DifficultyManager_OnDifficultyChanged(Difficulty difficulty)
+        private void OnUIDifficultyChanged(Difficulty difficulty)
         {
             switch (difficulty)
             {
@@ -61,54 +62,52 @@ namespace SnakeGame.Enemies
                     ReconfigureWeapon(0f, 0.1f, 0.1f, 0.1f);
                     IncreaseEnemyMoveSpeed();
                     ResetEnemyHealthToDefault();
+                    SetEnemySpeedToDefault();
                     SetEnemyImmunityTime();
 
                     break;
                 case Difficulty.Easy:
 
                     ReconfigureWeapon(0.2f, 0.6f, 1f, 2f);
-                    IncreaseEnemyMoveSpeed(0.5f);
-                    ReconfigureEnemyHealth(10);
                     SetEnemyImmunityTime();
 
                     break;
                 case Difficulty.Medium:
 
                     ReconfigureWeapon(0.3f, 0.8f, 1.5f, 2.5f);
-                    IncreaseEnemyMoveSpeed(0.8f);
-                    ReconfigureEnemyHealth(20);
                     SetEnemyImmunityTime();
 
                     break;
                 case Difficulty.Hard:
 
                     ReconfigureWeapon(0.5f, 1f, 2f, 2.8f);
-                    IncreaseEnemyMoveSpeed(1f);
-                    ReconfigureEnemyHealth(40);
                     SetEnemyImmunityTime();
 
                     break;
                 case Difficulty.DarkSouls:
 
                     ReconfigureWeapon(0.6f, 1.2f, 2.5f, 3.5f, false, true, 1);
-                    IncreaseEnemyMoveSpeed(1.2f);
-
-                    // Add extra health
-                    ReconfigureEnemyHealth(50);
                     SetEnemyImmunityTime(true, 0.25f);
 
                     break;
                 case Difficulty.EmotionalDamage:
 
                     ReconfigureWeapon(0.8f, 1.4f, 3f, 4.5f, false, true, 2);
-                    IncreaseEnemyMoveSpeed(1.5f);
-                    ReconfigureEnemyHealth(60);
                     SetEnemyImmunityTime(true, 0.5f);
 
                     break;
                 default:
                     break;
             }
+        }
+
+        private void OnTimeElapsed(TimerEventArgs args)
+        {
+            // To avoid increase the health on every in-game minute.
+            //if (m_CurrentStatus == args.Status) return;
+            m_CurrentStatus = args.Status;
+
+            ReconfigureEnemyHealth(m_HealthIncreasePercentage, false);
         }
 
         /// <summary>
@@ -148,22 +147,16 @@ namespace SnakeGame.Enemies
         /// Adds the specified extra health on top of the enemy health
         /// </summary>
         /// <param name="healthIncrease">The percentage to increase the health.</param>
-        private void ReconfigureEnemyHealth(float healthIncrease)
+        public void ReconfigureEnemyHealth(float healthIncrease, bool shouldResetHealth = true)
         {
-            ResetEnemyHealthToDefault();
+            if (shouldResetHealth)
+                ResetEnemyHealthToDefault();
 
             for (int i = 0; i < enemyHealthDetailsArray.Length; i++)
             {
                 int percent = enemyHealthDetailsArray[i].GetHealthPercentage(healthIncrease);
-                for (int y = 0; y < enemyHealthDetailsArray.Length; y++)
-                {
-                    enemyHealthDetailsArray[i].IncreaseHealth(percent);
-                }
+                enemyHealthDetailsArray[i].IncreaseHealth(percent);
             }
-            //for (int i = 0; i < enemyHealthDetailsArray.Length; i++)
-            //{
-            //    // And now the health can be increased
-            //}
         }
 
         /// <summary>
@@ -173,7 +166,7 @@ namespace SnakeGame.Enemies
         {
             for (int i = 0; i < enemyHealthDetailsArray.Length; i++)
             {
-                // If the difficulty is change, reset the health to the original value
+                // If the difficulty is changed, reset the health to the original value
                 enemyHealthDetailsArray[i].healthAmount = enemyHealthDetailsArray[i].defaultHealthAmount;
             }
         }
@@ -214,19 +207,6 @@ namespace SnakeGame.Enemies
                     enemyWeapon.weaponCurrentAmmo.IncreaseDamage(damageToIncrease);
             }
         }
-
-        public static void StartTimer()
-        {
-            m_DifficultyAdjustmentTimeSeconds -= Time.deltaTime;
-
-            if (m_DifficultyAdjustmentTimeSeconds <= 0f)
-            {
-                
-            }
-        }
-
-
-
 
         #region Validation
 #if UNITY_EDITOR

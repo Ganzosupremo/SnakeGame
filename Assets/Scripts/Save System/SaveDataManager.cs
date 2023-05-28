@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using SnakeGame.Interfaces;
 using SnakeGame.Debuging;
+using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 namespace SnakeGame.SaveAndLoadSystem
 {
@@ -64,10 +66,11 @@ namespace SnakeGame.SaveAndLoadSystem
         [Tooltip("The message that will be displayed in the UI")]
         #endregion
         [SerializeField] private TextMeshProUGUI messageToDisplay;
+        [SerializeField] private Image _saveIconImage;
+        [SerializeField] private Sprite _saveIconSprite;
 
         private GameData gameData;
         public List<IPersistenceData> persistenceDataobjects;
-        public int Count;
         private FileDataHandler fileDataHandler;
         private string selectedProfileID = "";
         private Coroutine autoSaveRoutine;
@@ -75,6 +78,7 @@ namespace SnakeGame.SaveAndLoadSystem
         protected override void Awake()
         {
             base.Awake();
+            _saveIconImage.gameObject.SetActive(false);
 
             DontDestroyOnLoad(this.gameObject);
 
@@ -112,16 +116,17 @@ namespace SnakeGame.SaveAndLoadSystem
             SaveGame();
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        private async void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             this.persistenceDataobjects = FindAllPersistenceObjects();
-            Count = persistenceDataobjects.Count;
             LoadGame();
 
             // Start the auto save
-            if (autoSaveRoutine != null)
-                StopCoroutine(autoSaveRoutine);
-            autoSaveRoutine = StartCoroutine(AutoSave());
+            await AutoSaveAsync();
+
+            //if (autoSaveRoutine != null)
+            //    StopCoroutine(autoSaveRoutine);
+            //autoSaveRoutine = StartCoroutine(AutoSave());
         }
 
         private void OnSceneUnloaded(Scene scene)
@@ -253,8 +258,18 @@ namespace SnakeGame.SaveAndLoadSystem
             {
                 yield return new WaitForSeconds(autoSaveTimeSeconds);
                 SaveGame();
-                string newMessage = string.Format("The game has been autosaved at {0:HH:mm:ss}!", DateTime.Now);
+                string newMessage = string.Format("The game has been autosaved");
                 StartCoroutine(DisplayMessage(newMessage, 3f));
+            }
+        }
+
+        private async UniTask AutoSaveAsync()
+        {
+            while (true)
+            {
+                await UniTask.Delay(autoSaveTimeSeconds * 1000);
+                SaveGame();
+                await ShowSaveIcon();
             }
         }
 
@@ -272,6 +287,15 @@ namespace SnakeGame.SaveAndLoadSystem
 
             messageToDisplay.text = "";
             messageToDisplay.gameObject.SetActive(false);
+        }
+
+        private async UniTask ShowSaveIcon()
+        {
+            _saveIconImage.gameObject.SetActive(true);
+            _saveIconImage.sprite = _saveIconSprite;
+            
+            await UniTask.Delay(1000);
+            _saveIconImage.gameObject.SetActive(false);
         }
     }
 }

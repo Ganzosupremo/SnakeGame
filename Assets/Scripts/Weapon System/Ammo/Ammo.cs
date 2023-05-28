@@ -21,9 +21,12 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
             DealDamage(other);
 
-            ActivateAmmoEffects();
+            ActivatHitEffect();
 
             DisableAmmo();
+
+            if (!other.CompareTag(Settings.EnemyTag))
+                PlayCollisionSoundEffect();
         }
     }
 }

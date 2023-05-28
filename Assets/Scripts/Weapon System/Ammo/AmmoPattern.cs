@@ -35,7 +35,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             transform.position += distanceVector;
 
             //Rotate the ammo pattern
-            transform.Rotate(new Vector3(0f, 0f, m_ammoDetails.ammoRotationSpeed * Time.deltaTime));
+            transform.Rotate(new Vector3(0f, 0f, m_ammoDetails.ammoRotationSpeed * Time.deltaTime * 0.3f));
 
             // Disable the bullet after it has reached it's max range
             m_ammoRange -= distanceVector.magnitude;
@@ -47,13 +47,13 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
         public override void InitialiseAmmo(BaseAmmoSO ammoDetails, float aimAngle, float weaponAimAngle, float ammoSpeed, Vector3 weaponAimDirectionVector, bool overrideAmmoMovement = false)
         {
-            this.m_ammoDetails = ammoDetails;
-            this.m_ammoSpeed = ammoSpeed;
+            m_ammoDetails = ammoDetails;
+            m_ammoSpeed = ammoSpeed;
 
             //Sets the fire direction of the ammo/bullet
             SetFireDirection(ammoDetails, aimAngle, weaponAimAngle, weaponAimDirectionVector);
 
-            this.m_ammoRange = ammoDetails.ammoRange;
+            m_ammoRange = ammoDetails.ammoRange;
 
             gameObject.SetActive(true);
 

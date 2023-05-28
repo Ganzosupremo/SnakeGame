@@ -1,4 +1,5 @@
 using SnakeGame.AudioSystem;
+using SnakeGame.HealthSystem;
 using UnityEngine;
 
 namespace SnakeGame.AbwehrSystem.Ammo
@@ -29,8 +30,9 @@ namespace SnakeGame.AbwehrSystem.Ammo
             if (_IsColliding) return;
 
             DealDamage(Physics2D.OverlapCircleAll(transform.position, m_ExplosiveAmmoDetail.ExplosionRadius, m_ExplosiveAmmoDetail.ExplosionMask));
-            ActivateAmmoEffects();
+            ActivatHitEffect();
             DisableAmmo();
+            PlayCollisionSoundEffect();
         }
 
         //private void OnDrawGizmos()
@@ -47,14 +49,17 @@ namespace SnakeGame.AbwehrSystem.Ammo
                     // If the Health component is atached to an enemy
                     if (health.enemy != null)
                     {
-                        health.TakeDamage(_AmmoDetails.ammoDamage);
+                        health.TakeDamage(m_ExplosiveAmmoDetail.ammoDamage);
                         if (health.enemy.enemyDetails.hitSoundEffect == null) return;
                         SoundEffectManager.CallOnSoundEffectSelectedEvent(health.enemy.enemyDetails.hitSoundEffect);
                     }
                     // If the health component is atached to the player
                     else
                     {
-                        health.TakeDamage(3);
+                        if (m_ExplosiveAmmoDetail.isPlayerAmmo)
+                            health.TakeDamage(3);
+                        else
+                            health.TakeDamage(m_ExplosiveAmmoDetail.ammoDamage);
                     }
                 }
             }

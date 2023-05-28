@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3531d14d43c32a48bc3a9bc14f7951a, type: 3}
+  m_Name: WeaponDetails_Minigun_Enemy
+  m_EditorClassIdentifier: 
+  weaponName: Minigun
+  weaponSprite: {fileID: 21300000, guid: 595672eb954aafb4cb8bf95c2aeab8db, type: 3}
+  weaponCrosshair: {fileID: -83007985, guid: 96952bfe641dc0d40af86cbb581f82de, type: 3}
+  weaponFirePosition: {x: 0.5, y: 0, z: 0}
+  weaponCurrentAmmo: {fileID: 11400000, guid: 9c639c38c795d6441a8bac40df77976b, type: 2}
+  shootEffect: {fileID: 11400000, guid: c4417794ebd0853488f3c9f854ad68f9, type: 2}
+  fireSound: {fileID: 11400000, guid: e4ab8228f6057364483dd75f2076d4ce, type: 2}
+  reloadSound: {fileID: 11400000, guid: 4e4c23232e5b9e4468f86b7685c3db9b, type: 2}
+  hasInfiniteAmmo: 1
+  hasInfinityClipCapacity: 1
+  clipMaxCapacity: 30
+  totalAmmoCapacity: 240
+  weaponFireRate: 0.13
+  weaponPrechargeTime: 0
+  weaponReloadTime: 3

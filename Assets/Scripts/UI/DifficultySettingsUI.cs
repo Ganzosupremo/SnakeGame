@@ -4,20 +4,20 @@ using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
+using SnakeGame.TimeSystem;
 using TMPro;
 using UnityEngine;
+using Timer = SnakeGame.TimeSystem.Timer;
+using SnakeGame.Enemies;
 
 namespace SnakeGame.UI
 {
     public class DifficultySettingsUI : MonoBehaviour, IPersistenceData
     {
-        public static Difficulty Difficulty { get => m_SelectedDifficulty; }
-
         [SerializeField] TextMeshProUGUI _DisplayMessage;
         public TMP_Dropdown dropdown;
 
-        private static Difficulty m_SelectedDifficulty = Difficulty.DarkSouls;
+        private static Difficulty m_SelectedDifficulty;
         private CancellationTokenSource m_CancellationToken;
         private void Start()
         {
@@ -40,6 +40,7 @@ namespace SnakeGame.UI
         private void OnDisable()
         {
             m_CancellationToken.Cancel();
+            SaveDataManager.Instance.SaveGame();
             dropdown.onValueChanged.RemoveAllListeners();
         }
 
@@ -51,22 +52,45 @@ namespace SnakeGame.UI
         private void OnDropValueChanged()
         {
             m_SelectedDifficulty = (Difficulty)dropdown.value;
+            ChangeSecondsToRealtime();
             DifficultyManager.CallOnDifficultyChangedEvent(m_SelectedDifficulty);
         }
 
         /// <summary>
-        /// Calls the <seealso cref="DifficultyManager.OnDifficultyChanged"/> event.
+        /// Changes the value of <seealso cref="Timer.SecondsToRealTime"/>
+        /// changing how fast or slow the in-game time flows.
         /// </summary>
-        public static void ApplyDifficulty()
+        private void ChangeSecondsToRealtime()
         {
-            SaveDataManager.Instance.LoadGame();
-            DifficultyManager.CallOnDifficultyChangedEvent(m_SelectedDifficulty);
+            switch (m_SelectedDifficulty)
+            {
+                case Difficulty.Noob:
+                    Timer.SecondsToRealTime = 1f;
+                    break;
+                case Difficulty.Easy:
+                    Timer.SecondsToRealTime = .9f;
+                    break;
+                case Difficulty.Medium:
+                    Timer.SecondsToRealTime = .8f;
+                    break;
+                case Difficulty.Hard:
+                    Timer.SecondsToRealTime = .6f;
+                    break;
+                case Difficulty.DarkSouls:
+                    Timer.SecondsToRealTime = .5f;
+                    break;
+                case Difficulty.EmotionalDamage:
+                    Timer.SecondsToRealTime = .3f;
+                    break;
+                default:
+                    break;
+            }
         }
 
         public async void SaveGame()
         {
             SaveDataManager.Instance.SaveGame();
-            await DisplayMessage("Changes Saved!", 2f, m_CancellationToken.Token);
+            await DisplayMessage("Changes Saved!", 1.5f, m_CancellationToken.Token);
         }
 
         /// <summary>
@@ -94,6 +118,7 @@ namespace SnakeGame.UI
         public void Save(GameData data)
         {
             data.DifficultyData.DifficultyToSave = m_SelectedDifficulty;
+            data.TimeDataSaved.SecondsToRealTime = Timer.SecondsToRealTime;
         }
     }
 }

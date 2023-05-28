@@ -35,13 +35,13 @@ namespace SnakeGame.ProceduralGenerationSystem
         private void OnEnable()
         {
             StaticEventHandler.OnRoomChanged += StaticEventHandler_OnRoomChanged;
-            GameManager.OnLevelChanged += GameManager_OnLevelChanged;
+            GameManager.OnLevelCompleted += GameManager_OnLevelChanged;
         }
 
         private void OnDisable()
         {
             StaticEventHandler.OnRoomChanged -= StaticEventHandler_OnRoomChanged;
-            GameManager.OnLevelChanged -= GameManager_OnLevelChanged;
+            GameManager.OnLevelCompleted -= GameManager_OnLevelChanged;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -52,7 +52,6 @@ namespace SnakeGame.ProceduralGenerationSystem
                 {
                     if (GameManager.CurrentGameState == GameState.Playing)
                     {
-                        //m_gameLevelIndex++;
                         GameManager.Instance.PlayNextLevel(m_gameLevelIndex);
                     }
                     else if (GameManager.CurrentGameState == GameState.GameWon)

@@ -1,3 +1,5 @@
+using SnakeGame.Interfaces;
+using SnakeGame.SaveAndLoadSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -115,5 +117,9 @@ public static class Settings
 
     #region HIGH SCORES
     public const int maxNumberOfHighScoresToSave = 100;
+    #endregion
+
+    #region TIME SETTINGS
+    public static float SecondsToRealTime;
     #endregion
 }
