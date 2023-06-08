@@ -32,6 +32,5 @@ namespace SnakeGame.AbwehrSystem
         public float aimAngle;
         public float weaponAimAngle;
         public Vector3 weaponAimDirectionVector;
-        //public WeaponShootEffectSO weaponShootEffectSO;
     }
 }

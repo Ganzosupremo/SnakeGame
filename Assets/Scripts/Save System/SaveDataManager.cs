@@ -34,6 +34,8 @@ namespace SnakeGame.SaveAndLoadSystem
         #endregion
         [SerializeField] private string testProfileID = "";
 
+        public int PersistenObjectsCount;
+
         #region Header File Storage Configuration
         [Space(10)]
         [Header("File Storage Settings")]
@@ -75,10 +77,15 @@ namespace SnakeGame.SaveAndLoadSystem
         private string selectedProfileID = "";
         private Coroutine autoSaveRoutine;
 
+        private float _UpdateTime = 60f;
+        private float _Timer;
+
         protected override void Awake()
         {
             base.Awake();
             _saveIconImage.gameObject.SetActive(false);
+
+            _Timer = _UpdateTime;
 
             DontDestroyOnLoad(this.gameObject);
 
@@ -98,6 +105,18 @@ namespace SnakeGame.SaveAndLoadSystem
                 this.LogWarning($"Overrided the selected profile ID with the test id: {testProfileID}");
             }
         }
+
+        //private void Update()
+        //{
+        //    _UpdateTime -= Time.deltaTime;
+
+        //    if (_UpdateTime <= 0f)
+        //    {
+        //        UpdatePersistenceObjectsList();
+        //        this.Log("Time's Up!");
+        //        _UpdateTime = _Timer;
+        //    }
+        //}
 
         private void OnEnable()
         {
@@ -119,6 +138,7 @@ namespace SnakeGame.SaveAndLoadSystem
         private async void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             this.persistenceDataobjects = FindAllPersistenceObjects();
+            PersistenObjectsCount = persistenceDataobjects.Count;
             LoadGame();
 
             // Start the auto save
@@ -219,6 +239,11 @@ namespace SnakeGame.SaveAndLoadSystem
             //    fileDataHandler.Save(gameData, selectedProfileID);
             //else
             //    fileDataHandler.Save(gameData);
+        }
+
+        private void UpdatePersistenceObjectsList()
+        {
+            persistenceDataobjects = FindAllPersistenceObjects();
         }
 
         /// <summary>

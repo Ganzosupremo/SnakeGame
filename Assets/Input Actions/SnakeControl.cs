@@ -386,7 +386,7 @@ namespace SnakeInput
                 {
                     ""name"": """",
                     ""id"": ""3bbb6d4b-b632-4287-bbbe-4875e8d2cfcb"",
-                    ""path"": ""<Keyboard>/p"",
+                    ""path"": ""<Keyboard>/k"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",

@@ -94,7 +94,7 @@ namespace SnakeGame.TimeSystem
         /// Use in case, the timer needs to be restarted.
         /// </summary>
         /// <param name="index"></param>
-        private void RestartTimer(int n)
+        public void RestartTimer()
         {
             Seconds = 0;
             Minutes = 0;
@@ -110,6 +110,7 @@ namespace SnakeGame.TimeSystem
         public void StopTimer()
         {
             _StopTimer = true;
+            RestartTimer();
         }
 
         private void CallOnSecondElapsed()
@@ -151,42 +152,42 @@ namespace SnakeGame.TimeSystem
             if (Minutes < 2)
             {
                 m_Status = DiffStatus.VeryEasy;
-                EnemyDetailsSO.HealthIncreasePercentage = 2f;
+                EnemyDetailsSO.HealthIncreasePercentage = 2.5f;
                 CallOnStatusChangeEvent();
                 return "Ez";
             }
-            if (Minutes < 4)
+            if (Minutes < 5)
             {
                 m_Status = DiffStatus.Easy;
-                EnemyDetailsSO.HealthIncreasePercentage = 4f;
+                EnemyDetailsSO.HealthIncreasePercentage = 4.5f;
                 CallOnStatusChangeEvent();
                 return "Easy";
             }
-            if (Minutes < 8)
+            if (Minutes < 9)
             {
                 m_Status = DiffStatus.Medium;
-                EnemyDetailsSO.HealthIncreasePercentage = 6f;
+                EnemyDetailsSO.HealthIncreasePercentage = 6.5f;
                 CallOnStatusChangeEvent();
                 return "Medium";
             }
-            if (Minutes < 12)
+            if (Minutes < 15)
             {
                 m_Status = DiffStatus.Hard;
-                EnemyDetailsSO.HealthIncreasePercentage = 8f;
+                EnemyDetailsSO.HealthIncreasePercentage = 9f;
                 CallOnStatusChangeEvent();
                 return "Hard";
             }
-            if (Minutes < 16)
+            if (Minutes < 18)
             {
                 m_Status = DiffStatus.VeryHard;
-                EnemyDetailsSO.HealthIncreasePercentage = 10f;
+                EnemyDetailsSO.HealthIncreasePercentage = 12f;
                 CallOnStatusChangeEvent();
                 return "Very Hard";
             }
             if (Minutes < 20)
             {
                 m_Status = DiffStatus.OhNO;
-                EnemyDetailsSO.HealthIncreasePercentage = 12f;
+                EnemyDetailsSO.HealthIncreasePercentage = 14f;
                 CallOnStatusChangeEvent();
                 return "Oh No";
             }

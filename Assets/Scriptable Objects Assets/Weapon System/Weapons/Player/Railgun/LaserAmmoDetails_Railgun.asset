@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1121659a38fe2544091211bf01d77e63, type: 3}
+  m_Name: LaserAmmoDetails_Railgun
+  m_EditorClassIdentifier: 
+  ammoName: Railgun Ammo
+  isPlayerAmmo: 1
+  ammoSprite: {fileID: 21300000, guid: da69f0eef9edca84fa5dd71d59899c48, type: 3}
+  ammoPrefabArray:
+  - {fileID: 8067906076677334798, guid: 19ebc35454e5b2f4c9dd8043f6c7d06d, type: 3}
+  ammoMaterial: {fileID: 2100000, guid: 4b9e9e848d84a1b41828381ea5ef9969, type: 2}
+  ammoChargeTime: 0
+  ammoChargeMaterial: {fileID: 2100000, guid: 3addf02ae29f95d47af51b9eb69214ff, type: 2}
+  ammoHitEffect: {fileID: 11400000, guid: 7565f4af35cc31545bea17c667e309b4, type: 2}
+  CollisionSoundEffect: {fileID: 11400000, guid: 6814029893b92204ea2d36dd678ce895, type: 2}
+  ammoDamage: 150
+  originalAmmoDamage: 150
+  maxAmmoDamage: 500
+  minAmmoSpeed: 71.9
+  maxAmmoSpeed: 82.3
+  ammoRange: 70
+  ammoRotationSpeed: 1
+  ammoSpreadMin: 0
+  ammoSpreadMax: 0
+  MinBulletsPerShoot: 1
+  MaxBulletsPerShoot: 1
+  minSpawnInterval: 0
+  maxSpawnInterval: 0
+  hasAmmoTrail: 1
+  ammoTrailLifetime: 0.1
+  ammoTrailMaterial: {fileID: 2100000, guid: 3addf02ae29f95d47af51b9eb69214ff, type: 2}
+  ammoTrailStartWidth: 0.5
+  ammoTrailEndWidth: 0.6
+  HitMask:
+    serializedVersion: 2
+    m_Bits: 98304
+  HasLineRenderer: 1
+  LineRendererMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  LineRendererStartWidth: 0.58
+  LineRendererEndWidth: 0.6
+  LineGradient:
+    serializedVersion: 2
+    key0: {r: 0.2863564, g: 0.5234908, b: 0.9339623, a: 0.36078432}
+    key1: {r: 0.43867922, g: 0.46706066, b: 1, a: 0.8509804}
+    key2: {r: 0, g: 0.06932831, b: 1, a: 1}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 34310
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 28527
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 3

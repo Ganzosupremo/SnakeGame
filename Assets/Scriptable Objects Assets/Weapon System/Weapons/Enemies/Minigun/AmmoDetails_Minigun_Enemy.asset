@@ -13,28 +13,28 @@ MonoBehaviour:
   m_Name: AmmoDetails_Minigun_Enemy
   m_EditorClassIdentifier: 
   ammoName: Minigun Ammo
-  isPlayerAmmo: 1
+  isPlayerAmmo: 0
   ammoSprite: {fileID: -1006212575, guid: 70230541bfb24e3449cd506b528cf8d5, type: 3}
   ammoPrefabArray:
-  - {fileID: 8740502524224239974, guid: 403b055819914404080cb61038c1a2da, type: 3}
-  ammoMaterial: {fileID: 2100000, guid: 4b9e9e848d84a1b41828381ea5ef9969, type: 2}
+  - {fileID: 8740502524224239974, guid: 1937f5dc458c88748b7ce7c78e9356bd, type: 3}
+  ammoMaterial: {fileID: 2100000, guid: 8bd9e03474d5262449fc1a455c043fbb, type: 2}
   ammoChargeTime: 0
   ammoChargeMaterial: {fileID: 0}
-  ammoHitEffect: {fileID: 11400000, guid: 769d9bce35129ad469ca3f5f6090179d, type: 2}
-  CollisionSoundEffect: {fileID: 11400000, guid: a54b24865905f9b468ab087b084b6e62, type: 2}
-  ammoDamage: 100
-  originalAmmoDamage: 100
-  maxAmmoDamage: 800
-  minAmmoSpeed: 25
-  maxAmmoSpeed: 35
-  ammoRange: 45
+  ammoHitEffect: {fileID: 11400000, guid: 0c14b3dc685415142bc13d9938338ee3, type: 2}
+  CollisionSoundEffect: {fileID: 0}
+  ammoDamage: 1
+  originalAmmoDamage: 1
+  maxAmmoDamage: 3
+  minAmmoSpeed: 20
+  maxAmmoSpeed: 30
+  ammoRange: 30
   ammoRotationSpeed: 1
-  ammoSpreadMin: 4
-  ammoSpreadMax: 8
+  ammoSpreadMin: 10.9
+  ammoSpreadMax: 19.7
   MinBulletsPerShoot: 1
   MaxBulletsPerShoot: 1
-  minSpawnInterval: 0.0323
-  maxSpawnInterval: 0.0824
+  minSpawnInterval: 0.0036
+  maxSpawnInterval: 0.0103
   hasAmmoTrail: 0
   ammoTrailLifetime: 3
   ammoTrailMaterial: {fileID: 0}

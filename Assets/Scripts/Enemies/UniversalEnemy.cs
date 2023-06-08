@@ -80,19 +80,23 @@ namespace SnakeGame.Enemies
 
         #region Tooltip
         [Tooltip("The minimum delay in seconds btw shoots for the enemy - the end value will be a random value btw min and max")]
+        [Range(.01f, 7f)]
         #endregion
         public float firingMinDelay = 0.1f;
         #region Tooltip
         [Tooltip("The maximum delay in seconds btw shoots for the enemy - the end value will be a random value btw min and max")]
+        [Range(.01f, 7f)]
         #endregion
         public float firingMaxDelay = 1f;
 
         #region Tooltip
         [Tooltip("The minimum duration in seconds that the enemy is going to fire for - the end value will be a random value btw min and max")]
+        [Range(.1f, 10f)]
         #endregion
         public float firingMinDuration = 1f;
         #region Tooltip
         [Tooltip("The maximum duration in seconds that the enemy is going to fire for - the end value will be a random value btw min and max")]
+        [Range(.1f, 10f)]
         #endregion
         public float firingMaxDuration = 2f;
 
@@ -118,6 +122,7 @@ namespace SnakeGame.Enemies
 
         #region Tooltip
         [Tooltip("Immunity time in seconds after hit")]
+        [Range(0.01f, 2.5f)]
         #endregion
         public float immunityTime;
 
@@ -137,11 +142,12 @@ namespace SnakeGame.Enemies
         internal float m_DefaultFireMaxDuration;
         internal bool m_DefaultRequireLineOfSight = true;
 
+        internal Difficulty _DifficultyToSave;
+
 
         protected virtual void PowerUpEnemy(GameObject parent) { }
 
         protected virtual void DowngradeEnemy(GameObject parent) { }
-
 
         #region Validation
 #if UNITY_EDITOR

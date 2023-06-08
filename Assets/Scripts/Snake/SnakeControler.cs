@@ -344,10 +344,10 @@ namespace SnakeGame.PlayerSystem
             Vector3 mouseWorldPosition = HelperUtilities.GetMouseWorldPosition();
 
             //Calculate Direction vector of the mouse cursor from the weapon shoot position
-            weaponDirection = (Vector3)mouseWorldPosition - snake.activeWeapon.GetFirePosition();
+            weaponDirection = mouseWorldPosition - snake.activeWeapon.GetFirePosition();
 
             //Calculate direction vector of mouse cursor from the snake transform position
-            Vector3 playerDirection = (Vector3)mouseWorldPosition - transform.position;
+            Vector3 playerDirection = mouseWorldPosition - transform.position;
 
             //Get angle from the weapon and the cursor
             weaponAngleDegrees = HelperUtilities.GetAngleFromVector(weaponDirection);

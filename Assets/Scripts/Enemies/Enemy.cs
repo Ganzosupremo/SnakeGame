@@ -3,7 +3,9 @@ using SnakeGame.AudioSystem;
 using SnakeGame.HealthSystem;
 using SnakeGame.ProceduralGenerationSystem;
 using SnakeGame.VisualEffects;
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -18,7 +20,6 @@ namespace SnakeGame.Enemies
     [RequireComponent(typeof(Destroy))]
     [RequireComponent(typeof(IdleEvent))]
     [RequireComponent(typeof(Idle))]
-    //[RequireComponent(typeof(AnimateEnemy))]
     [RequireComponent(typeof(MaterializeEffect))]
     [RequireComponent(typeof(MovementToPositionEvent))]
     [RequireComponent(typeof(MovementToPosition))]
@@ -33,7 +34,6 @@ namespace SnakeGame.Enemies
     [RequireComponent(typeof(ReloadWeapon))]
     [RequireComponent(typeof(WeaponReloadedEvent))]
     [RequireComponent(typeof(SortingGroup))]
-    //[RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(PolygonCollider2D))]
     [RequireComponent(typeof(DealDamageOnContact))]
@@ -41,11 +41,6 @@ namespace SnakeGame.Enemies
     #endregion
     public class Enemy : MonoBehaviour
     {
-        public struct UserAttributes { }
-        public struct AppAttributes { }
-
-
-        public bool ShouldFetchRemoteSettings = false;
         [HideInInspector] public EnemyDetailsSO enemyDetails;
         [HideInInspector] public SpriteRenderer[] spriteRendererArray;
         [HideInInspector] public AimWeaponEvent aimWeaponEvent;
@@ -56,22 +51,17 @@ namespace SnakeGame.Enemies
         [HideInInspector] public IdleEvent idleEvent;
         [HideInInspector] public EnemyMovementAI enemyMovementAI;
 
-        // Used to get the physics shape
-        [SerializeField] private SpriteRenderer enemySpriteRenderer;
+        /// <summary>
+        /// Used to get the physics shape
+        /// </summary>
+        private SpriteRenderer enemySpriteRenderer;
 
         private MaterializeEffect materializeEffect;
         private PolygonCollider2D triggerCollider;
 
-
         private SetActiveWeaponEvent m_SetActiveWeaponEvent;
         private HealthEvent m_HealthEvent;
         private Health m_Health;
-
-        // Difficulty Adjustment
-        //[Header("Difficulty Adjustment")]
-        //[SerializeField] private float m_DiffAdjustmentTimeSeconds = 30f;
-        //[SerializeField] private float m_HealthIncreasePercentage = 20f;
-        //private float timer;
 
         private void Awake()
         {
@@ -91,24 +81,6 @@ namespace SnakeGame.Enemies
             //solidCollider = GetComponentInChildren<CircleCollider2D>();
             triggerCollider = GetComponent<PolygonCollider2D>();
             spriteRendererArray = GetComponentsInChildren<SpriteRenderer>();
-
-            //timer = m_DiffAdjustmentTimeSeconds;
-        }
-
-        private void Update()
-        {
-            //m_DiffAdjustmentTimeSeconds -= Time.deltaTime;
-
-            //if (m_DiffAdjustmentTimeSeconds <= 0f)
-            //{
-            //    enemyDetails.ReconfigureEnemyHealth(m_HealthIncreasePercentage, false);
-            //    m_DiffAdjustmentTimeSeconds = timer;
-            //}
-
-            if (m_Health.IsDamageable)
-            {
-                ResetEnemyColor();
-            }
         }
 
         private void OnEnable()
@@ -131,6 +103,8 @@ namespace SnakeGame.Enemies
         {
             this.enemyDetails = enemyDetails;
 
+            SetEnemySpriteColor();
+
             SetEnemyMovementUpdateFrame(enemySpawnNumber);
 
             SetEnemyStartingHealth(gameLevel);
@@ -140,6 +114,11 @@ namespace SnakeGame.Enemies
             SetPolygonColliderShape();
 
             MaterializeEnemy();
+        }
+
+        private void SetEnemySpriteColor()
+        {
+            enemySpriteRenderer.color = enemyDetails.enemyColor;
         }
 
         /// <summary>
@@ -233,18 +212,18 @@ namespace SnakeGame.Enemies
                 destroyEvent.CallOnDestroy(false, 0);
         }
 
-        /// <summary>
-        /// Because the sprites of the enemies are a gray scale,
-        /// they can be tinted different colors in the inspector,
-        /// but when the enemy takes damage and is immune after hit,
-        /// the sprites blink from red to white.
-        /// This method resets the color, after the immunity time has been finished,
-        ///  to the selected color.
-        /// </summary>
-        private void ResetEnemyColor()
-        {
-            if (enemySpriteRenderer.color != enemyDetails.enemyColor)
-                enemySpriteRenderer.color = enemyDetails.enemyColor;
-        }
+        ///// <summary>
+        ///// Because the sprites of the enemies are a gray scale,
+        ///// they can be tinted different colors in the inspector,
+        ///// but when the enemy takes damage and is immune after hit,
+        ///// the sprites blink from red to white.
+        ///// This method resets the color, after the immunity time has been finished,
+        /////  to the selected color.
+        ///// </summary>
+        //private void ResetEnemyColor()
+        //{
+        //    if (enemySpriteRenderer.color != enemyDetails.enemyColor)
+        //        enemySpriteRenderer.color = enemyDetails.enemyColor;
+        //}
     }
 }

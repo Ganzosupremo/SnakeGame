@@ -122,4 +122,10 @@ public static class Settings
     #region TIME SETTINGS
     public static float SecondsToRealTime;
     #endregion
+
+    #region LASER AMMO SETTINGS
+    public static float MaxRaycastDistance = 50f;
+    public static int WallsLayer = LayerMask.NameToLayer("Walls");
+    public static int EnemiesLayer = LayerMask.NameToLayer("Enemy");
+    #endregion
 }

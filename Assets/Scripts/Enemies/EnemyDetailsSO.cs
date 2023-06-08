@@ -1,23 +1,24 @@
 using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
+using SnakeGame.Interfaces;
+using SnakeGame.SaveAndLoadSystem;
 using SnakeGame.TimeSystem;
+using System;
 using UnityEngine;
 
 namespace SnakeGame.Enemies
 {
     [CreateAssetMenu(fileName = "Enemy_", menuName = "Scriptable Objects/Enemy/Enemy Details")]
-    public class EnemyDetailsSO : UniversalEnemy
+    public class EnemyDetailsSO : UniversalEnemy, IPersistenceData
     {
         public static float HealthIncreasePercentage { get => m_HealthIncreasePercentage; set => m_HealthIncreasePercentage = value; }
         private static float m_HealthIncreasePercentage = 1f;
-
-        private DiffStatus m_CurrentStatus;
 
         private void OnEnable()
         {
             DifficultyManager.OnDifficultyChanged += OnUIDifficultyChanged;
             Timer.OnStatusChanged += OnTimeElapsed;
-            m_CurrentStatus = DiffStatus.Easy;
+            //SaveDataManager.Instance.LoadGame();
             SetDefaultWeaponValues();
         }
 
@@ -35,6 +36,7 @@ namespace SnakeGame.Enemies
         {
             DifficultyManager.OnDifficultyChanged -= OnUIDifficultyChanged;
             Timer.OnStatusChanged -= OnTimeElapsed;
+            //SaveDataManager.Instance.SaveGame();
 
             // Reset the health amount to it's original value
             ResetEnemyHealthToDefault();
@@ -55,12 +57,15 @@ namespace SnakeGame.Enemies
 
         private void OnUIDifficultyChanged(Difficulty difficulty)
         {
+            difficulty = SaveOrLoadDiff(difficulty);
+            //Debuger.Log(this, $"Diff saved on disk {_DifficultyToSave}", $"Diff passed on method {difficulty}");
+
             switch (difficulty)
             {
                 case Difficulty.Noob:
 
-                    ReconfigureWeapon(0f, 0.1f, 0.1f, 0.1f);
-                    IncreaseEnemyMoveSpeed();
+                    //ReconfigureWeapon(0f, 0.1f, 0.1f, 0.1f);
+                    //IncreaseEnemyMoveSpeed();
                     ResetEnemyHealthToDefault();
                     SetEnemySpeedToDefault();
                     SetEnemyImmunityTime();
@@ -68,32 +73,37 @@ namespace SnakeGame.Enemies
                     break;
                 case Difficulty.Easy:
 
-                    ReconfigureWeapon(0.2f, 0.6f, 1f, 2f);
+                    //ReconfigureWeapon(0.2f, 0.6f, 1f, 2f);
                     SetEnemyImmunityTime();
+                    IncreaseEnemyMoveSpeed(.5f);
 
                     break;
                 case Difficulty.Medium:
 
-                    ReconfigureWeapon(0.3f, 0.8f, 1.5f, 2.5f);
+                    //ReconfigureWeapon(0.3f, 0.8f, 1.5f, 2.5f);
                     SetEnemyImmunityTime();
+                    IncreaseEnemyMoveSpeed(1.5f);
 
                     break;
                 case Difficulty.Hard:
 
-                    ReconfigureWeapon(0.5f, 1f, 2f, 2.8f);
+                    //ReconfigureWeapon(0.5f, 1f, 2f, 2.8f);
                     SetEnemyImmunityTime();
+                    IncreaseEnemyMoveSpeed(3f);
 
                     break;
                 case Difficulty.DarkSouls:
 
-                    ReconfigureWeapon(0.6f, 1.2f, 2.5f, 3.5f, false, true, 1);
+                    //ReconfigureWeapon(0.6f, 1.2f, 2.5f, 3.5f, false, true, 1);
                     SetEnemyImmunityTime(true, 0.25f);
+                    IncreaseEnemyMoveSpeed(3.8f);
 
                     break;
                 case Difficulty.EmotionalDamage:
 
-                    ReconfigureWeapon(0.8f, 1.4f, 3f, 4.5f, false, true, 2);
-                    SetEnemyImmunityTime(true, 0.5f);
+                    //ReconfigureWeapon(0.8f, 1.4f, 3f, 4.5f, false, true, 2);
+                    SetEnemyImmunityTime(true, 0.4f);
+                    IncreaseEnemyMoveSpeed(5f);
 
                     break;
                 default:
@@ -101,12 +111,23 @@ namespace SnakeGame.Enemies
             }
         }
 
+        private Difficulty SaveOrLoadDiff(Difficulty difficulty)
+        {
+            if (difficulty != Difficulty.None)
+            {
+                _DifficultyToSave = difficulty;
+                return difficulty;
+            }
+            else if (difficulty == Difficulty.None)
+            {
+                difficulty = _DifficultyToSave;
+                return difficulty;
+            }
+            return default;
+        }
+
         private void OnTimeElapsed(TimerEventArgs args)
         {
-            // To avoid increase the health on every in-game minute.
-            //if (m_CurrentStatus == args.Status) return;
-            m_CurrentStatus = args.Status;
-
             ReconfigureEnemyHealth(m_HealthIncreasePercentage, false);
         }
 
@@ -206,6 +227,16 @@ namespace SnakeGame.Enemies
                 if (increaseDamage)
                     enemyWeapon.weaponCurrentAmmo.IncreaseDamage(damageToIncrease);
             }
+        }
+
+        public void Load(GameData data)
+        {
+            _DifficultyToSave = data.DifficultyData.DifficultyToSave;
+        }
+
+        public void Save(GameData data)
+        {
+            data.DifficultyData.DifficultyToSave = _DifficultyToSave;
         }
 
         #region Validation
