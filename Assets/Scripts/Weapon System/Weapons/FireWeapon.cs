@@ -6,6 +6,8 @@ using SnakeGame.Interfaces;
 using SnakeGame.AbwehrSystem.Ammo;
 using SnakeGame.AudioSystem;
 using SnakeGame.VisualEffects;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace SnakeGame.AbwehrSystem
 {
@@ -21,6 +23,9 @@ namespace SnakeGame.AbwehrSystem
         private FireWeaponEvent fireWeaponEvent;
         private ReloadWeaponEvent reloadWeaponEvent;
         private WeaponFiredEvent weaponFiredEvent;
+
+        // test code
+        public IFireable CurrentAmmo;
 
         private void Awake()
         {
@@ -65,7 +70,6 @@ namespace SnakeGame.AbwehrSystem
             {
                 FireAmmo(fireWeaponEventArgs.aimAngle, fireWeaponEventArgs.weaponAimAngle, fireWeaponEventArgs.weaponAimDirectionVector);
 
-                // TODO - Shake the camera when fired
                 //MyCameraShake.Instance.ShakeCamera(firingWeaponEventArgs.weaponShootEffectSO.intensity,
                 //    firingWeaponEventArgs.weaponShootEffectSO.time,
                 //    firingWeaponEventArgs.weaponShootEffectSO.enableShake);
@@ -79,12 +83,12 @@ namespace SnakeGame.AbwehrSystem
         /// <summary>
         /// Sets Up The Bullet/Ammo Using A GameObject From The Object Pool
         /// </summary>
-        private void FireAmmo(float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
+        private async void FireAmmo(float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
         {
             BaseAmmoSO currentAmmo = activeWeapon.GetCurrentAmmo();
 
             if (currentAmmo != null)
-                StartCoroutine(FireAmmoRoutine(currentAmmo, aimAngle, weaponAimAngle, weaponAimDirectionVector));
+                await FireAmmoAsync(currentAmmo, aimAngle, weaponAimAngle, weaponAimDirectionVector, destroyCancellationToken);
         }
 
         /// <summary>
@@ -106,13 +110,9 @@ namespace SnakeGame.AbwehrSystem
             float ammoSpawnInterval;
 
             if (bulletsPerShoot > 1)
-            {
                 ammoSpawnInterval = Random.Range(currentAmmo.minSpawnInterval, currentAmmo.maxSpawnInterval);
-            }
             else
-            {
                 ammoSpawnInterval = 0f;
-            }
 
             //Loop for the number of bullets that are gonna be fired
             while (ammoCounter < bulletsPerShoot)
@@ -126,10 +126,10 @@ namespace SnakeGame.AbwehrSystem
                 float ammoSpeed = Random.Range(currentAmmo.minAmmoSpeed, currentAmmo.maxAmmoSpeed);
 
                 // Get the component with the IFireable interface
-                IFireable ammo = (IFireable)PoolManager.Instance.ReuseComponent(ammoPrefab, activeWeapon.GetFirePosition(), Quaternion.identity);
+                CurrentAmmo = (IFireable)PoolManager.Instance.ReuseComponent(ammoPrefab, activeWeapon.GetFirePosition(), Quaternion.identity);
 
                 // Initialise the ammo
-                ammo.InitialiseAmmo(currentAmmo, aimAngle, weaponAimAngle, ammoSpeed, weaponAimDirectionVector);
+                CurrentAmmo.InitialiseAmmo(currentAmmo, aimAngle, weaponAimAngle, ammoSpeed, weaponAimDirectionVector);
 
                 // Wait for the ammo per shoot timegap
                 yield return new WaitForSeconds(ammoSpawnInterval);
@@ -142,14 +142,69 @@ namespace SnakeGame.AbwehrSystem
                 activeWeapon.GetCurrentWeapon().weaponTotalAmmoCapacity--;
             }
 
+            // Play the sound effects specified for this weapon
+            WeaponSoundEffects();
+
             //Call the fired weapon event
             weaponFiredEvent.CallWeaponFiredEvent(activeWeapon.GetCurrentWeapon());
 
             // Display the weapon shoot effect
             WeaponShootEffects(aimAngle);
+        }
+
+        private async UniTask FireAmmoAsync(BaseAmmoSO currentAmmo, float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested) return;
+
+            int ammoCounter = 0;
+
+            //Get a random number of bullets that are gonna be fired, per shoot
+            int bulletsPerShoot = Random.Range(currentAmmo.MinBulletsPerShoot, currentAmmo.MaxBulletsPerShoot + 1);
+
+            //Get a random interval that the bullets are gonna spawn with
+            float ammoSpawnInterval;
+
+            if (bulletsPerShoot > 1)
+                ammoSpawnInterval = Random.Range(currentAmmo.minSpawnInterval, currentAmmo.maxSpawnInterval);
+            else
+                ammoSpawnInterval = 0f;
+
+            //Loop for the number of bullets that are gonna be fired
+            while (ammoCounter < bulletsPerShoot)
+            {
+                ammoCounter++;
+
+                // Get a random ammo prefab from the array in the Ammo Details SO
+                GameObject ammoPrefab = currentAmmo.ammoPrefabArray[Random.Range(0, currentAmmo.ammoPrefabArray.Length)];
+
+                // Get a random speed btw the min and max values in the Ammo Details SO
+                float ammoSpeed = Random.Range(currentAmmo.minAmmoSpeed, currentAmmo.maxAmmoSpeed);
+
+                // Get the component with the IFireable interface
+                CurrentAmmo = (IFireable)PoolManager.Instance.ReuseComponent(ammoPrefab, activeWeapon.GetFirePosition(), Quaternion.identity);
+
+                // Initialise the ammo
+                CurrentAmmo.InitialiseAmmo(currentAmmo, aimAngle, weaponAimAngle, ammoSpeed, weaponAimDirectionVector);
+
+                // Wait for the ammo per shoot timegap
+                await UniTask.Delay((int)ammoSpawnInterval * 1000);
+            }
+
+            //Reduce the ammo mag capacity if it doesn't have infinity mag capacity
+            if (!activeWeapon.GetCurrentWeapon().weaponDetails.hasInfinityClipCapacity)
+            {
+                activeWeapon.GetCurrentWeapon().weaponClipRemaining--;
+                activeWeapon.GetCurrentWeapon().weaponTotalAmmoCapacity--;
+            }
 
             // Play the sound effects specified for this weapon
             WeaponSoundEffects();
+
+            //Call the fired weapon event
+            weaponFiredEvent.CallWeaponFiredEvent(activeWeapon.GetCurrentWeapon());
+
+            // Display the weapon shoot effect
+            WeaponShootEffects(aimAngle);
         }
 
         private bool WeaponReadyToFire()
@@ -182,11 +237,10 @@ namespace SnakeGame.AbwehrSystem
             if (fireWeaponEventArgs.firedPreviousFrame)
             {
                 firePrechargeTimer -= Time.deltaTime;
+                //SoundEffectManager.CallOnSoundEffectSelectedEvent(SoundEffectManager.Instance.RailgunReloadTest);
             }
             else
-            {
                 ResetPrechargeTimer();
-            }
         }
 
         private void ResetCooldownTimer()
@@ -222,9 +276,7 @@ namespace SnakeGame.AbwehrSystem
         private void WeaponSoundEffects()
         {
             if (activeWeapon.GetCurrentWeapon().weaponDetails.fireSound != null)
-            {
                 SoundEffectManager.CallOnSoundEffectSelectedEvent(activeWeapon.GetCurrentWeapon().weaponDetails.fireSound);
-            }
         }
     }
 }

@@ -1,14 +1,13 @@
+using Cysharp.Threading.Tasks;
 using SnakeGame.AStarPathfinding;
-using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
+using SnakeGame.ProceduralGenerationSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst;
-using Unity.Collections;
-using Unity.Jobs;
+using System.Threading;
 using UnityEngine;
-using static SnakeGame.Enemies.EnemyMovementAI;
 using Random = UnityEngine.Random;
 
 namespace SnakeGame.Enemies
@@ -17,27 +16,37 @@ namespace SnakeGame.Enemies
     [DisallowMultipleComponent]
     public class EnemyMovementAI : MonoBehaviour
     {
-        public struct EnemyMovementData
-        {
-            public void MoveEnemy()
-            {
+        //public struct EnemyMovementData
+        //{
+        //    public void MoveEnemy()
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
-
-        //#region Tooltip
-        //[Tooltip("The movement details SO containing information about the movement, such as speed etc.")]
-        //#endregion
-        //public MovementDetailsSO movementDetails;
+        // test code
+        [SerializeField] private float sightRange = 2f;
+        [SerializeField] private LayerMask _EnemySightMask;
+        private Vector3 _AmmoDirection;
 
         private Enemy enemy;
         private Stack<Vector3> movementSteps = new();
         private Vector3 playerReferencePosition;
+
         private Coroutine moveEnemyRoutine;
+        private Coroutine _dashCoroutine;
         private float currentEnemyPathRebuildCooldown;
+
         private WaitForFixedUpdate fixedUpdateWait;
         private bool shouldChasePlayer = false;
+
+
+        private bool _isDashing = false;
+        private float _dashCooldownTimer = 0f;
+        private CancellationTokenSource _tokenSource = new();
+        private Vector3 _nextPos;
+
+
         private List<Vector2Int> surroundingsPositionsList = new();
 
         [HideInInspector] public int updateFramesNumber = 1;
@@ -46,7 +55,6 @@ namespace SnakeGame.Enemies
         private void Awake()
         {
             enemy = GetComponent<Enemy>();
-            //enemyWeaponSprite = GetComponentInChildren<SpriteRenderer>();
         }
 
         private void Start()
@@ -59,14 +67,57 @@ namespace SnakeGame.Enemies
         private void Update()
         {
             MoveEnemy();
-
+            //EnemyDash();
+            //ReduceDashCooldownTimer();
         }
+
+        private void OnDisable()
+        {
+            _tokenSource.Cancel();
+        }
+
+        private void OnDestroy()
+        {
+            _tokenSource.Dispose();
+        }
+
+        private void OnCollisionStay2D(Collision2D other)
+        {
+            if (other.collider.CompareTag(Settings.CollisionTilemapTag))
+            {
+                StopCoroutine(_dashCoroutine);
+            }
+        }
+
+        private async void EnemyDash()
+        {
+            if (movementSteps.Count == 0) return;
+
+            _AmmoDirection = GameManager.Instance.GetSnake().GetSnakePosition() - transform.position; /* Get the bullet's position */
+
+            if (await IsPlayerAmmoInSight(_AmmoDirection, 4) && _dashCooldownTimer <= 0f)
+            {
+                //if (_dashCoroutine != null)
+                //{
+                //    StopCoroutine(_dashCoroutine);
+                //}
+                //_dashCoroutine = StartCoroutine(EnemyDashRoutine(movementSteps.Peek()));
+
+                //await EnemyDashAsync(_nextPos, _tokenSource.Token);
+            }
+
+            //Debug.DrawRay(transform.position, _AmmoDirection, Color.red);
+        }
+
+
 
         /// <summary>
         /// Moves the enemy, uses the AStar Pathfinding to build a path to the player 
         /// </summary>
         private void MoveEnemy()
         {
+            if (_isDashing) return;
+
             // Movement cooldown timer
             currentEnemyPathRebuildCooldown -= Time.deltaTime;
 
@@ -96,12 +147,13 @@ namespace SnakeGame.Enemies
                 //If a path has been built, move the enemy
                 if (movementSteps != null)
                 {
+                    //await MoveEnemyAsync(movementSteps);
+
                     if (moveEnemyRoutine != null)
                     {
                         enemy.idleEvent.CallIdleEvent();
                         StopCoroutine(moveEnemyRoutine);
                     }
-
                     //Move the enemy along the path using a coroutine
                     moveEnemyRoutine = StartCoroutine(MoveEnemyCoroutine(movementSteps));
                 }
@@ -133,7 +185,78 @@ namespace SnakeGame.Enemies
             }
         }
 
+        private async UniTask EnemyDashAsync(Vector3 nextPos, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested) return;
+
+            float minDistance = 0.4f;
+            _isDashing = true;
+
+            float vel = enemy.enemyDetails.MovementDetails.dashSpeed;
+            Vector3 targetPosition = _nextPos * enemy.enemyDetails.MovementDetails.dashDistance;
+
+            while (Vector3.Distance(enemy.transform.position, targetPosition) > minDistance)
+            {
+                enemy.movementToPositionEvent.CallMovementToPosition(targetPosition, transform.position, (_nextPos - transform.position).normalized, vel, _isDashing);
+                await UniTask.WaitForFixedUpdate(_tokenSource.Token);
+            }
+
+            _isDashing = false;
+            _dashCooldownTimer = enemy.enemyDetails.MovementDetails.dashCooldownTime;
+            enemy.transform.position = targetPosition;
+        }
+
+        private IEnumerator EnemyDashRoutine(Vector3 nextPos)
+        {
+            float minDistance = 0.3f;
+            _isDashing = true;
+
+            float vel = enemy.enemyDetails.MovementDetails.dashSpeed;
+            Vector3 targetPosition = enemy.transform.position + nextPos * enemy.enemyDetails.MovementDetails.dashDistance;
+            this.Log(targetPosition);
+
+
+            while (Vector3.Distance(enemy.transform.position, targetPosition) > minDistance)
+            {
+                enemy.movementToPositionEvent.CallMovementToPosition(targetPosition, enemy.transform.position, movementSteps.Pop(), vel, _isDashing);
+                yield return fixedUpdateWait;
+            }
+
+            _isDashing = false;
+            _dashCooldownTimer = enemy.enemyDetails.MovementDetails.dashCooldownTime;
+            enemy.transform.position = targetPosition;
+        } 
+
         private IEnumerator MoveEnemyCoroutine(Stack<Vector3> movementSteps)
+        {
+            while (movementSteps.Count > 0)
+            {
+                _nextPos = movementSteps.Pop();
+
+                if (_isDashing)
+                {
+                    yield return null;
+                    continue;
+                }
+
+                // While not very close continue moving, too close move to the next point
+                while (Vector3.Distance(_nextPos, transform.position) > 0.3f)
+                {
+                    //Call the movement event
+                    enemy.movementToPositionEvent.CallMovementToPosition(_nextPos, transform.position, (_nextPos - transform.position).normalized, enemySpeed);
+                    //RotateBodyWithAngle(_nextPos);
+
+                    yield return fixedUpdateWait; // The enemy moves using the 2D physics , so wait for the fixed update.
+                }
+
+                yield return fixedUpdateWait;
+            }
+
+            // End of path steps - trigger the enemy idle event
+            enemy.idleEvent.CallIdleEvent();
+        }
+
+        private async UniTask MoveEnemyAsync(Stack<Vector3> movementSteps)
         {
             while (movementSteps.Count > 0)
             {
@@ -142,14 +265,14 @@ namespace SnakeGame.Enemies
                 // While not very close continue moving, too close move to the next point
                 while (Vector3.Distance(nextPos, transform.position) > 0.3f)
                 {
-                    //Call the movement event
+                    // Call the movement event
                     enemy.movementToPositionEvent.CallMovementToPosition(nextPos, transform.position, (nextPos - transform.position).normalized, enemySpeed);
-                    RotateBodyWithAngle(nextPos);
+                    RotateBodyWithAngle((nextPos - transform.position));
 
-                    yield return fixedUpdateWait; // The enemy moves using the 2D physics , so wait for the fixed update.
+                    await UniTask.WaitForFixedUpdate(destroyCancellationToken);
                 }
 
-                yield return fixedUpdateWait;
+                await UniTask.WaitForFixedUpdate(destroyCancellationToken);
             }
 
             // End of path steps - trigger the enemy idle event
@@ -225,7 +348,7 @@ namespace SnakeGame.Enemies
                     // Catch errors where the surrounded position is outside the grid
                     catch (Exception e)
                     {
-                        Debug.LogError("Outside the room bounds... Calculating new value. More Info: " + e.Message);
+                        this.LogError("Outside the room bounds... Calculating new value. More Info: " + e.Message);
                     }
 
                     surroundingsPositionsList.RemoveAt(index);
@@ -242,26 +365,61 @@ namespace SnakeGame.Enemies
             transform.eulerAngles = new(0f, 0f, angle);
         }
 
-        #region Validation
-#if UNITY_EDITOR
-        //private void OnValidate()
-        //{
-        //    HelperUtilities.ValidateCheckNullValue(this, nameof(movementDetails), movementDetails);
-        //}
-#endif
-        #endregion
-    }
-
-    [BurstCompile]
-    public struct EnemyParallelMovement : IJobParallelFor
-    {
-        public NativeArray<EnemyMovementData> MovementDataArray;
-
-        public void Execute(int index)
+        private void ReduceDashCooldownTimer()
         {
-            var data = MovementDataArray[index];
-            data.MoveEnemy();
-            MovementDataArray[index] = data;
+            if (_dashCooldownTimer >= 0f)
+            {
+                _dashCooldownTimer -= Time.deltaTime;
+            }
+        }
+
+        /// <summary>
+        /// Creates a raycast to the player position, since we want to know where the player bullet is coming from.
+        /// </summary>
+        /// <param name="bulletDirection">The direction where the player ammo is coming from</param>
+        /// <param name="numRaycasts">Specifies the number of raycasts to be fired at the same time</param>
+        /// <returns>True if the player is in sight, false otherwise</returns>
+        private async UniTask<bool> IsPlayerAmmoInSight(Vector3 bulletDirection, int numRaycasts = 1)
+        {
+            try
+            {
+                float angleBetweenRaycasts = 360f / numRaycasts; // Calculate the angle between each raycast
+
+                for (int i = 0; i < numRaycasts; i++)
+                {
+                    // Calculate the direction of the current raycast based on the angle
+                    float angle = i * angleBetweenRaycasts;
+                    Quaternion rotation = Quaternion.Euler(0f, 0f, angle);
+                    Vector3 direction = transform.forward + (rotation * bulletDirection);
+
+                    await UniTask.WaitForFixedUpdate(destroyCancellationToken);
+
+                    RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, direction, sightRange, _EnemySightMask);
+                  
+                    if (raycastHit2D)
+                        return true;
+                }
+
+                await UniTask.WaitForFixedUpdate(destroyCancellationToken);
+                return false;
+            }
+            catch (OperationCanceledException)
+            {
+                return false;
+            }
         }
     }
+
+    //[BurstCompile]
+    //public struct EnemyParallelMovement : IJobParallelFor
+    //{
+    //    public NativeArray<EnemyMovementData> MovementDataArray;
+
+    //    public void Execute(int index)
+    //    {
+    //        var data = MovementDataArray[index];
+    //        data.MoveEnemy();
+    //        MovementDataArray[index] = data;
+    //    }
+    //}
 }

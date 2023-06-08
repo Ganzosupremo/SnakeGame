@@ -21,11 +21,11 @@ namespace SnakeGame.FoodSystem
         private int gridHeight = 20;
 
         [HideInInspector] public FoodSO foodSO;
-        private MaterializeEffect materializeEffect;
-        private SpriteRenderer spriteRenderer;
+        private MaterializeEffect m_MaterializeEffect;
+        private SpriteRenderer m_SpriteRenderer;
         [SerializeField] private SpriteRenderer minimapSpriteRenderer;
         private Sprite foodSprite;
-        private long score = 0;
+        private long m_Score = 0;
         private bool m_IsColliding = false;
 
         // This is the trigger collider, detects when the player comes near the food and eats it
@@ -41,8 +41,8 @@ namespace SnakeGame.FoodSystem
 
         private void Awake()
         {
-            materializeEffect = GetComponent<MaterializeEffect>();
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            m_MaterializeEffect = GetComponent<MaterializeEffect>();
+            m_SpriteRenderer = GetComponent<SpriteRenderer>();
             triggerCollider2D = GetComponent<CircleCollider2D>();
         }
 
@@ -65,11 +65,13 @@ namespace SnakeGame.FoodSystem
         {
             this.foodSO = foodSO;
 
+            m_IsColliding = false;
+
             foodSprite = foodSO.FoodSprite;
-            spriteRenderer.sprite = foodSprite;
+            m_SpriteRenderer.sprite = foodSprite;
             minimapSpriteRenderer.sprite = this.foodSO.MinimapFoodSprite;
 
-            score = foodSO.score;
+            m_Score = foodSO.score;
 
             MaterializeFood();
         }
@@ -78,8 +80,8 @@ namespace SnakeGame.FoodSystem
         {
             EnableFood(false);
 
-            await materializeEffect.MaterializeAsync(foodSO.materializeShader, foodSO.materiliazeColor,
-                foodSO.materializeTime, foodSO.defaultLitMaterial, spriteRenderer);
+            await m_MaterializeEffect.MaterializeAsync(foodSO.materializeShader, foodSO.materiliazeColor,
+                foodSO.materializeTime, foodSO.defaultLitMaterial, m_SpriteRenderer);
 
             EnableFood(true);
         }
@@ -101,6 +103,7 @@ namespace SnakeGame.FoodSystem
         private void PlaySoundEffect()
         {
             if (foodSO.SoundEffect == null) return;
+
             SoundEffectManager.CallOnSoundEffectSelectedEvent(foodSO.SoundEffect);
         }
 
@@ -108,7 +111,7 @@ namespace SnakeGame.FoodSystem
         {
             m_IsColliding = false;
             DestroyEvent destroyEvent = GetComponent<DestroyEvent>();
-            destroyEvent.CallOnDestroy(true, score);
+            destroyEvent.CallOnDestroy(true, m_Score);
         }
 
         private void CallOnFoodEatenEvent()

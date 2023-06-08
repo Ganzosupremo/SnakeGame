@@ -10,12 +10,23 @@ namespace SnakeGame.AbwehrSystem
     [RequireComponent(typeof(AimWeaponEvent))]
     public class AimWeapon : MonoBehaviour
     {
+        public Transform WeaponRotationPointTransform { get => weaponRotationPointTransform; }
+
         #region Tooltip
         [Tooltip("Populate with the Transform from the child of WeaponRotationPoint gameobject")]
         #endregion
         [SerializeField] private Transform weaponRotationPointTransform;
 
         private AimWeaponEvent m_aimWeaponEvent;
+
+        private bool _negativeLocalScale = false;
+
+        public bool NegativeLocalScale
+        {
+            get { return _negativeLocalScale; }
+            set { _negativeLocalScale = value; }
+        }
+
 
         private void Awake()
         {
@@ -47,12 +58,14 @@ namespace SnakeGame.AbwehrSystem
                 case AimDirection.UpLeft:
                 case AimDirection.Left:
                     weaponRotationPointTransform.localScale = new Vector3(1f, -1f, 0f);
+                    _negativeLocalScale = true;
                     break;
                 case AimDirection.UpRight:
                 case AimDirection.Right:
                 case AimDirection.Up:
                 case AimDirection.Down:
                     weaponRotationPointTransform.localScale = new Vector3(1f, 1f, 0f);
+                    _negativeLocalScale = false;
                     break;
                 default:
                     break;

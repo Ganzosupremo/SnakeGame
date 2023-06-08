@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44782be4b9e88664c9a8893f7891a654, type: 3}
+  m_Name: WeaponShootEffect_Railgun
+  m_EditorClassIdentifier: 
+  colorGradient:
+    serializedVersion: 2
+    key0: {r: 0.9408072, g: 0.9622642, b: 0.077162705, a: 0.12156863}
+    key1: {r: 0.92737216, g: 0.93333334, b: 0.2078431, a: 0.7254902}
+    key2: {r: 0.8867924, g: 0.259939, b: 0.04601282, a: 1}
+    key3: {r: 0.7264151, g: 0.09251513, b: 0.14363816, a: 0}
+    key4: {r: 0.9150943, g: 0.76913756, b: 0, a: 0}
+    key5: {r: 0.3999001, g: 0.83137256, b: 0.24705882, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 23516
+    ctime2: 31997
+    ctime3: 41634
+    ctime4: 54356
+    ctime5: 65535
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 18311
+    atime2: 28527
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 6
+    m_NumAlphaKeys: 3
+  particleDuration: 0.2
+  startParticleSize: 0.7
+  startParticleSpeed: 15.2
+  startLifetime: 0.4
+  maxParticles: 250
+  emissionRate: 0
+  burstNumber: 250
+  gravityEffect: -0.9
+  sprites:
+  - {fileID: 21300000, guid: 1f19cbb22ea7d204ea47942043b31fcd, type: 3}
+  - {fileID: 21300000, guid: 8769c576e77182a42b815da16b46a522, type: 3}
+  minVelocityOverLifetime: {x: -1.1, y: -1.79, z: 0}
+  maxVelocityOverLifetime: {x: 6.16, y: 7.97, z: 0}
+  shootEffectPrefab: {fileID: 8467163931044552805, guid: 1419577dfb85ed44790b33eaa5be6636, type: 3}
+  enableShake: 0
+  amplitud: 1
+  intensity: 1
+  time: 0.1

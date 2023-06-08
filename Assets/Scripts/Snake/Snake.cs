@@ -58,6 +58,7 @@ namespace SnakeGame.PlayerSystem
         [HideInInspector] public Idle idle;
         [HideInInspector] public IdleEvent idleEvent;
         [HideInInspector] public AimWeaponEvent aimWeaponEvent;
+        [HideInInspector] public AimWeapon aimWeapon;
         [HideInInspector] public SetActiveWeaponEvent setActiveWeaponEvent;
         [HideInInspector] public ActiveWeapon activeWeapon;
         [HideInInspector] public FireWeaponEvent fireWeaponEvent;
@@ -78,7 +79,6 @@ namespace SnakeGame.PlayerSystem
         private MaterializeEffect materializeEffect;
         private SnakeControler snakeControler;
         private Light2D snakeLight;
-        private SnakePool snakePool;
         private void Awake()
         {
             #region Getting Component References
@@ -88,6 +88,7 @@ namespace SnakeGame.PlayerSystem
             destroy = GetComponent<Destroy>();
             destroyEvent = GetComponent<DestroyEvent>();
             aimWeaponEvent = GetComponent<AimWeaponEvent>();
+            aimWeapon = GetComponent<AimWeapon>();
             snakeControler = GetComponent<SnakeControler>();
             movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
             movementToPositionEvent = GetComponent<MovementToPositionEvent>();
@@ -104,15 +105,21 @@ namespace SnakeGame.PlayerSystem
             spriteRenderer = GetComponent<SpriteRenderer>();
             materializeEffect = GetComponent<MaterializeEffect>();
             snakeLight = GetComponentInChildren<Light2D>();
-            snakePool = GetComponent<SnakePool>();
             #endregion
         }
 
-        private async void Start()
+        private void Start()
         {
-            await snakePool.Init();
             AddStartingSegments();
             ChangeLightIntensity(TimeManager.Instance.CurrentTime);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.K))
+            {
+                GrowSnake(1);
+            }
         }
 
         private void AddStartingSegments()
@@ -133,34 +140,33 @@ namespace SnakeGame.PlayerSystem
 
         private void OnEnable()
         {
-            healthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
-            Food.OnFoodEaten += Food_OnFoodEaten;
-            TimeManager.OnTimeChanged += TimeManager_OnTimeChanged;
+            healthEvent.OnHealthChanged += OnHealthChanged;
+            Food.OnFoodEaten += OnFoodEaten;
+            TimeManager.OnTimeChanged += OnTimeChanged;
         }
 
         private void OnDisable()
         {
-            healthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
-            Food.OnFoodEaten -= Food_OnFoodEaten;
-            TimeManager.OnTimeChanged -= TimeManager_OnTimeChanged;
+            healthEvent.OnHealthChanged -= OnHealthChanged;
+            Food.OnFoodEaten -= OnFoodEaten;
+            TimeManager.OnTimeChanged -= OnTimeChanged;
         }
 
-        private void Food_OnFoodEaten(Food food)
+        private void OnFoodEaten(Food food)
         {
-            if (!IsSnakeColliding)
-            {
-                IsSnakeColliding = true;
-                GrowSnake(food.foodSO.HealthIncrease);
-                //IncreaseWeaponDamage(food.foodSO.DamageIncreasePercentage);
-            }
+            if (IsSnakeColliding) return;
+
+            IsSnakeColliding = true;
+            GrowSnake(food.foodSO.HealthIncrease);
+            //IncreaseWeaponDamage(food.foodSO.DamageIncreasePercentage);
         }
 
-        private void TimeManager_OnTimeChanged(DayCicle dayCicle)
+        private void OnTimeChanged(DayCicle dayCicle)
         {
             ChangeLightIntensity(dayCicle);
         }
 
-        private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
+        private void OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
         {
             if (healthEventArgs.healthAmount <= 0f)
             {
@@ -280,8 +286,8 @@ namespace SnakeGame.PlayerSystem
             snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -SnakeSegmentsList.Count;
             snakeBody.WaitHeadUpdateCycle(SnakeSegmentsList.Count);
 
-            IsSnakeColliding = false;
             health.IncreaseHealth(increaseHealth);
+            IsSnakeColliding = false;
         }
 
         public void UpdateSnakeSegments()

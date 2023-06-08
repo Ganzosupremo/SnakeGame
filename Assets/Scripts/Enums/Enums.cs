@@ -75,6 +75,7 @@ namespace SnakeGame
 
     public enum Difficulty
     {
+        None = 69,
         Noob = 0,
         Easy = 1,
         Medium = 2,

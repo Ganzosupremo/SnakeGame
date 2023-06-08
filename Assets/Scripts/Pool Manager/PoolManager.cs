@@ -109,6 +109,51 @@ namespace SnakeGame
         }
 
         /// <summary>
+        /// Returns a list of active components of the specified type from the object pool.
+        /// </summary>
+        /// <param name="componentType">The type of component to retrieve.</param>
+        /// <returns>A list of active components of the specified type.</returns>
+        public List<T> GetActiveComponents<T>() where T : Component
+        {
+            List<T> activeComponents = new();
+
+            foreach (Queue<Component> componentQueue in poolDictionary.Values)
+            {
+                foreach (Component component in componentQueue)
+                {
+                    if (component is T comp && component.gameObject.activeSelf)
+                    {
+                        activeComponents.Add(comp);
+                    }
+                }
+            }
+
+            return activeComponents;
+        }
+
+        public List<Component> GetActiveComponents(string componentType)
+        {
+            List<Component> activeComponents = new List<Component>();
+
+            foreach (Queue<Component> componentQueue in poolDictionary.Values)
+            {
+                foreach (Component component in componentQueue)
+                {
+                    if (component != null && component.GetType().Name.Equals(componentType))
+                    {
+                        if (component.gameObject.activeSelf)
+                        {
+                            activeComponents.Add(component);
+                        }
+                    }
+                }
+            }
+
+            return activeComponents;
+        }
+
+
+        /// <summary>
         /// Gets A Gameobject From The Pool using The 'poolKey'
         /// </summary>
         private Component GetComponentFromPool(int poolKey)

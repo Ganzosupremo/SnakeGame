@@ -305,6 +305,7 @@ SortingGroup:
   m_SortingLayerID: -251573173
   m_SortingLayer: 4
   m_SortingOrder: 5
+  m_SortAtRoot: 0
 --- !u!114 &6930524932663728290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,6 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a860d17e9f9a63740982ee23e016a50c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShouldFetchRemoteSettings: 0
   enemyDetails: {fileID: 0}
   spriteRendererArray: []
   aimWeaponEvent: {fileID: 0}
@@ -325,7 +327,6 @@ MonoBehaviour:
   movementToPositionEvent: {fileID: 0}
   idleEvent: {fileID: 0}
   enemyMovementAI: {fileID: 0}
-  enemySpriteRenderer: {fileID: 3357846481401008582}
 --- !u!114 &-8524531580395593901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,7 +339,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69933635bd683e1488d4085df13a5899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementDetails: {fileID: 11400000, guid: 54fe20fadc9bd314497fdc1c7c415a27, type: 2}
+  sightRange: 10
+  _EnemySightMask:
+    serializedVersion: 2
+    m_Bits: 2048
   updateFramesNumber: 1
   enemySpeed: 0
 --- !u!114 &3481932725181957171
@@ -400,6 +404,12 @@ Rigidbody2D:
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -650,6 +660,25 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -670,6 +699,7 @@ PolygonCollider2D:
       - {x: 0.1875, y: -0.25}
       - {x: 0.25, y: -0.1875}
       - {x: 0.25, y: 0.25}
+  m_UseDelaunayMesh: 0
 --- !u!1 &8666032275487336328
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,6 +736,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6727757720795439248}
     m_Modifications:
     - target: {fileID: 789657008888275479, guid: 4177e3d39089bbc4595c16c376687603, type: 3}
@@ -757,6 +788,9 @@ PrefabInstance:
       value: HealthBar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4177e3d39089bbc4595c16c376687603, type: 3}
 --- !u!114 &3475971873423870954 stripped
 MonoBehaviour:

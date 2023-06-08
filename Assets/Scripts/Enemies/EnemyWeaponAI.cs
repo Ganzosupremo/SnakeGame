@@ -108,7 +108,7 @@ namespace SnakeGame.Enemies
                 //Get the ammo range
                 float enemyAmmoRange = m_EnemyDetails.enemyWeapon.weaponCurrentAmmo.ammoRange;
 
-                //Is the player in range
+                //Is the player in range of the ammo
                 if (playerDirectionVector.magnitude <= enemyAmmoRange)
                 {
                     //Does this enemy is required to have a line of sight before firing?

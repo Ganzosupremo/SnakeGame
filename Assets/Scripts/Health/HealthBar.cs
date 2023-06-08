@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace SnakeGame.HealthSystem
@@ -9,6 +10,7 @@ namespace SnakeGame.HealthSystem
         [Header("Game Object References")]
         #endregion
         [SerializeField] private GameObject healthBarContainer;
+        [SerializeField] private TextMeshPro _bossName;
 
         /// <summary>
         /// Enables the health bar
@@ -33,6 +35,12 @@ namespace SnakeGame.HealthSystem
         public void SetHealthBarValue(float healthPercent)
         {
             healthBarContainer.transform.localScale = new Vector3(healthPercent, 1f, 0f);
+        }
+
+        public void SetBossName(string  bossName)
+        {
+            if (_bossName != null)
+                _bossName.text = bossName;
         }
     }
 }

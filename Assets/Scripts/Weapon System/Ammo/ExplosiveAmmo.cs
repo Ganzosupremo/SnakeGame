@@ -30,15 +30,10 @@ namespace SnakeGame.AbwehrSystem.Ammo
             if (_IsColliding) return;
 
             DealDamage(Physics2D.OverlapCircleAll(transform.position, m_ExplosiveAmmoDetail.ExplosionRadius, m_ExplosiveAmmoDetail.ExplosionMask));
-            ActivatHitEffect();
+            ActivateAmmoHitEffect();
             DisableAmmo();
             PlayCollisionSoundEffect();
         }
-
-        //private void OnDrawGizmos()
-        //{
-        //    Gizmos.DrawWireSphere(transform.position, _ExplosionRadius);
-        //}
 
         protected override void DealDamage(params Collider2D[] others)
         {

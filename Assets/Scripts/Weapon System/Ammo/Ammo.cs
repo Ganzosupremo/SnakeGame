@@ -21,7 +21,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
             DealDamage(other);
 
-            ActivatHitEffect();
+            ActivateAmmoHitEffect();
 
             DisableAmmo();
 

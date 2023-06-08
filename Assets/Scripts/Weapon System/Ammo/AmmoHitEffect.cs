@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SnakeGame.VisualEffects
@@ -31,6 +32,37 @@ namespace SnakeGame.VisualEffects
 
             // Set shoot effect lifetime min and max velocities
             SetAmmoHitEffectVelocityOverLifeTime(ammoHitEffect.minVelocityOverLifetime, ammoHitEffect.maxVelocityOverLifetime);
+        }
+
+        /// <summary>
+        /// Sets the shoot effect from the AmmoHitEffectSO and sets it's position to the specified position.
+        /// </summary>
+        /// <param name="ammoHitEffect"></param>
+        /// <param name="spawnPosition"></param>
+        public void SetAmmoHitEffect(AmmoHitEffectSO ammoHitEffect, Vector3 spawnPosition)
+        {
+            SetAmmoHitEffectPosition(spawnPosition);
+
+            // Set shoot effect color gradient
+            SetAmmoHitEffectColorGradient(ammoHitEffect.colorGradient);
+
+            // Set shoot effect particle system starting values
+            SetAmmoHitEffectParticleStartingValues(ammoHitEffect.particleDuration, ammoHitEffect.startParticleSize, ammoHitEffect.startParticleSpeed,
+                ammoHitEffect.startLifetime, ammoHitEffect.gravityEffect, ammoHitEffect.maxParticles);
+
+            // Set shoot effect particle system particle burst particle number
+            SetAmmoHitEffectParticleEmission(ammoHitEffect.emissionRate, ammoHitEffect.burstNumber);
+
+            // Set shoot effect particle sprite
+            SetAmmoHitEffectParticleSprite(ammoHitEffect.sprite);
+
+            // Set shoot effect lifetime min and max velocities
+            SetAmmoHitEffectVelocityOverLifeTime(ammoHitEffect.minVelocityOverLifetime, ammoHitEffect.maxVelocityOverLifetime);
+        }
+
+        private void SetAmmoHitEffectPosition(Vector3 spawnPosition)
+        {
+            transform.position = spawnPosition;
         }
 
         /// <summary>

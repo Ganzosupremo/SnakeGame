@@ -31,7 +31,7 @@ namespace SnakeGame.FoodSystem
         #region Game Scoring
         [Header("Game Scoring")]
         [Space(10)]
-        [Range(1, 2000)]
+        [Range(10, 1000)]
         [Tooltip("The points this type of food will give to the player when eaten. " +
             "Up to 2000 points")]
         #endregion

@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using SnakeGame.Enemies;
 using SnakeGame.PlayerSystem;
+using Cysharp.Threading.Tasks;
 
 namespace SnakeGame.HealthSystem
 {
@@ -55,10 +56,13 @@ namespace SnakeGame.HealthSystem
             if (enemy != null && enemy.enemyDetails.isHealthBarDisplayed && healthBar != null)
             {
                 healthBar.EnableHealthBar();
+                if (enemy.enemyDetails.IsBoss) 
+                    healthBar.SetBossName($"<{enemy.enemyDetails.enemyName}>");
             }
             else if (healthBar = null)
             {
                 healthBar.DisableHealthBar();
+                healthBar.SetBossName(string.Empty);
             }
         }
 
@@ -128,18 +132,42 @@ namespace SnakeGame.HealthSystem
         {
             int blinkIterations = Mathf.RoundToInt(immunityTime / spriteBlinkInterval / 2f);
 
+            Color originalColor = spriteRenderer.color;
+
             IsDamageable = false;
 
             while (blinkIterations > 0)
             {
                 spriteRenderer.color = Color.red;
                 yield return waitForSecondsInterval;
-                spriteRenderer.color = Color.white;
+                spriteRenderer.color = originalColor;
                 yield return waitForSecondsInterval;
                 blinkIterations--;
                 yield return null;
             }
 
+            spriteRenderer.color = originalColor;
+            IsDamageable = true;
+        }
+
+        private async UniTask InmunityAsync(float inmunityTime, SpriteRenderer spriteRenderer)
+        {
+            int blinkIterations = Mathf.RoundToInt(inmunityTime / spriteBlinkInterval / 2f);
+
+            Color originalColor = spriteRenderer.color;
+            IsDamageable = false;
+
+            while (blinkIterations > 0)
+            {
+                spriteRenderer.color = Color.red;
+                await UniTask.Delay((int)spriteBlinkInterval * 1000);
+
+                spriteRenderer.color = originalColor;
+                await UniTask.Delay((int)blinkIterations * 1000);
+                blinkIterations--;
+            }
+
+            spriteRenderer.color = originalColor;
             IsDamageable = true;
         }
 

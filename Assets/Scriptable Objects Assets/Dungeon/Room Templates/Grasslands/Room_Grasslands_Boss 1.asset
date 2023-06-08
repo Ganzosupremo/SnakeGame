@@ -54,51 +54,23 @@ MonoBehaviour:
     isConnected: 0
     isUnavailable: 0
   spawnPositionArray:
-  - {x: -2, y: -1}
-  - {x: 0, y: 0}
-  - {x: 8, y: 4}
-  - {x: 17, y: 3}
-  - {x: 15, y: -14}
-  - {x: -14, y: -14}
-  - {x: -8, y: -8}
-  - {x: -11, y: 9}
-  - {x: 1, y: 12}
-  - {x: -1, y: -19}
+  - {x: -10, y: 9}
+  - {x: 1, y: 10}
+  - {x: 16, y: 8}
+  - {x: 23, y: -4}
+  - {x: 0, y: -4}
+  - {x: 14, y: -16}
+  - {x: 0, y: -17}
+  - {x: -15, y: -14}
+  - {x: -16, y: -2}
+  - {x: -11, y: -10}
   enemiesByLevelList:
-  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
-    spawnableObjectRatioList:
-    - dungeonObject: {fileID: 11400000, guid: a67840dd00d71514ca3ac4bb78b114e9, type: 2}
-      spawnRatio: 10
-    - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
-      spawnRatio: 10
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
     spawnableObjectRatioList:
-    - dungeonObject: {fileID: 11400000, guid: a67840dd00d71514ca3ac4bb78b114e9, type: 2}
-      spawnRatio: 10
-    - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
-      spawnRatio: 10
-  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-    spawnableObjectRatioList:
-    - dungeonObject: {fileID: 11400000, guid: a67840dd00d71514ca3ac4bb78b114e9, type: 2}
-      spawnRatio: 10
-    - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
+    - dungeonObject: {fileID: 11400000, guid: afe2feb0e7d5e6846a90ce16e2a37560, type: 2}
       spawnRatio: 10
   roomEnemySpawnParemetersList:
-  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
-    minTotalItemsToSpawn: 2
-    maxTotalItemsToSpawn: 3
-    minConcurrentItems: 1
-    maxConcurrentItems: 3
-    minSpawnInterval: 4
-    maxSpawnInterval: 6
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
-    minTotalItemsToSpawn: 2
-    maxTotalItemsToSpawn: 3
-    minConcurrentItems: 1
-    maxConcurrentItems: 3
-    minSpawnInterval: 4
-    maxSpawnInterval: 6
-  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
     minTotalItemsToSpawn: 2
     maxTotalItemsToSpawn: 3
     minConcurrentItems: 1
@@ -111,27 +83,13 @@ MonoBehaviour:
     - dungeonObject: {fileID: 11400000, guid: 49af185b20448bd4f9417c1f9da50fee, type: 2}
       spawnRatio: 500
     - dungeonObject: {fileID: 11400000, guid: 1b59725eb2a31cd4ab762e41835cf506, type: 2}
-      spawnRatio: 100
+      spawnRatio: 10
     - dungeonObject: {fileID: 11400000, guid: 71e7527ecdfb15b4c812b4cc704a3ff7, type: 2}
       spawnRatio: 5
     - dungeonObject: {fileID: 11400000, guid: f806310c89831d54db3a82a8aac3f8d5, type: 2}
       spawnRatio: 1
   roomFoodSpawnParametersList:
-  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
-    minTotalItemsToSpawn: 4
-    maxTotalItemsToSpawn: 6
-    minConcurrentItems: 3
-    maxConcurrentItems: 4
-    minSpawnInterval: 3
-    maxSpawnInterval: 4
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
-    minTotalItemsToSpawn: 4
-    maxTotalItemsToSpawn: 6
-    minConcurrentItems: 3
-    maxConcurrentItems: 4
-    minSpawnInterval: 3
-    maxSpawnInterval: 4
-  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
     minTotalItemsToSpawn: 4
     maxTotalItemsToSpawn: 6
     minConcurrentItems: 3

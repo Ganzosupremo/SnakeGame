@@ -18,6 +18,8 @@ namespace SnakeGame.AudioSystem
         [Range(0, 20)]
         public int MinigunFireVolume = 9;
 
+        public SoundEffectSO RailgunReloadTest;
+
         public static event Action OnSFXVolumeIncreased;
         public static event Action OnSFXVolumeDecreased;
         public static event Action OnMinigunSFXVolumeIncreased;
