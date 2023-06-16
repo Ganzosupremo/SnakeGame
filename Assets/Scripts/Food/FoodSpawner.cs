@@ -21,6 +21,7 @@ namespace SnakeGame.FoodSystem
 
         private Room currentRoom;
         private RoomItemSpawnParameters foodSpawnParameters;
+        private Coroutine spawnFoodRoutine;
 
         private void OnEnable()
         {
@@ -66,7 +67,9 @@ namespace SnakeGame.FoodSystem
 
         private void SpawnFood()
         {
-            StartCoroutine(SpawnFoodCoroutine());
+            if (spawnFoodRoutine != null)
+                StopCoroutine(spawnFoodRoutine);
+            spawnFoodRoutine = StartCoroutine(SpawnFoodCoroutine());
         }
 
         private IEnumerator SpawnFoodCoroutine()
@@ -102,13 +105,11 @@ namespace SnakeGame.FoodSystem
             FoodSpawnedSoFar++;
             currentFoodCount++;
 
-            // Get current dungeon level
-            GameLevelSO gameLevel = GameManager.Instance.GetCurrentDungeonLevel();
-
             // Instantiate the food from the pool
             Food food = (Food)PoolManager.Instance.ReuseComponent(foodSO.FoodPrefab, position, Quaternion.identity);
             food.gameObject.SetActive(true);
-            food.InitializeFood(foodSO, gameLevel);
+            
+            food.InitializeFood(foodSO);
             food.GetComponent<DestroyEvent>().OnDestroy += FoodSpawner_OnDestroy;
         }
 
@@ -118,7 +119,7 @@ namespace SnakeGame.FoodSystem
 
             // Reduce the food count
             currentFoodCount--;
-            //Debug.Log("Minus 1 - Current food count: " + currentFoodCount);
+
             foodEatenSoFar++;
 
             // Score points

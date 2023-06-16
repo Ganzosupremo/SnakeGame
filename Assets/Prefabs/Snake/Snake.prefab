@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -251573173
   m_SortingLayer: 4
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -397,7 +397,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -251573173
   m_SortingLayer: 4
-  m_SortingOrder: 5
+  m_SortingOrder: 6
   m_Sprite: {fileID: 507617228, guid: a0d9ac691a51edb4d9a62b8fcc4473cf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -432,6 +432,7 @@ MonoBehaviour:
   idle: {fileID: 0}
   idleEvent: {fileID: 0}
   aimWeaponEvent: {fileID: 0}
+  aimWeapon: {fileID: 0}
   setActiveWeaponEvent: {fileID: 0}
   activeWeapon: {fileID: 0}
   fireWeaponEvent: {fileID: 0}
@@ -441,6 +442,7 @@ MonoBehaviour:
   reloadWeapon: {fileID: 0}
   weaponReloadedEvent: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  _LowHealthEffect: {fileID: 11400000, guid: 1dfe4d82b6255b642bab34705ca80e57, type: 2}
 --- !u!114 &8266277145047211176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,6 +735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b01ce2fead2835479424933b96d632b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSpriteRenderer: {fileID: 8182033735335509260}
   weaponShootPosition: {fileID: 7744678937136800536}
   weaponEffectPosition: {fileID: 4535233281347273686}
 --- !u!114 &4760146493644783039

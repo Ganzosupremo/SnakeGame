@@ -1,13 +1,16 @@
 using SnakeGame.AbwehrSystem;
 using SnakeGame.AudioSystem;
+using SnakeGame.Debuging;
 using SnakeGame.HealthSystem;
 using SnakeGame.ProceduralGenerationSystem;
+using SnakeGame.TimeSystem;
 using SnakeGame.VisualEffects;
 using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace SnakeGame.Enemies
 {
@@ -41,6 +44,7 @@ namespace SnakeGame.Enemies
     #endregion
     public class Enemy : MonoBehaviour
     {
+        #region Public Components
         [HideInInspector] public EnemyDetailsSO enemyDetails;
         [HideInInspector] public SpriteRenderer[] spriteRendererArray;
         [HideInInspector] public AimWeaponEvent aimWeaponEvent;
@@ -50,21 +54,26 @@ namespace SnakeGame.Enemies
         [HideInInspector] public MovementToPositionEvent movementToPositionEvent;
         [HideInInspector] public IdleEvent idleEvent;
         [HideInInspector] public EnemyMovementAI enemyMovementAI;
+        #endregion
+
+        [SerializeField] private TextMeshPro _BossNameUI;
 
         /// <summary>
         /// Used to get the physics shape
         /// </summary>
-        private SpriteRenderer enemySpriteRenderer;
+        private SpriteRenderer m_EnemySpriteRenderer;
 
-        private MaterializeEffect materializeEffect;
-        private PolygonCollider2D triggerCollider;
+        private MaterializeEffect m_MaterializeEffect;
+        private PolygonCollider2D m_TriggerCollider;
 
         private SetActiveWeaponEvent m_SetActiveWeaponEvent;
         private HealthEvent m_HealthEvent;
         private Health m_Health;
+        private Light2D m_EnemyLight;
 
         private void Awake()
         {
+            #region Getting References
             enemyMovementAI = GetComponent<EnemyMovementAI>();
             m_HealthEvent = GetComponent<HealthEvent>();
             m_Health = GetComponent<Health>();
@@ -76,21 +85,34 @@ namespace SnakeGame.Enemies
             m_SetActiveWeaponEvent = GetComponent<SetActiveWeaponEvent>();
             idleEvent = GetComponent<IdleEvent>();
 
-            enemySpriteRenderer = GetComponent<SpriteRenderer>();
-            materializeEffect = GetComponent<MaterializeEffect>();
-            //solidCollider = GetComponentInChildren<CircleCollider2D>();
-            triggerCollider = GetComponent<PolygonCollider2D>();
+            m_EnemySpriteRenderer = GetComponent<SpriteRenderer>();
+            m_MaterializeEffect = GetComponent<MaterializeEffect>();
+            m_TriggerCollider = GetComponent<PolygonCollider2D>();
             spriteRendererArray = GetComponentsInChildren<SpriteRenderer>();
+            m_EnemyLight = GetComponentInChildren<Light2D>();
+            #endregion
+        }
+
+        private void Start()
+        {
+            ChangeLightIntensity(TimeManager.Instance.CurrentTime);
         }
 
         private void OnEnable()
         {
             m_HealthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
+            TimeManager.OnTimeChanged += OnTimeChanged;
         }
 
         private void OnDisable()
         {
             m_HealthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
+            TimeManager.OnTimeChanged -= OnTimeChanged;
+        }
+
+        private void OnTimeChanged(DayCicle cicle)
+        {
+            ChangeLightIntensity(cicle);
         }
 
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
@@ -103,7 +125,9 @@ namespace SnakeGame.Enemies
         {
             this.enemyDetails = enemyDetails;
 
-            SetEnemySpriteColor();
+            SetBossNameOnText();
+
+            SetEnemySprite();
 
             SetEnemyMovementUpdateFrame(enemySpawnNumber);
 
@@ -116,9 +140,20 @@ namespace SnakeGame.Enemies
             MaterializeEnemy();
         }
 
-        private void SetEnemySpriteColor()
+        private void SetBossNameOnText()
         {
-            enemySpriteRenderer.color = enemyDetails.enemyColor;
+            if (_BossNameUI != null)
+                _BossNameUI.text = $"<{enemyDetails.enemyName.ToUpper().Color("red")}>";
+        }
+
+        private void SetEnemySprite()
+        {
+            if (enemyDetails.EnemySprite != null)
+            {
+                m_EnemySpriteRenderer.sprite = enemyDetails.EnemySprite;
+            }
+
+            m_EnemySpriteRenderer.color = enemyDetails.enemyColor;
         }
 
         /// <summary>
@@ -172,12 +207,12 @@ namespace SnakeGame.Enemies
 
         private void SetPolygonColliderShape()
         {
-            if (triggerCollider != null)
+            if (m_TriggerCollider != null)
             {
                 List<Vector2> polygonVertices = new();
-                enemySpriteRenderer.sprite.GetPhysicsShape(0, polygonVertices);
+                m_EnemySpriteRenderer.sprite.GetPhysicsShape(0, polygonVertices);
 
-                triggerCollider.points = polygonVertices.ToArray();
+                m_TriggerCollider.points = polygonVertices.ToArray();
             }
         }
 
@@ -185,8 +220,8 @@ namespace SnakeGame.Enemies
         {
             EnableEnemy(false);
 
-            await materializeEffect.MaterializeAsync(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
-                enemyDetails.enemyMaterializeTime, enemyDetails.standardEnemyMaterial, enemySpriteRenderer);
+            await m_MaterializeEffect.MaterializeAsync(enemyDetails.enemyMaterializeShader, enemyDetails.enemyMaterializeColor,
+                enemyDetails.enemyMaterializeTime, enemyDetails.standardEnemyMaterial, m_EnemySpriteRenderer);
 
             EnableEnemy(true);
         }
@@ -194,7 +229,7 @@ namespace SnakeGame.Enemies
         private void EnableEnemy(bool isEnabled)
         {
             // Enable/Disable the colliders
-            triggerCollider.enabled = isEnabled;
+            m_TriggerCollider.enabled = isEnabled;
 
             // Enable/Disable the enemy movement AI
             enemyMovementAI.enabled = isEnabled;
@@ -206,24 +241,36 @@ namespace SnakeGame.Enemies
         private void EnemyDestroyed()
         {
             if (enemyDetails.deathSoundEffect != null)
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(enemyDetails.deathSoundEffect);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(enemyDetails.deathSoundEffect);
 
             if (TryGetComponent(out DestroyEvent destroyEvent))
                 destroyEvent.CallOnDestroy(false, 0);
         }
 
-        ///// <summary>
-        ///// Because the sprites of the enemies are a gray scale,
-        ///// they can be tinted different colors in the inspector,
-        ///// but when the enemy takes damage and is immune after hit,
-        ///// the sprites blink from red to white.
-        ///// This method resets the color, after the immunity time has been finished,
-        /////  to the selected color.
-        ///// </summary>
-        //private void ResetEnemyColor()
-        //{
-        //    if (enemySpriteRenderer.color != enemyDetails.enemyColor)
-        //        enemySpriteRenderer.color = enemyDetails.enemyColor;
-        //}
+        private void ChangeLightIntensity(DayCicle cicle)
+        {
+            if (m_EnemyLight == null) return;
+
+            switch (cicle)
+            {
+                case DayCicle.Morning:
+                    m_EnemyLight.gameObject.SetActive(false);
+                    break;
+                case DayCicle.Afternoon:
+                    m_EnemyLight.gameObject.SetActive(true);
+                    m_EnemyLight.intensity = 0.1f;
+                    break;
+                case DayCicle.Evening:
+                    m_EnemyLight.gameObject.SetActive(true);
+                    m_EnemyLight.intensity = 0.3f;
+                    break;
+                case DayCicle.Night:
+                    m_EnemyLight.gameObject.SetActive(true);
+                    m_EnemyLight.intensity = 0.6f;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

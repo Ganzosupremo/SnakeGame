@@ -22,13 +22,13 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
         private void Awake()
         {
             m_Snake = GetComponent<Snake>();
-            // Choose a special ability at random
-            //m_snake.snakeDetails.ability = m_snake.snakeDetails.AbilitiesArray[Random.Range(0, m_snake.snakeDetails.AbilitiesArray.Length)];
         }
 
         private void Start()
         {
-            //m_Snake.snakeDetails.ability = m_Snake.snakeDetails.AbilitiesArray[UnityEngine.Random.Range(0, m_Snake.snakeDetails.AbilitiesArray.Length)];
+            // Choose a special ability at random
+            m_Snake.snakeDetails.ability = m_Snake.snakeDetails.AbilitiesArray[UnityEngine.Random.Range(0, m_Snake.snakeDetails.AbilitiesArray.Length)];
+            
             m_Ability = m_Snake.snakeDetails.ability;
             AbilityEffectParticleSystem = Instantiate(AbilityEffectParticleSystem, m_Snake.transform);
             AbilityEffectParticleSystem.SetActive(false);
@@ -81,14 +81,14 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
             if (m_ActiveTime > 0f)
             {
                 m_ActiveTime -= Time.unscaledDeltaTime;
-                ActivateParticleEffects();
+                //ActivateParticleEffects();
                 StartCoroutine(SpecialAbilityUI.Instance.UpdateSpecialAbilityBar(m_ActiveTime / m_Ability.ActiveTime));
             }
             else
             {
                 CallOnAbilityInactiveEvent(m_ActiveTime, m_CooldownTime);
                 m_Ability.Cooldown(gameObject);
-                DeactivateParticleEffects();
+                //DeactivateParticleEffects();
                 m_Snake.ChangeSpriteMaterial(GameResources.Instance.litMaterial);
                 m_Snake.GetSnakeControler().SetSpecialAbilityBool(false);
                 m_CooldownTime = m_Ability.CooldownTime;

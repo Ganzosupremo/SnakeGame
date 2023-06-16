@@ -1,3 +1,4 @@
+using SnakeGame.AudioSystem;
 using SnakeGame.HealthSystem;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,8 @@ namespace SnakeGame.UI
 {
     public class HealthUI : MonoBehaviour
     {
+        [SerializeField] private SoundEffectSO _LowHealthSoundEffect;
+
         private List<GameObject> healthHeartsList = new();
 
         private void OnEnable()
@@ -46,17 +49,6 @@ namespace SnakeGame.UI
 
             heart.GetComponentInChildren<TextMeshProUGUI>().text = healthPercent + "%";
             healthHeartsList.Add(heart);
-
-            //for (int i = 0; i < healthHearts; i++)
-            //{
-            //    //Instantiate the heart Icon prefab
-            //    GameObject heart = Instantiate(GameResources.Instance.healthPrefab, transform);
-
-            //    //Set correctly the position of the hearts in the UI
-            //    heart.GetComponent<RectTransform>().anchoredPosition = new Vector2(Settings.uiHeartSpacing * i, 0f);
-
-            //    healthHeartsList.Add(heart);
-            //}
         }
     }
 }

@@ -72,7 +72,7 @@ namespace SnakeGame.ProceduralGenerationSystem
                 }
 
                 // In the future every door will have it's unique open sound effect
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(GameResources.Instance.doorSoundEffect);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(GameResources.Instance.doorSoundEffect);
             }
         }
 

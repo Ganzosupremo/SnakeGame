@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using SnakeGame.AudioSystem;
 using SnakeGame.Debuging;
 using SnakeGame.Enemies;
 using SnakeGame.GameUtilities;
@@ -63,6 +64,8 @@ namespace SnakeGame
         #endregion
         [SerializeField] private TextMeshProUGUI feedbackText;
 
+        [SerializeField] private MusicSO _GameOverMusic;
+
         #region Header UI REFERENCES
         [Header("UI REFERENCES")]
         [Space(5)]
@@ -123,12 +126,12 @@ namespace SnakeGame
             await FadeScreenAsync(0f,1f, 0f, Color.black);
         }
 
-        private void Update()
+        private async void Update()
         {
             if (Input.GetKeyDown(KeyCode.P))
                 CurrentGameState = GameState.Started;
 
-            HandleGameStatesAsync();
+            await HandleGameStatesAsync();
         }
 
         private void OnEnable()
@@ -278,7 +281,7 @@ namespace SnakeGame
             }
         }
 
-        private async void HandleGameStatesAsync()
+        private async UniTask HandleGameStatesAsync()
         {
             switch (m_CurrentGameState)
             {
@@ -513,7 +516,7 @@ namespace SnakeGame
             m_BossRoom = null;
 
             // See if all rooms have been cleared of enemies
-            foreach (KeyValuePair<string, Room> keyValuePair in DungeonBuilder.Instance.dungeonBuilderRoomDictionary)
+            foreach (KeyValuePair<string, Room> keyValuePair in DungeonBuilder.DungeonBuilderRoomDictionary)
             {
                 // Skip the boos room for the moment
                 if (keyValuePair.Value.roomNodeType.isBossRoom)
@@ -821,7 +824,7 @@ namespace SnakeGame
             await DisplayMessageAsync($"Well Done {GameResources.Instance.currentSnake.snakeName}!\n You Defeated every Boss on Every Biome. " +
                 $"\n\nYou're now the Ultimate Snake.", Color.white, 5.5f, m_CancellationTokenSource.Token);
             await DisplayMessageAsync($"Your final Score: {m_GameScore:###,###}. \n\n{rankText}", Color.white, 6f, m_CancellationTokenSource.Token);
-            await DisplayMessageAsync($"Thanks For Playing. Head to the Exit or Press 'Enter' to restart the game", Color.white, 4f, m_CancellationTokenSource.Token);
+            await DisplayMessageAsync($"Thanks For Playing! Press 'Enter' to restart the game", Color.white, 0f, m_CancellationTokenSource.Token);
             await FadeScreenAsync(1f, 0f, 1.5f, Color.black);
 
             // Change later to the new input system
@@ -891,6 +894,8 @@ namespace SnakeGame
 
             m_PreviousGameState = GameState.GameLost;
             GetSnake().GetSnakeControler().DisableSnake();
+
+            MusicManager.CallOnMusicClipChangedEvent(_GameOverMusic);
 
             int rank = HighScoreManager.Instance.GetRank(m_GameScore);
             string rankText;

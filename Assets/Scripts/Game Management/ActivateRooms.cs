@@ -33,7 +33,7 @@ namespace SnakeGame
                 out Vector2Int mainCameraWorldPositionUpperBounds, mainCamera);
 
             // Iterate through all the dungeon rooms to see if there are in the viewport of the camera
-            foreach (KeyValuePair<string, Room> keyValuePair in DungeonBuilder.Instance.dungeonBuilderRoomDictionary)
+            foreach (KeyValuePair<string, Room> keyValuePair in DungeonBuilder.DungeonBuilderRoomDictionary)
             {
                 Room room = keyValuePair.Value;
 

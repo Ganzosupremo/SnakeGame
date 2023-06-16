@@ -32,8 +32,17 @@ namespace SnakeGame.Enemies
         public SoundEffectSO hitSoundEffect;
         public SoundEffectSO deathSoundEffect;
 
+        #region Tooltip
+        [Tooltip("The color for the enemy, choose a color if the sprite is the default one or is gray scale," +
+            " otherwise leave as white.")]
         [ColorUsage(true, true)]
+        #endregion
         public Color enemyColor;
+
+        #region Tooltip
+        [Tooltip("The sprite for this enemy, leave null if you want default sprite.")]
+        #endregion
+        public Sprite EnemySprite;
 
         #region Tooltip
         [Tooltip("Distance from which the enemy will chase the player")]

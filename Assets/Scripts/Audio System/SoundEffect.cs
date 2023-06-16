@@ -43,5 +43,10 @@ namespace SnakeGame.AudioSystem
 
             audioSource.clip = soundEffect.soundEffectClip;
         }
+
+        public void StopSound()
+        {
+            audioSource.Stop();
+        }
     }
 }

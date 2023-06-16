@@ -23,9 +23,10 @@ namespace SnakeGame.AbwehrSystem
         private FireWeaponEvent fireWeaponEvent;
         private ReloadWeaponEvent reloadWeaponEvent;
         private WeaponFiredEvent weaponFiredEvent;
+        private CancellationTokenSource _CancellationTokenSource;
 
         // test code
-        public IFireable CurrentAmmo;
+        private IFireable CurrentAmmo;
 
         private void Awake()
         {
@@ -33,6 +34,7 @@ namespace SnakeGame.AbwehrSystem
             fireWeaponEvent = GetComponent<FireWeaponEvent>();
             reloadWeaponEvent = GetComponent<ReloadWeaponEvent>();
             weaponFiredEvent = GetComponent<WeaponFiredEvent>();
+            _CancellationTokenSource = new();
         }
 
         private void Update()
@@ -48,6 +50,12 @@ namespace SnakeGame.AbwehrSystem
         private void OnDisable()
         {
             fireWeaponEvent.OnFire -= FireWeaponEvent_OnFire;
+            _CancellationTokenSource?.Cancel();
+        }
+
+        private void OnDestroy()
+        {
+            _CancellationTokenSource?.Dispose();
         }
 
         /// <summary>
@@ -83,12 +91,13 @@ namespace SnakeGame.AbwehrSystem
         /// <summary>
         /// Sets Up The Bullet/Ammo Using A GameObject From The Object Pool
         /// </summary>
-        private async void FireAmmo(float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
+        private void FireAmmo(float aimAngle, float weaponAimAngle, Vector3 weaponAimDirectionVector)
         {
             BaseAmmoSO currentAmmo = activeWeapon.GetCurrentAmmo();
 
             if (currentAmmo != null)
-                await FireAmmoAsync(currentAmmo, aimAngle, weaponAimAngle, weaponAimDirectionVector, destroyCancellationToken);
+                StartCoroutine(FireAmmoRoutine(currentAmmo, aimAngle, weaponAimAngle, weaponAimDirectionVector));
+                //await FireAmmoAsync(currentAmmo, aimAngle, weaponAimAngle, weaponAimDirectionVector, _CancellationTokenSource.Token);
         }
 
         /// <summary>
@@ -126,10 +135,10 @@ namespace SnakeGame.AbwehrSystem
                 float ammoSpeed = Random.Range(currentAmmo.minAmmoSpeed, currentAmmo.maxAmmoSpeed);
 
                 // Get the component with the IFireable interface
-                CurrentAmmo = (IFireable)PoolManager.Instance.ReuseComponent(ammoPrefab, activeWeapon.GetFirePosition(), Quaternion.identity);
+                IFireable ammo = (IFireable)PoolManager.Instance.ReuseComponent(ammoPrefab, activeWeapon.GetFirePosition(), Quaternion.identity);
 
                 // Initialise the ammo
-                CurrentAmmo.InitialiseAmmo(currentAmmo, aimAngle, weaponAimAngle, ammoSpeed, weaponAimDirectionVector);
+                ammo.InitialiseAmmo(currentAmmo, aimAngle, weaponAimAngle, ammoSpeed, weaponAimDirectionVector);
 
                 // Wait for the ammo per shoot timegap
                 yield return new WaitForSeconds(ammoSpawnInterval);
@@ -181,10 +190,10 @@ namespace SnakeGame.AbwehrSystem
                 float ammoSpeed = Random.Range(currentAmmo.minAmmoSpeed, currentAmmo.maxAmmoSpeed);
 
                 // Get the component with the IFireable interface
-                CurrentAmmo = (IFireable)PoolManager.Instance.ReuseComponent(ammoPrefab, activeWeapon.GetFirePosition(), Quaternion.identity);
+                 IFireable ammo = (IFireable)PoolManager.Instance.ReuseComponent(ammoPrefab, activeWeapon.GetFirePosition(), Quaternion.identity);
 
                 // Initialise the ammo
-                CurrentAmmo.InitialiseAmmo(currentAmmo, aimAngle, weaponAimAngle, ammoSpeed, weaponAimDirectionVector);
+                ammo.InitialiseAmmo(currentAmmo, aimAngle, weaponAimAngle, ammoSpeed, weaponAimDirectionVector);
 
                 // Wait for the ammo per shoot timegap
                 await UniTask.Delay((int)ammoSpawnInterval * 1000);
@@ -276,7 +285,7 @@ namespace SnakeGame.AbwehrSystem
         private void WeaponSoundEffects()
         {
             if (activeWeapon.GetCurrentWeapon().weaponDetails.fireSound != null)
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(activeWeapon.GetCurrentWeapon().weaponDetails.fireSound);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(activeWeapon.GetCurrentWeapon().weaponDetails.fireSound);
         }
     }
 }

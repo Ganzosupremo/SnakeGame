@@ -1347,14 +1347,14 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.35092592
-    width: 0.16822918
-    height: 0.16822916
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8.4375
+  orthographic size: 11.25
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1725,7 +1725,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633479772}
   m_Enabled: 1
-  m_Alpha: 0.5679176
+  m_Alpha: 0.22140366
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -2720,7 +2720,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 958640990}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.073936, y: 36.87129, z: 0.29505932}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2920,12 +2920,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
   - {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
   - {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
+  - {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
   - {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-  currentDungeonLevelListIndex: 2
+  currentDungeonLevelListIndex: 1
   loadScreenText: {fileID: 240902833}
   canvasGroup: {fileID: 633479776}
   pauseMenuUI: {fileID: 6583639098866822507}
   feedbackText: {fileID: 1447294440}
+  _GameOverMusic: {fileID: 11400000, guid: 66cd5cd7ee602564b9ff187200c7cce7, type: 2}
   _ObjectivesBackground: {fileID: 1132275018}
 --- !u!1 &1062857585
 GameObject:
@@ -5641,6 +5643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bc3ae997e87d84786a892f73943fdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _LowHealthSoundEffect: {fileID: 11400000, guid: 1dfe4d82b6255b642bab34705ca80e57, type: 2}
 --- !u!1 &2119549362
 GameObject:
   m_ObjectHideFlags: 0

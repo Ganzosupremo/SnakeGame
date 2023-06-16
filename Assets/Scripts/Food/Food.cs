@@ -24,12 +24,12 @@ namespace SnakeGame.FoodSystem
         private MaterializeEffect m_MaterializeEffect;
         private SpriteRenderer m_SpriteRenderer;
         [SerializeField] private SpriteRenderer minimapSpriteRenderer;
-        private Sprite foodSprite;
         private long m_Score = 0;
         private bool m_IsColliding = false;
 
         // This is the trigger collider, detects when the player comes near the food and eats it
-        private CircleCollider2D triggerCollider2D;
+        private CircleCollider2D m_TriggerCollider2D;
+        
         // This collider prevents the food for passing trough walls or something
         [SerializeField] private CircleCollider2D solidCollider2D;
 
@@ -43,7 +43,7 @@ namespace SnakeGame.FoodSystem
         {
             m_MaterializeEffect = GetComponent<MaterializeEffect>();
             m_SpriteRenderer = GetComponent<SpriteRenderer>();
-            triggerCollider2D = GetComponent<CircleCollider2D>();
+            m_TriggerCollider2D = GetComponent<CircleCollider2D>();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -61,15 +61,14 @@ namespace SnakeGame.FoodSystem
             }
         }
 
-        public void InitializeFood(FoodSO foodSO, GameLevelSO gameLevel)
+        public void InitializeFood(FoodSO foodSO)
         {
             this.foodSO = foodSO;
 
             m_IsColliding = false;
 
-            foodSprite = foodSO.FoodSprite;
-            m_SpriteRenderer.sprite = foodSprite;
-            minimapSpriteRenderer.sprite = this.foodSO.MinimapFoodSprite;
+            m_SpriteRenderer.sprite = foodSO.FoodSprite;
+            minimapSpriteRenderer.sprite = foodSO.MinimapFoodSprite;
 
             m_Score = foodSO.score;
 
@@ -96,7 +95,7 @@ namespace SnakeGame.FoodSystem
 
         private void EnableFood(bool isActive)
         {
-            triggerCollider2D.enabled = isActive;
+            m_TriggerCollider2D.enabled = isActive;
             solidCollider2D.enabled = isActive;
         }
 
@@ -104,7 +103,7 @@ namespace SnakeGame.FoodSystem
         {
             if (foodSO.SoundEffect == null) return;
 
-            SoundEffectManager.CallOnSoundEffectSelectedEvent(foodSO.SoundEffect);
+            SoundEffectManager.CallOnSoundEffectChangedEvent(foodSO.SoundEffect);
         }
 
         private void DisableFood()

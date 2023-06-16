@@ -262,7 +262,6 @@ namespace SnakeGame.AbwehrSystem.Ammo
                 if (ammoDamage < originalAmmoDamage)
                 {
                     ammoDamage = originalAmmoDamage;
-                    //GameManager.Instance.CallShowMesageRoutine($"Damage At Lowest Possible!", 1.5f);
                     return;
                 }
                 GameManager.Instance.CallShowMesageRoutine($"Damage Decreased!", 1.5f);

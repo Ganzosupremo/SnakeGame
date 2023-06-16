@@ -131,7 +131,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         protected override void PlayCollisionSoundEffect()
         {
             if (_LaserAmmoDetails.CollisionSoundEffect != null)
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(_LaserAmmoDetails.CollisionSoundEffect);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(_LaserAmmoDetails.CollisionSoundEffect);
         }
     }
 }

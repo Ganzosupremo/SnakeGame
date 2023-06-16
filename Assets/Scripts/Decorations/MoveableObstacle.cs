@@ -41,7 +41,7 @@ namespace SnakeGame.Decorations
             {
                 if (moveSound != null && Time.frameCount % 10 == 0)
                 {
-                    SoundEffectManager.CallOnSoundEffectSelectedEvent(moveSound);
+                    SoundEffectManager.CallOnSoundEffectChangedEvent(moveSound);
                 }
             }
         }

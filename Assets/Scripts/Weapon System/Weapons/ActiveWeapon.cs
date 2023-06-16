@@ -9,9 +9,9 @@ namespace SnakeGame.AbwehrSystem
     public class ActiveWeapon : MonoBehaviour
     {
         #region Tooltip
-        //[Tooltip("Populate this with the Sprite Renderer on the child weapon gameobject")]
+        [Tooltip("Populate this with the Sprite Renderer on the child weapon gameobject")]
         #endregion
-        //[SerializeField] private SpriteRenderer weaponSpriteRenderer;
+        [SerializeField] private SpriteRenderer weaponSpriteRenderer;
 
         #region Tooltip
         //[Tooltip("Populate this with the Polygon Collider on the child weapon gameobject")]
@@ -57,7 +57,8 @@ namespace SnakeGame.AbwehrSystem
 
             // In the final game the weapon won't have a sprite,
             // just in the UI, comment this code later
-            //weaponSpriteRenderer.sprite = currentWeapon.weaponDetails.weaponSprite;
+            //if (weaponSpriteRenderer != null)
+            //    weaponSpriteRenderer.sprite = currentWeapon.weaponDetails.weaponSprite;
 
             //// Set the weapon polygon collider based on the shape the weapon sprite has
             //if (weaponPolygonCollider != null && weaponSpriteRenderer.sprite != null)
@@ -70,7 +71,9 @@ namespace SnakeGame.AbwehrSystem
             //    weaponPolygonCollider.points = spritePhysicsShapePointsList.ToArray();
             //}
 
-            weaponShootPosition.localPosition = currentWeapon.weaponDetails.weaponFirePosition;
+            // Add some offset to the fire position
+            Vector3 offset = currentWeapon.weaponDetails.weaponFirePosition;
+            weaponShootPosition.localPosition = offset * 1.5f;
         }
 
         /// <summary>
@@ -96,7 +99,10 @@ namespace SnakeGame.AbwehrSystem
         /// <returns>Returns The Weapon Fire Position</returns>
         public Vector3 GetFirePosition()
         {
-            return weaponShootPosition.position;
+            if (gameObject.activeSelf)
+                return weaponShootPosition.position;
+            else
+                return Vector3.zero;
         }
 
         /// <summary>
@@ -105,7 +111,10 @@ namespace SnakeGame.AbwehrSystem
         /// <returns>Returns The Fire Effect Of The Weapon</returns>
         public Vector3 GetWeaponFireEffectPosition()
         {
-            return weaponEffectPosition.position;
+            if (gameObject.activeSelf)
+                return weaponEffectPosition.position;
+            else
+                return  Vector3.zero;
         }
 
         /// <summary>

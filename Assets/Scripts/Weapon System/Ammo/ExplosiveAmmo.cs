@@ -46,7 +46,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
                     {
                         health.TakeDamage(m_ExplosiveAmmoDetail.ammoDamage);
                         if (health.enemy.enemyDetails.hitSoundEffect == null) return;
-                        SoundEffectManager.CallOnSoundEffectSelectedEvent(health.enemy.enemyDetails.hitSoundEffect);
+                        SoundEffectManager.CallOnSoundEffectChangedEvent(health.enemy.enemyDetails.hitSoundEffect);
                     }
                     // If the health component is atached to the player
                     else

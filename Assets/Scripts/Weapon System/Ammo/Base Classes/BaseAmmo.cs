@@ -176,7 +176,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
             if (health.enemy == null) return;
             if (health.enemy.enemyDetails.hitSoundEffect == null) return;
-            SoundEffectManager.CallOnSoundEffectSelectedEvent(health.enemy.enemyDetails.hitSoundEffect);
+            SoundEffectManager.CallOnSoundEffectChangedEvent(health.enemy.enemyDetails.hitSoundEffect);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
                     {
                         health.TakeDamage(_AmmoDetails.ammoDamage);
                         if (health.enemy.enemyDetails.hitSoundEffect == null) return;
-                        SoundEffectManager.CallOnSoundEffectSelectedEvent(health.enemy.enemyDetails.hitSoundEffect);
+                        SoundEffectManager.CallOnSoundEffectChangedEvent(health.enemy.enemyDetails.hitSoundEffect);
                     }
                 }
             }
@@ -231,7 +231,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
         protected virtual void PlayCollisionSoundEffect()
         {
             if (_AmmoDetails.CollisionSoundEffect != null)
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(_AmmoDetails.CollisionSoundEffect);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(_AmmoDetails.CollisionSoundEffect);
         }
 
         protected virtual void DisableAmmo()

@@ -2289,9 +2289,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Select the desired difficulty of the game. The player's and enemies' health
-    will change depending on the difficulty. The higher the difficulty, the faster
-    the enemies' move speed and fire rate are.
+  m_text: Every in-game minute the enemies' health is increased by a certain amount,
+    the difficulty you select here, controls how faster the in-game time flows and
+    by how much the enemies' health is increased.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 77324fdc4fd3003419e67b36c9bd4446, type: 2}
   m_sharedMaterial: {fileID: 2623338010483359974, guid: 77324fdc4fd3003419e67b36c9bd4446, type: 2}
@@ -2318,7 +2318,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14.85
+  m_fontSize: 13.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6274,6 +6274,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0

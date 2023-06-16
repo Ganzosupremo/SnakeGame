@@ -68,7 +68,7 @@ namespace SnakeGame.Decorations
             Destroy(boxCollider2D);
 
             if (destroySoundEffect != null)
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(destroySoundEffect);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(destroySoundEffect);
 
             animator.SetBool(Settings.destroy, true);
 

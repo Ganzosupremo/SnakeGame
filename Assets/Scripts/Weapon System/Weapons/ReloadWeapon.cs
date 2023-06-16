@@ -69,7 +69,7 @@ namespace SnakeGame.AbwehrSystem
         {
             // Play the reload sound when the weapon is reloaded
             if (weapon.weaponDetails.reloadSound != null)
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(weapon.weaponDetails.reloadSound);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(weapon.weaponDetails.reloadSound);
 
             weapon.isWeaponReloading = true;
 
@@ -124,7 +124,7 @@ namespace SnakeGame.AbwehrSystem
         {
             // Play the reload sound when the weapon is reloaded
             if (weapon.weaponDetails.reloadSound != null)
-                SoundEffectManager.CallOnSoundEffectSelectedEvent(weapon.weaponDetails.reloadSound);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(weapon.weaponDetails.reloadSound);
 
             weapon.isWeaponReloading = true;
 

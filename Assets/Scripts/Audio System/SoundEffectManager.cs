@@ -1,4 +1,6 @@
+using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
+using SnakeGame.HealthSystem;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
 using System;
@@ -20,12 +22,14 @@ namespace SnakeGame.AudioSystem
 
         public SoundEffectSO RailgunReloadTest;
 
-        public static event Action OnSFXVolumeIncreased;
-        public static event Action OnSFXVolumeDecreased;
-        public static event Action OnMinigunSFXVolumeIncreased;
-        public static event Action OnMinigunSFXVolumeDecreased;
+        private static event Action OnSFXVolumeIncreased;
+        private static event Action OnSFXVolumeDecreased;
+        private static event Action OnMinigunSFXVolumeIncreased;
+        private static event Action OnMinigunSFXVolumeDecreased;
 
-        public static event Action<SoundEffectSO> OnSoundEffectSelected;
+        private static event Action<SoundEffectSO> OnSoundEffectChanged;
+
+        private static SoundEffectSO _CurrentSoundEffect;
 
         private void Start()
         {
@@ -35,43 +39,62 @@ namespace SnakeGame.AudioSystem
 
         private void OnEnable()
         {
-            OnSFXVolumeIncreased += SoundEffectManager_OnSFXVolumeIncreased;
-            OnSFXVolumeDecreased += SoundEffectManager_OnSFXVolumeDecreased;
-            OnMinigunSFXVolumeIncreased += SoundEffectManager_OnMinigunSFXVolumeIncreased;
-            OnMinigunSFXVolumeDecreased += SoundEffectManager_OnMinigunSFXVolumeDecreased;
-            OnSoundEffectSelected += SoundEffectManager_OnSoundEffectChanged;
+            OnSFXVolumeIncreased += SFXVolumeIncreased;
+            OnSFXVolumeDecreased += SFXVolumeDecreased;
+            OnMinigunSFXVolumeIncreased += MinigunSFXVolumeIncreased;
+            OnMinigunSFXVolumeDecreased += MninigunSFXVolumeDecreased;
+            OnSoundEffectChanged += SoundEffectChanged;
+            
+            if (GameManager.Instance != null)
+                GameManager.Instance.GetSnake().healthEvent.OnHealthChanged += OnHealthChanged;
         }
 
         private void OnDisable()
         {
-            OnSFXVolumeIncreased -= SoundEffectManager_OnSFXVolumeIncreased;
-            OnSFXVolumeDecreased -= SoundEffectManager_OnSFXVolumeDecreased;
-            OnMinigunSFXVolumeIncreased -= SoundEffectManager_OnMinigunSFXVolumeIncreased;
-            OnMinigunSFXVolumeDecreased -= SoundEffectManager_OnMinigunSFXVolumeDecreased;
-            OnSoundEffectSelected -= SoundEffectManager_OnSoundEffectChanged;
+            OnSFXVolumeIncreased -= SFXVolumeIncreased;
+            OnSFXVolumeDecreased -= SFXVolumeDecreased;
+            OnMinigunSFXVolumeIncreased -= MinigunSFXVolumeIncreased;
+            OnMinigunSFXVolumeDecreased -= MninigunSFXVolumeDecreased;
+            OnSoundEffectChanged -= SoundEffectChanged;
+            
+            if (GameManager.Instance != null)
+                GameManager.Instance.GetSnake().healthEvent.OnHealthChanged -= OnHealthChanged;
         }
 
-        private void SoundEffectManager_OnSoundEffectChanged(SoundEffectSO soundEffect)
+        private void OnHealthChanged(HealthEvent healthEvent, HealthEventArgs args)
+        {
+            float lowHealthThreshold = .33f;
+            if (args.healthPercent <= lowHealthThreshold && args.healthPercent >= 0f)
+            {
+                PlaySoundEffect(GameResources.Instance.LowHealthSoundEffect, true);
+            }
+            else
+            {
+                StopSoundEffect(GameResources.Instance.LowHealthSoundEffect);
+            }
+        }
+
+        private void SoundEffectChanged(SoundEffectSO soundEffect)
         {
             PlaySoundEffect(soundEffect);
         }
 
-        private void SoundEffectManager_OnMinigunSFXVolumeDecreased()
+        private void MninigunSFXVolumeDecreased()
         {
             DecreaseMinigunFireSound();
         }
 
-        private void SoundEffectManager_OnMinigunSFXVolumeIncreased()
+        private void MinigunSFXVolumeIncreased()
         {
             IncreaseMinigunFireSound();
         }
 
-        private void SoundEffectManager_OnSFXVolumeDecreased()
+        private void SFXVolumeDecreased()
         {
             DecreaseSoundsVolume();
         }
 
-        private void SoundEffectManager_OnSFXVolumeIncreased()
+        private void SFXVolumeIncreased()
         {
             IncreaseSoundsVolume();
         }
@@ -83,8 +106,22 @@ namespace SnakeGame.AudioSystem
         {
             SoundEffect sound = (SoundEffect)PoolManager.Instance.ReuseComponent(soundEffect.soundPrefab, Vector3.zero);
             sound.SetSound(soundEffect);
+            sound.AudioSource.loop = false;
             sound.gameObject.SetActive(true);
             StartCoroutine(DisableSound(sound, soundEffect.soundEffectClip.length));
+        }
+
+        private void PlaySoundEffect(SoundEffectSO soundEffect, bool shouldLoop)
+        {
+            SoundEffect sound = (SoundEffect)PoolManager.Instance.ReuseComponent(soundEffect.soundPrefab, Vector3.zero);
+            sound.SetSound(soundEffect);
+            sound.AudioSource.loop = shouldLoop;
+            sound.gameObject.SetActive(true);
+        }
+
+        private void StopSoundEffect(SoundEffectSO soundEffect)
+        {
+            
         }
 
         /// <summary>
@@ -211,13 +248,19 @@ namespace SnakeGame.AudioSystem
         }
 
         /// <summary>
-        /// Triggers the <seealso cref="OnSoundEffectSelected"/> event.
+        /// Triggers the <seealso cref="OnSoundEffectChanged"/> event.
         /// That event plays the selected SoundEffectSO.
         /// </summary>
         /// <param name="soundEffect"></param>
-        public static void CallOnSoundEffectSelectedEvent(SoundEffectSO soundEffect)
+        public static void CallOnSoundEffectChangedEvent(SoundEffectSO soundEffect)
         {
-            OnSoundEffectSelected?.Invoke(soundEffect);
+            _CurrentSoundEffect = soundEffect;
+            OnSoundEffectChanged?.Invoke(soundEffect);
+        }
+
+        public static float GetSoundEffectLength()
+        {
+            return _CurrentSoundEffect.soundEffectClip.length;
         }
 
         public void Load(GameData data)

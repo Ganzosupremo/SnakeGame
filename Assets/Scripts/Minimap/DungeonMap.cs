@@ -1,4 +1,5 @@
 using Cinemachine;
+using Cysharp.Threading.Tasks;
 using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
 using SnakeGame.ProceduralGenerationSystem;
@@ -26,8 +27,11 @@ namespace SnakeGame.Minimap
         private Camera mainCamera;
         //private Snake snake;
 
-        private float waitBeforeTeleporting = 0.7f;
-        private readonly float counter = 0.7f;
+        private float waitBeforeTeleporting = 1f;
+        private readonly float counter = 1f;
+
+        private float _DisplayCooldown = 0.15f;
+        private float _Timer = 0.15f;
 
         protected override void Awake()
         {
@@ -52,6 +56,7 @@ namespace SnakeGame.Minimap
         private void Update()
         {
             waitBeforeTeleporting -= Time.deltaTime;
+            _DisplayCooldown -= Time.deltaTime;
 
             if (GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Click.WasPressedThisFrame() && 
                 GameManager.CurrentGameState == GameState.OverviewMap && 
@@ -67,8 +72,8 @@ namespace SnakeGame.Minimap
         /// </summary>
         public void DisplayDungeonOverviewMap()
         {
-            //player.playerControl.GetPlayerInputActions().OverviewMap.Enable();
-            //characterInput.OverviewMap.Enable();
+            if (_DisplayCooldown >= 0f) return;
+
             GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Enable();
 
             // Set the game states
@@ -88,13 +93,44 @@ namespace SnakeGame.Minimap
 
             // Disable the small minimap UI on the top right corner
             MinimapUI.SetActive(false);
+
+            _DisplayCooldown = _Timer;
+        }
+
+        public async UniTask DisplayDungeonOverviewMapAsync()
+        {
+            if (_DisplayCooldown >= 0f) return;
+
+            GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Enable();
+
+            await UniTask.Delay(100);
+
+            // Set the game states
+            GameManager.PreviousGameState = GameManager.CurrentGameState;
+            GameManager.CurrentGameState = GameState.OverviewMap;
+
+            // Disable the player
+            GameManager.Instance.GetSnake().idleEvent.CallIdleEvent();
+            GameManager.Instance.GetSnake().GetSnakeControler().DisableSnake();
+
+            // Disable the main camera and display the overview map camera
+            mainCamera.gameObject.SetActive(false);
+            dungeonMapCamera.gameObject.SetActive(true);
+
+            // Ensure all room are active when displaying the overview map
+            ActivateDungeonRoomsForDisplay();
+
+            // Disable the small minimap UI on the top right corner
+            MinimapUI.SetActive(false);
+
+            _DisplayCooldown = _Timer;
         }
 
         public void ClearDungeonOverviewMap()
         {
-            //characterInput.OverviewMap.Disable();
-            //characterInput.Disable();
-            //GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Disable();
+            if (_DisplayCooldown >= 0f) return;
+
+            GameManager.Instance.GetSnake().GetSnakeControler().GetInputActions().OverviewMap.Disable();
 
             // Restore the game states
             GameManager.CurrentGameState = GameManager.PreviousGameState;
@@ -107,6 +143,27 @@ namespace SnakeGame.Minimap
             mainCamera.gameObject.SetActive(true);
             dungeonMapCamera.gameObject.SetActive(false);
             
+            // Enable again the small minimap UI on the top right corner
+            MinimapUI.SetActive(true);
+
+            _DisplayCooldown = _Timer;
+        }
+
+        public async  UniTask ClearDungeonMapAsync()
+        {
+            await UniTask.Delay(100);
+
+            // Restore the game states
+            GameManager.CurrentGameState = GameManager.PreviousGameState;
+            GameManager.PreviousGameState = GameState.OverviewMap;
+
+            // Reenable the player
+            GameManager.Instance.GetSnake().GetSnakeControler().EnableSnake();
+
+            // Renable the main camera and disable the overview map
+            mainCamera.gameObject.SetActive(true);
+            dungeonMapCamera.gameObject.SetActive(false);
+
             // Enable again the small minimap UI on the top right corner
             MinimapUI.SetActive(true);
         }
@@ -160,7 +217,7 @@ namespace SnakeGame.Minimap
 
         private void ActivateDungeonRoomsForDisplay()
         {
-            foreach (KeyValuePair<string, Room> keyValuePair in DungeonBuilder.Instance.dungeonBuilderRoomDictionary)
+            foreach (KeyValuePair<string, Room> keyValuePair in DungeonBuilder.DungeonBuilderRoomDictionary)
             {
                 Room room = keyValuePair.Value;
 

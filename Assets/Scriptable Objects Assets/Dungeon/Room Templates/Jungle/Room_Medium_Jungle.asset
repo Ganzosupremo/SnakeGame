@@ -45,7 +45,7 @@ MonoBehaviour:
     doorwayCopyTileHeight: 4
     isConnected: 0
     isUnavailable: 0
-  - doorPosition: {x: 13, y: 22}
+  - doorPosition: {x: -13, y: 22}
     doorOrientation: 3
     doorPrefab: {fileID: 2875601794430873091, guid: dc75d93bc8ac4584fa4717627088df61, type: 3}
     doorwayStartCopyPosition: {x: -13, y: 25}
@@ -61,7 +61,47 @@ MonoBehaviour:
   - {x: -3, y: -10}
   - {x: 12, y: -10}
   - {x: 11, y: 2}
-  enemiesByLevelList: []
-  roomEnemySpawnParemetersList: []
-  foodByLevelList: []
-  roomFoodSpawnParametersList: []
+  enemiesByLevelList:
+  - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: 2fddd5ef85ab81044808e69d09cfcc6a, type: 2}
+      spawnRatio: 7
+    - dungeonObject: {fileID: 11400000, guid: c8bc2d25b10acdd46947452d319f4a06, type: 2}
+      spawnRatio: 5
+    - dungeonObject: {fileID: 11400000, guid: 5a4f8776ec3e1874fae6c69a0614f985, type: 2}
+      spawnRatio: 3
+    - dungeonObject: {fileID: 11400000, guid: 8e54a0de83b035446b87a8cd7076ee8f, type: 2}
+      spawnRatio: 8
+    - dungeonObject: {fileID: 11400000, guid: da8b6bac083b53e409a59b87f3c908f0, type: 2}
+      spawnRatio: 6
+    - dungeonObject: {fileID: 11400000, guid: 5ccb3d704a91b984cb21c534ca93c08b, type: 2}
+      spawnRatio: 6
+    - dungeonObject: {fileID: 11400000, guid: 36eaa98a4fd0db24b8bb90fabe298461, type: 2}
+      spawnRatio: 7
+  roomEnemySpawnParemetersList:
+  - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
+    minTotalItemsToSpawn: 6
+    maxTotalItemsToSpawn: 10
+    minConcurrentItems: 4
+    maxConcurrentItems: 8
+    minSpawnInterval: 1
+    maxSpawnInterval: 2
+  foodByLevelList:
+  - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: 13e203f846ac0b446b88669675393277, type: 2}
+      spawnRatio: 500
+    - dungeonObject: {fileID: 11400000, guid: eaaabba6e3123094d836a45e855d2a4d, type: 2}
+      spawnRatio: 100
+    - dungeonObject: {fileID: 11400000, guid: 71e7527ecdfb15b4c812b4cc704a3ff7, type: 2}
+      spawnRatio: 5
+    - dungeonObject: {fileID: 11400000, guid: f806310c89831d54db3a82a8aac3f8d5, type: 2}
+      spawnRatio: 1
+  roomFoodSpawnParametersList:
+  - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
+    minTotalItemsToSpawn: 1
+    maxTotalItemsToSpawn: 2
+    minConcurrentItems: 1
+    maxConcurrentItems: 1
+    minSpawnInterval: 2
+    maxSpawnInterval: 3

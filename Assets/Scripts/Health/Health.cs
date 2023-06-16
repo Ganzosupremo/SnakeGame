@@ -3,12 +3,19 @@ using UnityEngine;
 using SnakeGame.Enemies;
 using SnakeGame.PlayerSystem;
 using Cysharp.Threading.Tasks;
+using SnakeGame.AudioSystem;
+using SnakeGame.GameUtilities;
+using System;
+using SnakeGame.Debuging;
 
 namespace SnakeGame.HealthSystem
 {
     [DisallowMultipleComponent]
     public class Health : MonoBehaviour
     {
+        public static event Action OnLowHealth;
+        public static event Action OnNormalHealth;
+
         [Tooltip("Here goes the health bar prefab for the enemies")]
         [SerializeField] private HealthBar healthBar;
 
@@ -56,8 +63,9 @@ namespace SnakeGame.HealthSystem
             if (enemy != null && enemy.enemyDetails.isHealthBarDisplayed && healthBar != null)
             {
                 healthBar.EnableHealthBar();
+                
                 if (enemy.enemyDetails.IsBoss) 
-                    healthBar.SetBossName($"<{enemy.enemyDetails.enemyName}>");
+                    healthBar.SetBossName($"<{enemy.enemyDetails.enemyName}>".Color("red"));
             }
             else if (healthBar = null)
             {
@@ -78,18 +86,15 @@ namespace SnakeGame.HealthSystem
 
         public void TakeDamage(int damage)
         {
-            if (IsDamageable)
-            {
-                CurrentHealth -= damage;
-                CallHealthEvent(damage);
+            if (!IsDamageable) return;
+            
+            CurrentHealth -= damage;
+            CallHealthEvent(damage);
 
-                PostHitImmunity();
-            }
+            PostHitImmunity();
 
             if (healthBar != null)
-            {
                 healthBar.SetHealthBarValue((float)CurrentHealth / (float)startingHealth);
-            }
         }
 
         /// <summary>
@@ -124,6 +129,7 @@ namespace SnakeGame.HealthSystem
                 if (snake != null)
                     snake.SubstractSnakeSegment();
 
+                //await InmunityAsync(immunityTime, spriteRenderer);
                 immunityCoroutine = StartCoroutine(ImmunityRoutine(immunityTime, spriteRenderer));
             }
         }
@@ -184,6 +190,16 @@ namespace SnakeGame.HealthSystem
         public void SetIsDamageable(bool isDamageable)
         {
             IsDamageable = !isDamageable;
+        }
+
+        public static void CallOnLowHealthEvent()
+        {
+            OnLowHealth?.Invoke();
+        }
+
+        public static void CallOnNormalHealthEvent()
+        {
+            OnNormalHealth?.Invoke();
         }
     }
 }

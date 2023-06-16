@@ -59,6 +59,8 @@ namespace SnakeGame
         #endregion
         public Transform snakeBodyPrefab;
 
+        public SoundEffectSO LowHealthSoundEffect;
+
         #region Header Game Audio
         [Header("AUDIO MANAGEMENT")]
         [Space(10)]

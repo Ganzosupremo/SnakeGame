@@ -4,7 +4,6 @@ using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
 using System;
 using System.Collections.Generic;
-using UnityEditor.Media;
 using UnityEngine;
 
 namespace SnakeGame.PlayerSystem

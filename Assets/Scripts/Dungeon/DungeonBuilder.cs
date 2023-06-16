@@ -1,14 +1,16 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using SnakeGame.Debuging;
 
 namespace SnakeGame.ProceduralGenerationSystem
 {
     [DisallowMultipleComponent]
     public class DungeonBuilder : SingletonMonoBehaviour<DungeonBuilder>
     {
-        public Dictionary<string, Room> dungeonBuilderRoomDictionary = new();
+        public static Dictionary<string, Room> DungeonBuilderRoomDictionary { get => dungeonBuilderRoomDictionary; }
 
+        private static readonly Dictionary<string, Room> dungeonBuilderRoomDictionary = new();
         private readonly Dictionary<string, RoomTemplateSO> roomTemplateDictionary = new();
         private List<RoomTemplateSO> roomTemplateList = null;
         private RoomNodeTypeListSO roomNodeTypeList;
@@ -571,7 +573,7 @@ namespace SnakeGame.ProceduralGenerationSystem
             }
             else
             {
-                Debug.Log("No Room Node Graphs In List");
+                this.Log("No Room Node Graphs In List");
                 return null;
             }
         }

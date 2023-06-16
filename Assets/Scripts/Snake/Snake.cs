@@ -1,10 +1,13 @@
 using Cysharp.Threading.Tasks;
 using SnakeGame.AbwehrSystem;
+using SnakeGame.AudioSystem;
 using SnakeGame.FoodSystem;
+using SnakeGame.GameUtilities;
 using SnakeGame.HealthSystem;
 using SnakeGame.PlayerSystem.AbilitySystem;
 using SnakeGame.TimeSystem;
 using SnakeGame.VisualEffects;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -71,14 +74,17 @@ namespace SnakeGame.PlayerSystem
         [HideInInspector] public List<Weapon> weaponList = new();
         #endregion
 
+        [SerializeField] private SoundEffectSO _LowHealthEffect;
+
         public List<SnakeBody> SnakeBodyList { get; private set; } = new();
         public List<Transform> SnakeSegmentsList { get; private set; } = new();
         public bool IsSnakeColliding { get; private set; }
 
-        private int snakeSegmentCount;
-        private MaterializeEffect materializeEffect;
-        private SnakeControler snakeControler;
-        private Light2D snakeLight;
+        private int _SnakeSegmentCount;
+        private MaterializeEffect _MaterializeEffect;
+        private SnakeControler _SnakeControler;
+        private Light2D _SnakeLight;
+        private PeriodicFunction _SnakePeriodicFunc;
         private void Awake()
         {
             #region Getting Component References
@@ -89,7 +95,7 @@ namespace SnakeGame.PlayerSystem
             destroyEvent = GetComponent<DestroyEvent>();
             aimWeaponEvent = GetComponent<AimWeaponEvent>();
             aimWeapon = GetComponent<AimWeapon>();
-            snakeControler = GetComponent<SnakeControler>();
+            _SnakeControler = GetComponent<SnakeControler>();
             movementByVelocityEvent = GetComponent<MovementByVelocityEvent>();
             movementToPositionEvent = GetComponent<MovementToPositionEvent>();
             idle = GetComponent<Idle>();
@@ -103,8 +109,8 @@ namespace SnakeGame.PlayerSystem
             reloadWeapon = GetComponent<ReloadWeapon>();
             weaponReloadedEvent = GetComponent<WeaponReloadedEvent>();
             spriteRenderer = GetComponent<SpriteRenderer>();
-            materializeEffect = GetComponent<MaterializeEffect>();
-            snakeLight = GetComponentInChildren<Light2D>();
+            _MaterializeEffect = GetComponent<MaterializeEffect>();
+            _SnakeLight = GetComponentInChildren<Light2D>();
             #endregion
         }
 
@@ -132,9 +138,9 @@ namespace SnakeGame.PlayerSystem
                 snakeBody.gameObject.SetActive(true);
                 SnakeBodyList.Add(snakeBody);
 
-                snakeBody.transform.position = SnakeSegmentsList[snakeSegmentCount].position;
+                snakeBody.transform.position = SnakeSegmentsList[_SnakeSegmentCount].position;
                 SnakeSegmentsList.Add(snakeBody.transform);
-                snakeSegmentCount++;
+                _SnakeSegmentCount++;
             }
         }
 
@@ -158,7 +164,6 @@ namespace SnakeGame.PlayerSystem
 
             IsSnakeColliding = true;
             GrowSnake(food.foodSO.HealthIncrease);
-            //IncreaseWeaponDamage(food.foodSO.DamageIncreasePercentage);
         }
 
         private void OnTimeChanged(DayCicle dayCicle)
@@ -168,11 +173,20 @@ namespace SnakeGame.PlayerSystem
 
         private void OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
         {
-            if (healthEventArgs.healthAmount <= 0f)
+            UpdatePeriodicFunction(healthEventArgs);
+
+            if (healthEventArgs.healthAmount <= 0)
             {
                 destroyEvent.CallOnDestroy(true, 0);
+                PeriodicFunction.StopAllFunc("LowHealthEffect");
                 ResetSnakeSegments();
             }
+        }
+
+        private void PlayLowHealthEffect()
+        {
+            if (_LowHealthEffect != null)
+                SoundEffectManager.CallOnSoundEffectChangedEvent(_LowHealthEffect);
         }
 
         /// <summary>
@@ -184,7 +198,7 @@ namespace SnakeGame.PlayerSystem
             this.snakeDetails = snakeDetails;
 
             SnakeSegmentsList.Add(this.transform);
-            snakeSegmentCount = 0;
+            _SnakeSegmentCount = 0;
 
             IsSnakeColliding = false;
 
@@ -214,7 +228,7 @@ namespace SnakeGame.PlayerSystem
             // Disable snake while the effect is in progress
             EnableSnake(false);
             
-            await materializeEffect.MaterializeAsync(snakeDetails.materializeShader,
+            await _MaterializeEffect.MaterializeAsync(snakeDetails.materializeShader,
                 snakeDetails.materializeColor, snakeDetails.materializeTime, snakeDetails.defaultLitMaterial, spriteRenderer);
             
             // Enable the snake again
@@ -242,7 +256,7 @@ namespace SnakeGame.PlayerSystem
         /// <returns></returns>
         public SnakeControler GetSnakeControler()
         {
-            return snakeControler;
+            return _SnakeControler;
         }
 
         public Weapon AddWeaponToPlayer(WeaponDetailsSO weaponDetails)
@@ -276,12 +290,12 @@ namespace SnakeGame.PlayerSystem
                 SnakeSegmentsList[^1].position, Quaternion.identity);
 
             snakeBody.gameObject.SetActive(true);
-            snakeBody.transform.position = SnakeSegmentsList[snakeSegmentCount].position;
+            snakeBody.transform.position = SnakeSegmentsList[_SnakeSegmentCount].position;
             
             // Add the new segment to both lists
             SnakeBodyList.Add(snakeBody);
             SnakeSegmentsList.Add(snakeBody.transform);
-            snakeSegmentCount++;
+            _SnakeSegmentCount++;
 
             snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -SnakeSegmentsList.Count;
             snakeBody.WaitHeadUpdateCycle(SnakeSegmentsList.Count);
@@ -311,18 +325,18 @@ namespace SnakeGame.PlayerSystem
 
         public void SubstractSnakeSegment()
         {
-            if (SnakeSegmentsList.Count > 0 && snakeSegmentCount > 0)
+            if (SnakeSegmentsList.Count > 0 && _SnakeSegmentCount > 0)
             {
                 if (!health.IsDamageable) return;
 
-                SnakeSegmentsList[snakeSegmentCount].TryGetComponent(out SnakeBody snakeBody);
+                SnakeSegmentsList[_SnakeSegmentCount].TryGetComponent(out SnakeBody snakeBody);
 
                 snakeBody.gameObject.SetActive(false);
                 SnakeSegmentsList.Remove(snakeBody.transform);
                 if (SnakeBodyList.Count > 0)
                     SnakeBodyList.Remove(snakeBody);
 
-                snakeSegmentCount--;
+                _SnakeSegmentCount--;
 
                 // Reduce the multiplier when the player gets hit,
                 // because the player at some point will run out of ammo
@@ -359,8 +373,8 @@ namespace SnakeGame.PlayerSystem
 
         private void EnableSnake(bool isActive)
         {
-            snakeControler.IsSnakeEnabled = isActive;
-            snakeControler.enabled = isActive;
+            _SnakeControler.IsSnakeEnabled = isActive;
+            _SnakeControler.enabled = isActive;
             fireWeapon.enabled = isActive;
         }
 
@@ -369,24 +383,42 @@ namespace SnakeGame.PlayerSystem
             spriteRenderer.material = material;
         }
 
-        public void ChangeLightIntensity(DayCicle time)
+        private void ChangeLightIntensity(DayCicle time)
         {
             switch (time)
             {
                 case DayCicle.Morning:
-                    snakeLight.intensity = 0f;
+                    _SnakeLight.intensity = 0f;
+                    _SnakeLight.gameObject.SetActive(false);
                     break;
                 case DayCicle.Afternoon:
-                    snakeLight.intensity = 0.1f;
+                    _SnakeLight.gameObject.SetActive(true);
+                    _SnakeLight.intensity = 0.15f;
                     break;
                 case DayCicle.Evening:
-                    snakeLight.intensity = 0.3f;
+                    _SnakeLight.gameObject.SetActive(true);
+                    _SnakeLight.intensity = 0.35f;
                     break;
                 case DayCicle.Night:
-                    snakeLight.intensity = 0.6f;
+                    _SnakeLight.gameObject.SetActive(true);
+                    _SnakeLight.intensity = 0.65f;
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void UpdatePeriodicFunction(HealthEventArgs healthEventArgs)
+        {
+            if (healthEventArgs.healthAmount <= 3 && _LowHealthEffect != null)
+            {
+                //SoundEffectManager.CallOnSoundEffectChangedLoopingEvent(_LowHealthEffect, true);
+                Health.CallOnLowHealthEvent();
+            }
+            else if (healthEventArgs.healthAmount >= 3 && _LowHealthEffect != null)
+            {
+                //SoundEffectManager.CallOnSoundEffectChangedLoopingEvent(_LowHealthEffect, false);
+                Health.CallOnNormalHealthEvent();
             }
         }
     }
