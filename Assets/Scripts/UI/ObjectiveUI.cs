@@ -108,7 +108,7 @@ namespace SnakeGame.UI
             while (timer <= displayTime)
             {
                 timer += Time.deltaTime;
-                _CanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / 1.2f);
+                _CanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / displayTime);
                 await UniTask.NextFrame(cancellationToken);
             }
             await UniTask.NextFrame(cancellationToken);

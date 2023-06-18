@@ -123,7 +123,7 @@ namespace SnakeGame
             m_ScoreMultiplier = 0;
 
             //StartCoroutine(FadeScreen(0f, 1f, 0f, Color.black));
-            await FadeScreenAsync(0f,1f, 0f, Color.black);
+            await FadeScreenAsync(0f, 1f, 0f, Color.black);
         }
 
         private async void Update()
@@ -413,7 +413,7 @@ namespace SnakeGame
             await DisplayMessageAsync(levelName, Color.white, 4.2f, m_CancellationTokenSource.Token);
             GetSnake().GetSnakeControler().EnableSnake();
 
-            await FadeScreenAsync(1f,0f,2f,Color.black);
+            await FadeScreenAsync(1f, 0f, 2f, Color.black);
         }
 
         /// <summary>
@@ -570,6 +570,7 @@ namespace SnakeGame
         public IEnumerator FadeScreen(float currentAlpha, float targetAlpha, float timeSeconds, Color screenColor)
         {
             IsFading = true;
+            DisplayMusicUI.CanDisplay = false;
 
             Image image = canvasGroup.GetComponent<Image>();
             image.color = screenColor;
@@ -583,26 +584,37 @@ namespace SnakeGame
             }
 
             IsFading = false;
+            DisplayMusicUI.CanDisplay = true;
         }
 
-        public async UniTask FadeScreenAsync(float currentAlpha, float targetAlpha, float timeSeconds, Color screenColor)
+        public async UniTask FadeScreenAsync(float currentAlpha, float targetAlpha, float timeSeconds, Color screenColor, CancellationToken cancellationToken = default)
         {
-            IsFading = true;
-            DisplayMusicUI.CanDisplay = false;
+            if (cancellationToken.IsCancellationRequested) return;
 
-            Image image = canvasGroup.GetComponent<Image>();
-            image.color = screenColor;
-            float timer = 0f;
-
-            while (timer <= timeSeconds)
+            try
             {
-                timer += Time.deltaTime;
-                canvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / timeSeconds);
-                await UniTask.NextFrame();
-            }
+                IsFading = true;
+                DisplayMusicUI.CanDisplay = false;
 
-            IsFading = false;
-            DisplayMusicUI.CanDisplay = true;
+                Image image = canvasGroup.GetComponent<Image>();
+                image.color = screenColor;
+                float timer = 0f;
+
+                while (timer <= timeSeconds)
+                {
+                    timer += Time.deltaTime;
+                    this.Log(timer);
+                    canvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / timeSeconds);
+                    await UniTask.Yield();
+                }
+
+                IsFading = false;
+                DisplayMusicUI.CanDisplay = true;
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
         }
 
         /// <summary>

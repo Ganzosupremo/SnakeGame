@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using SnakeGame.AbwehrSystem;
 using SnakeGame.GameUtilities;
 using SnakeGame.ProceduralGenerationSystem;
@@ -6,6 +7,7 @@ using SnakeInput;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -18,6 +20,8 @@ namespace SnakeGame.PlayerSystem
     [DisallowMultipleComponent]
     public class SnakeControler : MonoBehaviour
     {
+        public bool IsSnakeEnabled { get; set; } = false;
+        
         [SerializeField] private MovementDetailsSO movementDetails;
         [SerializeField] private Transform weaponShootPosition;
 
@@ -41,7 +45,7 @@ namespace SnakeGame.PlayerSystem
         private Coroutine specialAbilityCoroutine;
 
         private bool isSpecialAbilityActive = false;
-        public bool IsSnakeEnabled { get; set; } = false;
+        private CancellationTokenSource _CancellationTokenSource = new();
 
         private void Awake()
         {
@@ -58,6 +62,16 @@ namespace SnakeGame.PlayerSystem
 
             SetInitialWeapon();
             SetAnimatorSpeed();
+        }
+
+        private void OnDisable()
+        {
+            _CancellationTokenSource.Cancel();
+        }
+
+        private void OnDestroy()
+        {
+            _CancellationTokenSource.Dispose();
         }
 
         private void FixedUpdate()
@@ -81,11 +95,11 @@ namespace SnakeGame.PlayerSystem
             //}
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private async void OnCollisionEnter2D(Collision2D other)
         {
             if (other.collider.CompareTag(Settings.CollisionTilemapTag) ||
                 other.collider.CompareTag(Settings.EnemyTag))
-                TeleportSnake();
+                await TeleportSnake();
         }
 
         private void OnCollisionStay2D(Collision2D other)
@@ -432,23 +446,30 @@ namespace SnakeGame.PlayerSystem
         /// Teleports the snake to the center of the room again, when the snake collides
         /// with the walls.
         /// </summary>
-        private void TeleportSnake()
+        private async UniTask TeleportSnake(CancellationToken cancellationToken = default)
         {
-            if (!gameObject.activeSelf) return;
+            if (!gameObject.activeSelf || !gameObject.activeInHierarchy || cancellationToken.IsCancellationRequested) return;
+            
+            try
+            {
+                await GameManager.Instance.FadeScreen(0f, 1f, 0f, Color.black);
 
-            Room currentRoom = GameManager.Instance.GetCurrentRoom();
+                Room currentRoom = GameManager.Instance.GetCurrentRoom();
 
-            StartCoroutine(GameManager.Instance.FadeScreen(0f, 1f, 1f, Color.black));
+                snake.TakeOneDamage();
 
-            snake.TakeOneDamage();
+                snake.gameObject.transform.position = new Vector3((currentRoom.lowerBounds.x + currentRoom.upperBounds.x) / 2f,
+                    (currentRoom.lowerBounds.y + currentRoom.upperBounds.y) / 2f, 0f);
 
-            snake.gameObject.transform.position = new Vector3((currentRoom.lowerBounds.x + currentRoom.upperBounds.x) / 2f,
-                (currentRoom.lowerBounds.y + currentRoom.upperBounds.y) / 2f, 0f);
+                // Get the nearest spawn point position of the room, so the snake doesn't spawn on the walls and gets hit again
+                snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(snake.gameObject.transform.position);
 
-            // Get the nearest spawn point position of the room, so the snake doesn't spawn on the walls and gets hit again
-            snake.gameObject.transform.position = HelperUtilities.GetNearestSpawnPointPosition(snake.gameObject.transform.position);
-
-            StartCoroutine(GameManager.Instance.FadeScreen(1f, 0f, 1f, Color.black));
+                await GameManager.Instance.FadeScreen(1f, 0f, 1f, Color.black);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
         }
 
         private void SetWeaponByIndex(int index)
@@ -458,7 +479,7 @@ namespace SnakeGame.PlayerSystem
                 currentWeaponIndex = index;
                 snake.setActiveWeaponEvent.CallSetActiveWeaponEvent(snake.weaponList[index - 1]);
 
-                GameCursor.Instance.ChangeCrosshair(snake.activeWeapon.GetCurrentWeapon().weaponDetails.weaponCrosshair);
+                GameCursor.SetCrosshairImage(snake.activeWeapon.GetCurrentWeapon().weaponDetails.weaponCrosshair);
             }
         }
 
@@ -585,7 +606,7 @@ namespace SnakeGame.PlayerSystem
         ///  on the player should be the same.</returns>
         public float GetMoveSpeed()
         {
-            return movementDetails.minMoveSpeed;
+            return movementDetails.GetMoveSpeed();
         }
 
         public MovementDetailsSO GetMovementDetails()

@@ -5,6 +5,7 @@ using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SnakeGame.AudioSystem
@@ -30,6 +31,7 @@ namespace SnakeGame.AudioSystem
         private static event Action<SoundEffectSO> OnSoundEffectChanged;
 
         private static SoundEffectSO _CurrentSoundEffect;
+        private static Dictionary<SoundEffectSO, SoundEffect> _ActiveSoundEffects = new();
 
         private void Start()
         {
@@ -66,7 +68,10 @@ namespace SnakeGame.AudioSystem
             float lowHealthThreshold = .33f;
             if (args.healthPercent <= lowHealthThreshold && args.healthPercent >= 0f)
             {
-                PlaySoundEffect(GameResources.Instance.LowHealthSoundEffect, true);
+                if (!_ActiveSoundEffects.ContainsKey(GameResources.Instance.LowHealthSoundEffect))
+                {
+                    PlaySoundEffect(GameResources.Instance.LowHealthSoundEffect, true);
+                }
             }
             else
             {
@@ -106,22 +111,32 @@ namespace SnakeGame.AudioSystem
         {
             SoundEffect sound = (SoundEffect)PoolManager.Instance.ReuseComponent(soundEffect.soundPrefab, Vector3.zero);
             sound.SetSound(soundEffect);
-            sound.AudioSource.loop = false;
             sound.gameObject.SetActive(true);
+            
+            AddSoundToDictionary(soundEffect, sound);
+            
             StartCoroutine(DisableSound(sound, soundEffect.soundEffectClip.length));
+            RemoveSoundFromDictionary(soundEffect);
         }
 
         private void PlaySoundEffect(SoundEffectSO soundEffect, bool shouldLoop)
         {
             SoundEffect sound = (SoundEffect)PoolManager.Instance.ReuseComponent(soundEffect.soundPrefab, Vector3.zero);
+            
             sound.SetSound(soundEffect);
             sound.AudioSource.loop = shouldLoop;
             sound.gameObject.SetActive(true);
+            
+            AddSoundToDictionary(soundEffect, sound);
         }
 
         private void StopSoundEffect(SoundEffectSO soundEffect)
         {
-            
+            if (_ActiveSoundEffects.TryGetValue(soundEffect, out SoundEffect sound))
+            {
+                StartCoroutine(DisableSound(sound, soundEffect.soundEffectClip.length));
+                RemoveSoundFromDictionary(soundEffect);
+            }
         }
 
         /// <summary>
@@ -130,7 +145,24 @@ namespace SnakeGame.AudioSystem
         private IEnumerator DisableSound(SoundEffect sound, float soundDuration)
         {
             yield return new WaitForSeconds(soundDuration);
+
+            sound.StopSound();
+            sound.AudioSource.loop = false;
             sound.gameObject.SetActive(false);
+        }
+
+        private void AddSoundToDictionary(SoundEffectSO soundEffectSO, SoundEffect sound)
+        {
+            if (!_ActiveSoundEffects.ContainsKey(soundEffectSO))
+                _ActiveSoundEffects.Add(soundEffectSO, sound);
+        }
+
+        private void RemoveSoundFromDictionary(SoundEffectSO soundEffectSO)
+        {
+            if (_ActiveSoundEffects.ContainsKey(soundEffectSO))
+            {
+                _ActiveSoundEffects.Remove(soundEffectSO);
+            }
         }
 
         /// <summary>

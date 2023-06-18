@@ -68,13 +68,14 @@ namespace SnakeGame.AbwehrSystem.Ammo
 
                 transform.position += distanceVector;
 
+                // Rotate the ammo
+                transform.Rotate(new Vector3(0f, 0f, _AmmoDetails.ammoRotationSpeed * Time.deltaTime * 10f));
+
                 //Disable after the max range has been reached
                 _AmmoRange -= distanceVector.magnitude;
 
                 if (_AmmoRange < 0)
-                {
                     DisableAmmo();
-                }
             }
         }
 
@@ -226,6 +227,9 @@ namespace SnakeGame.AbwehrSystem.Ammo
             }
         }
 
+        /// <summary>
+        /// Enables, if any, the ammo hit visual effects
+        /// </summary>
         protected virtual void ActivateAmmoHitEffect(Vector3 spawnPosition) { }
 
         protected virtual void PlayCollisionSoundEffect()

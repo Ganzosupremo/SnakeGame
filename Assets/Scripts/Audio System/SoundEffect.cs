@@ -47,6 +47,7 @@ namespace SnakeGame.AudioSystem
         public void StopSound()
         {
             audioSource.Stop();
+            gameObject.SetActive(false);
         }
     }
 }

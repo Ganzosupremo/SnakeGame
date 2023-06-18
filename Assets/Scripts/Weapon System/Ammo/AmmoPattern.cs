@@ -35,7 +35,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
             transform.position += distanceVector;
 
             //Rotate the ammo pattern
-            transform.Rotate(new Vector3(0f, 0f, m_ammoDetails.ammoRotationSpeed * Time.deltaTime * 0.3f));
+            transform.Rotate(new Vector3(0f, 0f, m_ammoDetails.ammoRotationSpeed * Time.deltaTime * 1.3f));
 
             // Disable the bullet after it has reached it's max range
             m_ammoRange -= distanceVector.magnitude;

@@ -331,8 +331,8 @@ namespace SnakeGame.ProceduralGenerationSystem
                         case Orientation.East:
                             door = Instantiate(doorway.doorPrefab, gameObject.transform);
                             // Position the door correctly on the map
-                            door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance,
-                                doorway.doorPosition.y + tileDistance * 1.25f, 0f);
+                            door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance / 2,
+                                doorway.doorPosition.y - tileDistance * .69f, 0f);
                             break;
                         case Orientation.South:
                             door = Instantiate(doorway.doorPrefab, gameObject.transform);
@@ -343,8 +343,8 @@ namespace SnakeGame.ProceduralGenerationSystem
 
                             door = Instantiate(doorway.doorPrefab, gameObject.transform);
                             // Position the door correctly on the map
-                            door.transform.localPosition = new Vector3(doorway.doorPosition.x,
-                                doorway.doorPosition.y + tileDistance * 1.25f, 0f);
+                            door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance / 2,
+                                doorway.doorPosition.y - tileDistance * 0.69f, 0f);
                             break;
                         default:
                             break;

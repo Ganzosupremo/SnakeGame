@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad842e14b0ab7e47987e3760d44519d, type: 3}
+  m_Name: ExplosiveAmmoDetails_Shovel
+  m_EditorClassIdentifier: 
+  ammoName: Shovel Ammo
+  isPlayerAmmo: 1
+  ammoSprite: {fileID: -972610901, guid: d0494aed92f5c4741981478e9b45fbc2, type: 3}
+  ammoPrefabArray:
+  - {fileID: 8740502524224239974, guid: b1828ce30d8b5474fb5e1bf86c6b13bb, type: 3}
+  ammoMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  ammoChargeTime: 0
+  ammoChargeMaterial: {fileID: 0}
+  ammoHitEffect: {fileID: 11400000, guid: 408b816fdd0b97c4d987590f7bfaa43a, type: 2}
+  CollisionSoundEffect: {fileID: 11400000, guid: 2d17f1ef6158fcc4791b19d95c4320f7, type: 2}
+  ammoDamage: 500
+  originalAmmoDamage: 500
+  maxAmmoDamage: 1000
+  minAmmoSpeed: 25
+  maxAmmoSpeed: 28
+  ammoRange: 50
+  ammoRotationSpeed: 10
+  ammoSpreadMin: 1
+  ammoSpreadMax: 2
+  MinBulletsPerShoot: 1
+  MaxBulletsPerShoot: 1
+  minSpawnInterval: 0.0308
+  maxSpawnInterval: 0.049
+  hasAmmoTrail: 0
+  ammoTrailLifetime: 0.1
+  ammoTrailMaterial: {fileID: 2100000, guid: 26367f8f9cf93874f91e402fa485eea6, type: 2}
+  ammoTrailStartWidth: 0.3
+  ammoTrailEndWidth: 0.6
+  ExplosionRadius: 6.5
+  ExplosionMask:
+    serializedVersion: 2
+    m_Bits: 66560

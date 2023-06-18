@@ -19,6 +19,8 @@ namespace SnakeGame.ProceduralGenerationSystem
         #endregion
         [SerializeField] private BoxCollider2D doorCollider;
 
+        [SerializeField] private SoundEffectSO _OpenDoorSoundEffect;
+
         [HideInInspector] public bool isBossRoomDoor = false;
         [SerializeField] private BoxCollider2D doorTrigger;
         [SerializeField] private ParticleSystem doorEffect;
@@ -71,8 +73,7 @@ namespace SnakeGame.ProceduralGenerationSystem
                     doorEffect.Play();
                 }
 
-                // In the future every door will have it's unique open sound effect
-                SoundEffectManager.CallOnSoundEffectChangedEvent(GameResources.Instance.doorSoundEffect);
+                SoundEffectManager.CallOnSoundEffectChangedEvent(_OpenDoorSoundEffect);
             }
         }
 
