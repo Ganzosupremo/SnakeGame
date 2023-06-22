@@ -33,7 +33,7 @@ namespace SnakeGame.ProceduralGenerationSystem
         /// </summary>
         private void StaticEventHandler_OnRoomChange(RoomChangedEventArgs roomChangedEventArgs)
         {
-            if (roomChangedEventArgs.room == instantiatedRoom.room && !instantiatedRoom.room.isLit)
+            if (roomChangedEventArgs.room == instantiatedRoom.room && !instantiatedRoom.room.IsLit)
             {
                 //Fade in the lightning on the rooms
                 FadeInRoomLightning();
@@ -46,7 +46,7 @@ namespace SnakeGame.ProceduralGenerationSystem
                 //Fade in the lightning also on the doors
                 FadeInDoors();
 
-                instantiatedRoom.room.isLit = true;
+                instantiatedRoom.room.IsLit = true;
             }
         }
 

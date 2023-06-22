@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using SnakeGame.AudioSystem;
 using SnakeGame.Decorations;
 using SnakeGame.Dungeon.NoiseGenerator;
 using SnakeGame.GameUtilities;
@@ -27,19 +28,11 @@ namespace SnakeGame.ProceduralGenerationSystem
 
         [HideInInspector] public int[,] aStarMovementPenalty; // This is used to store the movement penalties for the AStar Pathfinding
         [HideInInspector] public int[,] aStarItemObstacles; // Store the position of moveable items which acts as an obstacle
-        // ***** test code
-        [HideInInspector] public int[,] aStarSnakeSegmentsObstacles;
-        // *****
 
         [HideInInspector] public Bounds roomColliderBounds;
         [HideInInspector] public List<MoveableObstacle> moveableItemsList = new();
-        // ****** test code
-        [HideInInspector] public List<SnakeBody> snakeBodyList = new();
-        // ******
 
         private BoxCollider2D boxCollider2D;
-        private NoiseMap noiseMap;
-        private MapPresetSO mapPreset;
 
         #region Header References
         [Header("REFERENCES")]
@@ -51,31 +44,23 @@ namespace SnakeGame.ProceduralGenerationSystem
         private void Awake()
         {
             boxCollider2D = GetComponent<BoxCollider2D>();
-            noiseMap = GetComponent<NoiseMap>();
             roomColliderBounds = boxCollider2D.bounds;
         }
 
         private void Start()
         {
             UpdateMoveableObstacles();
-            //UpdateSnakeSegmenstObstacles();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag(Settings.PlayerTag) && room != GameManager.Instance.GetCurrentRoom())
             {
-                room.isPreviouslyVisited = true;
+                room.IsPreviouslyVisited = true;
                 StaticEventHandler.CallRoomChangedEvent(room);
             }
 
         }
-
-        //private void OnTriggerExit2D(Collider2D other)
-        //{
-        //    if (other.CompareTag(Settings.playerTag) && room != GameManager.Instance.GetCurrentRoom())
-        //        this.room.isPreviouslyVisited = true;
-        //}
 
         //private void OnDrawGizmos()
         //{
@@ -114,8 +99,6 @@ namespace SnakeGame.ProceduralGenerationSystem
             AddObstaclesAndPreferredPaths();
 
             CreateObstaclesArray();
-            // test code
-            CreateSegmetsArray();
 
             AddDoorsToRooms();
 
@@ -331,8 +314,8 @@ namespace SnakeGame.ProceduralGenerationSystem
                         case Orientation.East:
                             door = Instantiate(doorway.doorPrefab, gameObject.transform);
                             // Position the door correctly on the map
-                            door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance / 2,
-                                doorway.doorPosition.y - tileDistance * .69f, 0f);
+                            door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance,
+                                doorway.doorPosition.y + tileDistance * 1.25f, 0f);
                             break;
                         case Orientation.South:
                             door = Instantiate(doorway.doorPrefab, gameObject.transform);
@@ -343,8 +326,8 @@ namespace SnakeGame.ProceduralGenerationSystem
 
                             door = Instantiate(doorway.doorPrefab, gameObject.transform);
                             // Position the door correctly on the map
-                            door.transform.localPosition = new Vector3(doorway.doorPosition.x + tileDistance / 2,
-                                doorway.doorPosition.y - tileDistance * 0.69f, 0f);
+                            door.transform.localPosition = new Vector3(doorway.doorPosition.x,
+                                doorway.doorPosition.y + tileDistance * 1.25f, 0f);
                             break;
                         default:
                             break;
@@ -515,48 +498,6 @@ namespace SnakeGame.ProceduralGenerationSystem
                     aStarItemObstacles[x, y] = Settings.defaultAStarMovementPenalty;
                 }
             }
-        }
-
-        // test code
-        private void CreateSegmetsArray()
-        {
-            aStarSnakeSegmentsObstacles = new int[room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
-                room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1];
-        }
-
-        private void InitializeSegmentsArray()
-        {
-            // test code
-            for (int x = 0; x < (room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1); x++)
-            {
-                for (int y = 0; y < (room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1); y++)
-                {
-                    // Set the default penalty for the grid squares, with higher penalty the enemies will avoid this grid squares
-                    aStarSnakeSegmentsObstacles[x, y] = Settings.defaultAStarMovementPenalty;
-                }
-            }
-        }
-
-        // test code
-        public void UpdateSnakeSegmenstObstacles()
-        {
-            // Test code
-            InitializeSegmentsArray();
-
-            //foreach (SnakeBody snakeBody in GameManager.Instance.GetSnake().SnakeBodyList)
-            //{
-            //    Vector3Int minColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.min);
-            //    Vector3Int maxColliderBounds = grid.WorldToCell(snakeBody.boxCollider2D.bounds.max);
-
-            //    // Loop through and add the snake body collider bounds to the snake segments array
-            //    for (int i = minColliderBounds.x; i <= maxColliderBounds.x; i++)
-            //    {
-            //        for (int j = minColliderBounds.y; j <= maxColliderBounds.y; j++)
-            //        {
-            //            aStarSnakeSegmentsObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
-            //        }
-            //    }
-            //}
         }
 
         /// <summary>

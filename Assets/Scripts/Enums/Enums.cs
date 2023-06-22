@@ -125,3 +125,15 @@ namespace SnakeGame.PlayerSystem.AbilitySystem
         Cooldown
     }
 }
+
+namespace SnakeGame.VisualEffects
+{
+    public enum EffectType
+    {
+        Sphere_Burst,
+        Circle_Explosion,
+        Cone_Upwards,
+        Circle_Whirpool,
+        None,
+    }
+}

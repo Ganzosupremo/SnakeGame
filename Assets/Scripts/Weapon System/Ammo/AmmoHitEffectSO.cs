@@ -17,6 +17,11 @@ namespace SnakeGame.VisualEffects
         public Gradient colorGradient;
 
         #region Tooltip
+        [Tooltip("Can Define the shape where the particles come from and also define the Arc Mode in the Shape Modul.")]
+        #endregion Tooltip
+        public EffectType Type = EffectType.None;
+
+        #region Tooltip
         [Tooltip("The length of time the particle system is emitting particles")]
         #endregion Tooltip
         public float particleDuration = 0.5f;

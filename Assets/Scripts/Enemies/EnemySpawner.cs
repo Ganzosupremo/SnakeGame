@@ -38,7 +38,7 @@ namespace SnakeGame.Enemies
 
             currentRoom = roomChangedEventArgs.room;
 
-            if (currentRoom.normalMusic != null)
+            if (currentRoom.normalMusic != null && currentRoom.IsClearOfEnemies)
                 MusicManager.CallOnMusicClipChangedEvent(currentRoom.normalMusic);
 
             // Don't spawn enemies on corridors, entrance, chest and exit rooms
@@ -50,9 +50,8 @@ namespace SnakeGame.Enemies
                 return;
 
             // If the room is already clear of enemies, then return
-            if (currentRoom.isClearOfEnemies) return;
+            if (currentRoom.IsClearOfEnemies) return;
 
-            // TODO - Display the Game Objective UI so the player knows what to do.
             StaticEventHandler.CallOnDisplayObjectivesEvent
                 (Settings.DisplayObjectivesTime, 0f, 1f, $"Defeat 'em All!!");
 
@@ -66,7 +65,7 @@ namespace SnakeGame.Enemies
             // If no enemies to spawn, return and mark the room as cleared
             if (enemiesToSpawn == 0)
             {
-                currentRoom.isClearOfEnemies = true;
+                currentRoom.IsClearOfEnemies = true;
                 return;
             }
 
@@ -74,9 +73,9 @@ namespace SnakeGame.Enemies
             maxConcurrentNumberOfEnemies = GetConcurrentEnemiesToSpawn();
             
             // Start locking the doors with a delay
-            await currentRoom.instantiatedRoom.LockDoorsAsync();
+            await currentRoom.InstantiatedRoom.LockDoorsAsync();
             
-            if (currentRoom.battleMusic != null)
+            if (currentRoom.battleMusic != null && !currentRoom.IsClearOfEnemies)
                 MusicManager.CallOnMusicClipChangedEvent(currentRoom.battleMusic);
 
             // ... And actually spawn the enemies
@@ -107,7 +106,7 @@ namespace SnakeGame.Enemies
         /// </summary>
         private IEnumerator SpawnEnemiesRoutine()
         {
-            Grid grid = currentRoom.instantiatedRoom.grid;
+            Grid grid = currentRoom.InstantiatedRoom.grid;
 
             // Create an instance of the helper class used to select a random enemy
             RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new(currentRoom.EnemiesByLevelList);
@@ -135,7 +134,7 @@ namespace SnakeGame.Enemies
 
         private async UniTask SpawnEnemiesAsync()
         {
-            Grid grid = currentRoom.instantiatedRoom.grid;
+            Grid grid = currentRoom.InstantiatedRoom.grid;
 
             // Create an instance of the helper class used to select a random enemy
             RandomSpawnableObject<EnemyDetailsSO> randomSpawnableObject = new(currentRoom.EnemiesByLevelList);
@@ -204,7 +203,7 @@ namespace SnakeGame.Enemies
 
             if (currentEnemyCount <= 0 && enemiesSpawnedSoFar == enemiesToSpawn)
             {
-                currentRoom.isClearOfEnemies = true;
+                currentRoom.IsClearOfEnemies = true;
 
                 // Set the state of the game
                 if (GameManager.CurrentGameState == GameState.EngagingEnemies)
@@ -219,7 +218,7 @@ namespace SnakeGame.Enemies
                 }
 
                 // Unlock the doors
-                await currentRoom.instantiatedRoom.UnlockDoorsAsync(Settings.doorUnlockDelay);
+                await currentRoom.InstantiatedRoom.UnlockDoorsAsync(Settings.doorUnlockDelay);
 
                 // Play the normal music again
                 if (currentRoom.normalMusic != null)

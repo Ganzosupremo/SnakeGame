@@ -19,7 +19,7 @@ namespace SnakeGame.Enemies
             DifficultyManager.OnDifficultyChanged += OnUIDifficultyChanged;
             Timer.OnStatusChanged += OnTimeElapsed;
             //SaveDataManager.Instance.LoadGame();
-            SetDefaultWeaponValues();
+            //SetDefaultWeaponValues();
         }
 
         private void SetDefaultWeaponValues()
@@ -38,10 +38,9 @@ namespace SnakeGame.Enemies
             Timer.OnStatusChanged -= OnTimeElapsed;
             //SaveDataManager.Instance.SaveGame();
 
-            // Reset the health amount to it's original value
             ResetEnemyHealthToDefault();
             SetEnemySpeedToDefault();
-            ResetWeaponValues();
+            //ResetWeaponValues();
         }
 
         private void ResetWeaponValues()

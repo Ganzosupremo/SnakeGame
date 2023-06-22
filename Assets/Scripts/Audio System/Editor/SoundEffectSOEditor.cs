@@ -4,6 +4,7 @@ using UnityEngine;
 namespace SnakeGame.AudioSystem
 {
     [CustomEditor(typeof(SoundEffectSO))]
+    [CanEditMultipleObjects]
     public class SoundEffectSOEditor : Editor
     {
         public override void OnInspectorGUI()

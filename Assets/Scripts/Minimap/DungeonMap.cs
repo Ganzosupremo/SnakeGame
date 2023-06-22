@@ -186,7 +186,7 @@ namespace SnakeGame.Minimap
                     InstantiatedRoom instantiatedRoom = collider.GetComponent<InstantiatedRoom>();
 
                     // If the room has been cleared of enemies an has been previously visited, the player can be teleported there
-                    if (instantiatedRoom.room.isClearOfEnemies && instantiatedRoom.room.isPreviouslyVisited)
+                    if (instantiatedRoom.room.IsClearOfEnemies && instantiatedRoom.room.IsPreviouslyVisited)
                         StartCoroutine(TeleportToRoom(worldPosition, instantiatedRoom.room));
                 }
             }
@@ -221,7 +221,7 @@ namespace SnakeGame.Minimap
             {
                 Room room = keyValuePair.Value;
 
-                room.instantiatedRoom.gameObject.SetActive(true);
+                room.InstantiatedRoom.gameObject.SetActive(true);
             }
         }
     }

@@ -41,22 +41,22 @@ namespace SnakeGame
                 if ((room.lowerBounds.x <= minimapWorldPositionUpperBounds.x && room.lowerBounds.y <= minimapWorldPositionUpperBounds.y) &&
                     (room.upperBounds.x >= minimapWorldPositionLowerBounds.x && room.upperBounds.y >= minimapWorldPositionLowerBounds.y))
                 {
-                    room.instantiatedRoom.gameObject.SetActive(true);
+                    room.InstantiatedRoom.gameObject.SetActive(true);
 
                     //If the room is within the main camera viewport activate the environment objects
                     if ((room.lowerBounds.x <= mainCameraWorldPositionUpperBounds.x && room.lowerBounds.y <= mainCameraWorldPositionUpperBounds.y) &&
                     (room.upperBounds.x >= mainCameraWorldPositionLowerBounds.x && room.upperBounds.y >= mainCameraWorldPositionLowerBounds.y))
                     {
-                        room.instantiatedRoom.ActivateEnvironmentObjects();
+                        room.InstantiatedRoom.ActivateEnvironmentObjects();
                     }
                     else
                     {
-                        room.instantiatedRoom.DeactivateEnvironmentObjects();
+                        room.InstantiatedRoom.DeactivateEnvironmentObjects();
                     }
                 }
                 else
                 {
-                    room.instantiatedRoom.gameObject.SetActive(false);
+                    room.InstantiatedRoom.gameObject.SetActive(false);
                 }
             }
         }

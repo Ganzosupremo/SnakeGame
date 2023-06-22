@@ -2,6 +2,7 @@ using SnakeGame.AbwehrSystem;
 using SnakeGame.AudioSystem;
 using SnakeGame.GameUtilities;
 using SnakeGame.HealthSystem;
+using SnakeGame.VisualEffects;
 using UnityEngine;
 
 namespace SnakeGame.Enemies
@@ -30,7 +31,9 @@ namespace SnakeGame.Enemies
         public MovementDetailsSO MovementDetails;
 
         public SoundEffectSO hitSoundEffect;
+
         public SoundEffectSO deathSoundEffect;
+        public DeathEffectSO EnemyDeathEffect;
 
         #region Tooltip
         [Tooltip("The color for the enemy, choose a color if the sprite is the default one or is gray scale," +

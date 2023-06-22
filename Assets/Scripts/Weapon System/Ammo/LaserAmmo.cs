@@ -120,7 +120,7 @@ namespace SnakeGame.AbwehrSystem.Ammo
                     (_LaserAmmoDetails.ammoHitEffect.ammoHitEffectPrefab, spawnPosition, Quaternion.identity);
 
                 // Set hit effect
-                hitEffect.SetAmmoHitEffect(_LaserAmmoDetails.ammoHitEffect, spawnPosition);
+                hitEffect.InitialiseAmmoHitEffect(_LaserAmmoDetails.ammoHitEffect, spawnPosition);
 
                 // Set gameobject active (the particle system is set to automatically disable the
                 // gameobject once finished)

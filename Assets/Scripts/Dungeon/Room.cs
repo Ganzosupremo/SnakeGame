@@ -43,18 +43,18 @@ namespace SnakeGame.ProceduralGenerationSystem
         public List<SpawnableObjectByLevel<FoodSO>> FoodsByLevelList { get; set; }
         public List<RoomItemSpawnParameters> RoomLevelFoodSpawnParametersList { get; set; }
 
-        public List<string> childRoomIDList;
-        public string parentRoomID;
+        public List<string> ChildRoomIDList;
+        public string ParentRoomID;
         public List<Doorway> doorwayList;
-        public bool isPositioned = false;
-        public InstantiatedRoom instantiatedRoom;
-        public bool isLit = false;
-        public bool isClearOfEnemies = false;
-        public bool isPreviouslyVisited = false;
+        public bool IsPositioned { get; set; } = false;
+        public InstantiatedRoom InstantiatedRoom;
+        public bool IsLit { get; set; } = false;
+        public bool IsClearOfEnemies { get; set; } = false;
+        public bool IsPreviouslyVisited { get; set; } = false;
 
         public Room()
         {
-            childRoomIDList = new();
+            ChildRoomIDList = new();
             doorwayList = new();
         }
 

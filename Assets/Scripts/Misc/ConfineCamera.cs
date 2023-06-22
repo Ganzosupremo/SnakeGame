@@ -20,7 +20,7 @@ namespace SnakeGame.Miscelaneous
 
         private void StaticEventHandler_OnRoomChanged(RoomChangedEventArgs roomChangedEventArgs)
         {
-            cameraConfiner = roomChangedEventArgs.room.instantiatedRoom.cameraConfinerCollider;
+            cameraConfiner = roomChangedEventArgs.room.InstantiatedRoom.cameraConfinerCollider;
 
             if (cameraConfiner != null)
             {

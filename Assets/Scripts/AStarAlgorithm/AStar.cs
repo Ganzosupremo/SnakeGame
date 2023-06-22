@@ -33,7 +33,7 @@ namespace SnakeGame.AStarPathfinding
             AStarNode startNode = gridNode.GetGridNode(startGridPosition.x, startGridPosition.y);
             AStarNode endNode = gridNode.GetGridNode(endGridPosition.x, endGridPosition.y);
 
-            AStarNode endPathNode = FindShortestPath(startNode, endNode, gridNode, openHeapNodeList, closedNodeHashset, room.instantiatedRoom);
+            AStarNode endPathNode = FindShortestPath(startNode, endNode, gridNode, openHeapNodeList, closedNodeHashset, room.InstantiatedRoom);
 
             if (endPathNode != null)
             {
@@ -90,14 +90,14 @@ namespace SnakeGame.AStarPathfinding
             AStarNode nextNode = targetNode;
 
             // Get the mid point of the cell
-            Vector3 cellMidPoint = room.instantiatedRoom.grid.cellSize * 0.5f;
+            Vector3 cellMidPoint = room.InstantiatedRoom.grid.cellSize * 0.5f;
             cellMidPoint.z = 0f;
 
             // Loop until the next node is null meaning we reach the targetNode
             while (nextNode != null)
             {
                 // Convert grid position to world position
-                Vector3 worldPosition = room.instantiatedRoom.grid.CellToWorld(new Vector3Int(nextNode.gridPosition.x + room.tilemapLowerBounds.x,
+                Vector3 worldPosition = room.InstantiatedRoom.grid.CellToWorld(new Vector3Int(nextNode.gridPosition.x + room.tilemapLowerBounds.x,
                     nextNode.gridPosition.y + room.tilemapLowerBounds.y, 0));
 
                 // Add the world position to the middle of the grid cell

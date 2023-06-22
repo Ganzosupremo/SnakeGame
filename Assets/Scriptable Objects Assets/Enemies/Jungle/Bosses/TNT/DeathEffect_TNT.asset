@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26410a56aaa21641bda6105bdaf819d, type: 3}
+  m_Name: DeathEffect_TNT
+  m_EditorClassIdentifier: 
+  ColorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0.9098057, b: 0.21226418, a: 1}
+    key1: {r: 1, g: 0.3483723, b: 0, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0.5529412}
+    key3: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 6939
+    ctime2: 30262
+    ctime3: 65535
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 37201
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 4
+    m_NumAlphaKeys: 3
+  Type: 1
+  ParticleDuration: 0.668
+  StartParticleSize: 8.08
+  StartParticleSpeed: 17.19
+  StartLifetime: 0.634
+  MaxParticles: 1000
+  EmissionRate: 64
+  BurstNumber: 500
+  MinGravityEffect: -0.68
+  MaxGravityEffect: 0.58
+  SpriteArray:
+  - {fileID: 21300000, guid: 1f19cbb22ea7d204ea47942043b31fcd, type: 3}
+  - {fileID: 21300000, guid: 8769c576e77182a42b815da16b46a522, type: 3}
+  MinVelocityOverLifetime: {x: -1.71, y: -1.58, z: 0}
+  MaxVelocityOverLifetime: {x: 5.85, y: 4.8, z: 0}
+  DeathEffectPrefab: {fileID: 8467163931044552805, guid: abb7400cdf48dc246b1cd8a0ca0babe1, type: 3}
+  Radius: 2.34
+  Angle: 25
+  RadiusThickness: 0.119
+  Arc: 360
+  Mode: 3
+  Spread: 0.154
+  Speed: 4.33
+  _PreviewParticleSystem: {fileID: 3088771929239572704, guid: fcabb6cee4201d74d8c0a18f275c72f8, type: 3}

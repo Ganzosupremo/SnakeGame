@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e02a29ac514deb4b8c5e8ad55799fd7, type: 3}
+  m_Name: EnemyBossLGBBBQ+
+  m_EditorClassIdentifier: 
+  enemyName: LGBBQ+ Ultra
+  enemyPrefab: {fileID: 3696915300321008599, guid: 312f3b87a7527ab47977807dc8ad0105, type: 3}
+  IsBoss: 1
+  MovementDetails: {fileID: 11400000, guid: a1d5d1c531b62ff428ac425b5c71b1c2, type: 2}
+  hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
+  deathSoundEffect: {fileID: 11400000, guid: 75812132b6e759147b3af2bb8da4722e, type: 2}
+  EnemyDeathEffect: {fileID: 11400000, guid: 65ccbaeb329d5f64ba8b50f14cadac05, type: 2}
+  enemyColor: {r: 1.511896, g: 1.511896, b: 1.511896, a: 1}
+  EnemySprite: {fileID: -1311723672, guid: dab7cdc0bdb36c945818681b3964d7c9, type: 3}
+  enemyChaseDistance: 100
+  enemyMaterializeTime: 1.5
+  enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
+  enemyMaterializeColor: {r: 2.2488356, g: 0.22934172, b: 4.867144, a: 1}
+  standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  enemyWeapon: {fileID: 11400000, guid: b3f729399fae3ac41b46344ef3c50fa8, type: 2}
+  firingMinDelay: 0.12
+  firingMaxDelay: 1.04
+  firingMinDuration: 1.72
+  firingMaxDuration: 3.07
+  lineOfSightRequired: 0
+  enemyHealthDetailsArray:
+  - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
+    healthAmount: 2636
+    defaultHealthAmount: 2636
+  immuneAfterHit: 0
+  immunityTime: 0
+  startDazeTime: 0
+  isHealthBarDisplayed: 1

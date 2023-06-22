@@ -85,7 +85,8 @@ namespace SnakeGame.Enemies
         {
             if (other.collider.CompareTag(Settings.CollisionTilemapTag))
             {
-                StopCoroutine(_dashCoroutine);
+                if (_dashCoroutine != null)
+                    StopCoroutine(_dashCoroutine);
             }
         }
 
@@ -163,7 +164,7 @@ namespace SnakeGame.Enemies
         private void CreatePath()
         {
             Room currentRoom = GameManager.Instance.GetCurrentRoom();
-            Grid grid = currentRoom.instantiatedRoom.grid;
+            Grid grid = currentRoom.InstantiatedRoom.grid;
 
             // Gets the player position on the grid
             Vector3Int playerGridPosition = GetNearestNonObstaclePlayerPosition(currentRoom);
@@ -297,13 +298,13 @@ namespace SnakeGame.Enemies
         {
             Vector3 playerPosition = GameManager.Instance.GetSnake().GetSnakePosition();
 
-            Vector3Int playerCellPosition = currentRoom.instantiatedRoom.grid.WorldToCell(playerPosition);
+            Vector3Int playerCellPosition = currentRoom.InstantiatedRoom.grid.WorldToCell(playerPosition);
 
             Vector2Int adjustedPlayerCellPosition = new Vector2Int(playerCellPosition.x - currentRoom.tilemapLowerBounds.x,
                 playerCellPosition.y - currentRoom.tilemapLowerBounds.y);
 
-            int obstacle = Mathf.Min(currentRoom.instantiatedRoom.aStarMovementPenalty[adjustedPlayerCellPosition.x, adjustedPlayerCellPosition.y],
-                        currentRoom.instantiatedRoom.aStarItemObstacles[adjustedPlayerCellPosition.x, adjustedPlayerCellPosition.y]);
+            int obstacle = Mathf.Min(currentRoom.InstantiatedRoom.aStarMovementPenalty[adjustedPlayerCellPosition.x, adjustedPlayerCellPosition.y],
+                        currentRoom.InstantiatedRoom.aStarItemObstacles[adjustedPlayerCellPosition.x, adjustedPlayerCellPosition.y]);
 
             // if the player is not on an obstacle, then return the player position
             if (obstacle != 0)
@@ -335,8 +336,8 @@ namespace SnakeGame.Enemies
                     // See of there is an obstacle in the selected surrounded position
                     try
                     {
-                        obstacle = Mathf.Min(currentRoom.instantiatedRoom.aStarMovementPenalty[adjustedPlayerCellPosition.x + surroundingsPositionsList[index].x,
-                            adjustedPlayerCellPosition.y + surroundingsPositionsList[index].y], currentRoom.instantiatedRoom.aStarItemObstacles[adjustedPlayerCellPosition.x
+                        obstacle = Mathf.Min(currentRoom.InstantiatedRoom.aStarMovementPenalty[adjustedPlayerCellPosition.x + surroundingsPositionsList[index].x,
+                            adjustedPlayerCellPosition.y + surroundingsPositionsList[index].y], currentRoom.InstantiatedRoom.aStarItemObstacles[adjustedPlayerCellPosition.x
                             + surroundingsPositionsList[index].x, adjustedPlayerCellPosition.y + surroundingsPositionsList[index].y]);
 
                         if (obstacle != 0)

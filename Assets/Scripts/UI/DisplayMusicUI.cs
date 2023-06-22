@@ -40,44 +40,44 @@ namespace SnakeGame.UI
             MusicManager.OnMusicClipChanged -= MusicManager_OnMusicClipChanged;
         }
 
-        private void MusicManager_OnMusicClipChanged(MusicSO musicSO, float delay)
+        private void MusicManager_OnMusicClipChanged(MusicClipChangeEventArgs args)
         {
-            ChangeMusicNameText(musicSO, m_CancellationSource.Token);
+            ChangeMusicNameText(args, m_CancellationSource.Token);
         }
 
-        private async void ChangeMusicNameText(MusicSO musicSO, CancellationToken cancellationToken)
+        private async void ChangeMusicNameText(MusicClipChangeEventArgs args, CancellationToken token)
         {
-            if (cancellationToken.IsCancellationRequested) return;
-
-            while (!CanDisplay)
+            if (args.CanPlayMultipleClips)
             {
-                await UniTask.NextFrame();
-            }
-
-            if (musicSO.musicClip != m_CurrentMusicClip)
-            {
-                m_CurrentMusicClip = musicSO.musicClip;
-
                 _MusicBackground.SetActive(true);
-                _MusicNameText.text = musicSO.musicName;
-
-                LeanTween.moveX(_MusicBackground.GetComponent<RectTransform>(), 150f, TimeToTween).setEase(LeanTweenType.easeOutBack);
+                _MusicNameText.text = args.NameRandomClip;
+                LeanTween.moveX(_MusicBackground.GetComponent<RectTransform>(), 150f, TimeToTween).setEase(LeanTweenType.easeInOutCubic);
 
                 await UniTask.Delay((int)DelayTime * 1000);
 
-                LeanTween.moveX(_MusicBackground.GetComponent<RectTransform>(), 0f, TimeToTween).setEase(LeanTweenType.easeOutBack).setOnComplete(DisableBackground);
+                LeanTween.moveX(_MusicBackground.GetComponent<RectTransform>(), 0f, TimeToTween).setEase(LeanTweenType.easeInOutCubic).setOnComplete(DisableBackground);
                 CanDisplay = true;
             }
             else
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                _MusicBackground.SetActive(true);
+                _MusicNameText.text = args.Music.musicName;
+
+                LeanTween.moveX(_MusicBackground.GetComponent<RectTransform>(), 150f, TimeToTween).setEase(LeanTweenType.easeInOutCubic);
+
+                await UniTask.Delay((int)DelayTime * 1000);
+
+                LeanTween.moveX(_MusicBackground.GetComponent<RectTransform>(), 0f, TimeToTween).setEase(LeanTweenType.easeInOutCubic).setOnComplete(DisableBackground);
+                CanDisplay = true;
             }
+
+            await UniTask.NextFrame();
         }
 
         private void DisableBackground()
         {
-            _MusicBackground.SetActive(false);
             _MusicNameText.text = "";
+            _MusicBackground.SetActive(false);
         }
     }
 }

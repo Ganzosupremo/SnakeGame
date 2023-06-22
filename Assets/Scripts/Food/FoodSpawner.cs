@@ -1,3 +1,4 @@
+using SnakeGame.Debuging;
 using SnakeGame.GameUtilities;
 using SnakeGame.HealthSystem;
 using SnakeGame.ProceduralGenerationSystem;
@@ -48,7 +49,7 @@ namespace SnakeGame.FoodSystem
                 currentRoom.roomNodeType.isChestRoom)
                 return;
 
-            if (!currentRoom.isClearOfEnemies || !shouldSpawnFood) return;
+            if (!currentRoom.IsClearOfEnemies || !shouldSpawnFood) return;
 
             // Get a random number of foods to spawn for this room
             foodToSpawn = currentRoom.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel(), false);
@@ -74,7 +75,7 @@ namespace SnakeGame.FoodSystem
 
         private IEnumerator SpawnFoodCoroutine()
         {
-            Grid grid = currentRoom.instantiatedRoom.grid;
+            Grid grid = currentRoom.InstantiatedRoom.grid;
 
             // Create an instance of the helper class used to select a random food
             RandomSpawnableObject<FoodSO> randomSpawnableObject = new(currentRoom.FoodsByLevelList);
@@ -93,7 +94,10 @@ namespace SnakeGame.FoodSystem
                     Vector3Int foodPosition = (Vector3Int)currentRoom.spawnPositionArray[Random.Range(0, currentRoom.spawnPositionArray.Length)];
 
                     // Creates the food and get the next one to spawn
-                    CreateFood(randomSpawnableObject.GetRandomItem(), grid.CellToWorld(foodPosition));
+                    this.Log(grid.CellToWorld(foodPosition));
+                    FoodSO a = randomSpawnableObject.GetRandomItem();
+                    this.Log(a);
+                    CreateFood(a, grid.CellToWorld(foodPosition));
 
                     yield return new WaitForSeconds(GetFoodSpawnInterval());
                 }

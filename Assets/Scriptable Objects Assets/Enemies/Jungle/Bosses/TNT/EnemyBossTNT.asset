@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e02a29ac514deb4b8c5e8ad55799fd7, type: 3}
+  m_Name: EnemyBossTNT
+  m_EditorClassIdentifier: 
+  enemyName: Uh... that's a tnt...
+  enemyPrefab: {fileID: 3696915300321008599, guid: 312f3b87a7527ab47977807dc8ad0105, type: 3}
+  IsBoss: 1
+  MovementDetails: {fileID: 11400000, guid: 1bfa32f44f2e07d4ea4ffa01f937eed3, type: 2}
+  hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
+  deathSoundEffect: {fileID: 11400000, guid: dbb0b3813646e564c9930d1a3b74f1b4, type: 2}
+  EnemyDeathEffect: {fileID: 11400000, guid: 587885c7d2886d8498d7763452349490, type: 2}
+  enemyColor: {r: 1.511896, g: 1.511896, b: 1.511896, a: 1}
+  EnemySprite: {fileID: -1829983787, guid: dab7cdc0bdb36c945818681b3964d7c9, type: 3}
+  enemyChaseDistance: 100
+  enemyMaterializeTime: 1.5
+  enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
+  enemyMaterializeColor: {r: 3.6886046, g: 0.4327233, b: 0.17380849, a: 1}
+  standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  enemyWeapon: {fileID: 11400000, guid: ecbbec37c0a507545a481d048dbaa0ae, type: 2}
+  firingMinDelay: 1.02
+  firingMaxDelay: 2.06
+  firingMinDuration: 0.35
+  firingMaxDuration: 1.04
+  lineOfSightRequired: 0
+  enemyHealthDetailsArray:
+  - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
+    healthAmount: 3781
+    defaultHealthAmount: 3689
+  immuneAfterHit: 0
+  immunityTime: 0
+  startDazeTime: 0
+  isHealthBarDisplayed: 1

@@ -1541,6 +1541,14 @@ MonoBehaviour:
     PoolSize: 100
     prefabToUse: {fileID: 8740502524224239974, guid: 1f3742a0f8539554a8cd9c54d383a3ba, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
+  - name: Rocket
+    PoolSize: 50
+    prefabToUse: {fileID: 8740502524224239974, guid: 521269d0fc03989468912949f492a91e, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Shovel Rocket
+    PoolSize: 50
+    prefabToUse: {fileID: 8740502524224239974, guid: b1828ce30d8b5474fb5e1bf86c6b13bb, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
   - name: A
     PoolSize: 10
     prefabToUse: {fileID: 7273270984713707489, guid: 52aaa3a18b7213742b1c5bc7144342a1, type: 3}
@@ -1577,9 +1585,9 @@ MonoBehaviour:
     PoolSize: 200
     prefabToUse: {fileID: 8740502524224239974, guid: 4446f4c3dc97592438f2dcd979fd6935, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
-  - name: Enemy Pattern
-    PoolSize: 10
-    prefabToUse: {fileID: 4847929037998128972, guid: 28ba4a29ab5d97249b36557b12d8a007, type: 3}
+  - name: Enemy rocket
+    PoolSize: 15
+    prefabToUse: {fileID: 3758273934219701999, guid: 97b88ac859e930b49825e8d59973669f, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
   - name: Blue Ball's Pattern
     PoolSize: 10
@@ -1617,17 +1625,65 @@ MonoBehaviour:
     PoolSize: 100
     prefabToUse: {fileID: 2906756793259760893, guid: c82be0c991c9cf24ea6eb21d85ad8beb, type: 3}
     componentType: SnakeGame.AudioSystem.SoundEffect
-  - name: Rocket
+  - name: Enemy Death Sound Effect
     PoolSize: 50
-    prefabToUse: {fileID: 8740502524224239974, guid: 521269d0fc03989468912949f492a91e, type: 3}
+    prefabToUse: {fileID: 2906756793259760893, guid: 79fe8830cb7a33d4b908e45f50ab865b, type: 3}
+    componentType: SnakeGame.AudioSystem.SoundEffect
+  - name: Death  Effect Burst
+    PoolSize: 10
+    prefabToUse: {fileID: 8462543504094354173, guid: 9e4c672d44f497542ab9e35e454c5da3, type: 3}
+    componentType: SnakeGame.VisualEffects.DeathEffect
+  - name: Death  Effect Explosion
+    PoolSize: 10
+    prefabToUse: {fileID: 8467163931044552805, guid: abb7400cdf48dc246b1cd8a0ca0babe1, type: 3}
+    componentType: SnakeGame.VisualEffects.DeathEffect
+  - name: Death  Effect Upwards
+    PoolSize: 10
+    prefabToUse: {fileID: 8462543504094354173, guid: 525dba1e95902c546a0dd8961c436e1a, type: 3}
+    componentType: SnakeGame.VisualEffects.DeathEffect
+  - name: Enemy Pattern
+    PoolSize: 10
+    prefabToUse: {fileID: 4847929037998128972, guid: 28ba4a29ab5d97249b36557b12d8a007, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
-  - name: Shovel Rocket
-    PoolSize: 50
-    prefabToUse: {fileID: 8740502524224239974, guid: b1828ce30d8b5474fb5e1bf86c6b13bb, type: 3}
+  - name: Enemy Pattern Ameisen
+    PoolSize: 10
+    prefabToUse: {fileID: 8349032641790443976, guid: 159044cdf07f0ab46a189fb3f12fd756, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
-  - name: Enemy rocket
-    PoolSize: 15
-    prefabToUse: {fileID: 3758273934219701999, guid: 97b88ac859e930b49825e8d59973669f, type: 3}
+  - name: Enemy Pattern Cross
+    PoolSize: 10
+    prefabToUse: {fileID: 6691754383358141639, guid: bbd3723f9481c9f4e9e451edcbb37485, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Enemy Pattern Cube
+    PoolSize: 10
+    prefabToUse: {fileID: 5429602373476709044, guid: 014fb6488a59bba438f494199e94641c, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Enemy Pattern Random
+    PoolSize: 10
+    prefabToUse: {fileID: 2095811844686143177, guid: d5934b62fe2a73b45bb56d38bc8d1b8f, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Enemy Pattern Snail
+    PoolSize: 10
+    prefabToUse: {fileID: 8311323716412896946, guid: f7bde2e6c4de4d348938c4d93bd88e28, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Enemy Pattern Snake
+    PoolSize: 10
+    prefabToUse: {fileID: 51811616289672533, guid: 61454986714cfcf44bc0f1704c3828e5, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Enemy Pattern Square
+    PoolSize: 10
+    prefabToUse: {fileID: 7968442049705731679, guid: aa07f1cb76abbbe49a5de74b4fb53779, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Enemy Pattern Star
+    PoolSize: 10
+    prefabToUse: {fileID: 5441365152548954288, guid: 9de59c8d7edc410428b81077942495a7, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Enemy Pattern Strongest Shape
+    PoolSize: 10
+    prefabToUse: {fileID: 8401297832290103842, guid: a72466dba3e451d47a3139e8cfb21391, type: 3}
+    componentType: SnakeGame.Interfaces.IFireable
+  - name: Enemy Pattern Triangle
+    PoolSize: 10
+    prefabToUse: {fileID: 6473591448449891089, guid: e57dd08191eda514cbbe4db951718d1e, type: 3}
     componentType: SnakeGame.Interfaces.IFireable
 --- !u!4 &589272215
 Transform:
@@ -1730,7 +1786,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633479772}
   m_Enabled: 1
-  m_Alpha: 0.22140366
+  m_Alpha: 0.472732
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -2927,7 +2983,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
   - {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
   - {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-  currentDungeonLevelListIndex: 2
+  currentDungeonLevelListIndex: 1
   loadScreenText: {fileID: 240902833}
   canvasGroup: {fileID: 633479776}
   pauseMenuUI: {fileID: 6583639098866822507}

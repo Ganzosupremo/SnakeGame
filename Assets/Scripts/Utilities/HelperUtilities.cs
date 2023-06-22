@@ -77,7 +77,7 @@ namespace SnakeGame.GameUtilities
         {
             Room currentRoom = GameManager.Instance.GetCurrentRoom();
 
-            Grid grid = currentRoom.instantiatedRoom.grid;
+            Grid grid = currentRoom.InstantiatedRoom.grid;
 
             Vector3 nearestSpawnPosition = new(10000f, 10000f, 0);
 

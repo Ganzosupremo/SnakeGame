@@ -135,7 +135,7 @@ namespace SnakeGame.Decorations
             if (m_CurrentRoom != GameManager.Instance.GetCurrentRoom())
                 return;
 
-            Grid grid = m_CurrentRoom.instantiatedRoom.grid;
+            Grid grid = m_CurrentRoom.InstantiatedRoom.grid;
 
             // Gets the target position on the grid
             Vector3Int targetGridPosition = GetNearestPosition(m_CurrentRoom);

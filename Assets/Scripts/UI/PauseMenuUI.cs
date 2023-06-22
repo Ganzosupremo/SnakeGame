@@ -32,7 +32,7 @@ namespace SnakeGame.UI
 
         private void OnEnable()
         {
-            SaveDataManager.Instance.LoadGame();
+            //SaveDataManager.Instance.LoadGame();
             Time.timeScale = 0f;
             StartCoroutine(InitializeUI());
         }

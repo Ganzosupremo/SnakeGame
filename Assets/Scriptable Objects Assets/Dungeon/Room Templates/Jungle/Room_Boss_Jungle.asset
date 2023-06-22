@@ -15,8 +15,8 @@ MonoBehaviour:
   guid: 3f7fe2cfe89f54546b6c244b5ce41ecd
   prefab: {fileID: 4154312413488295907, guid: ec4d4a213117a2e4ca3c7b85dca8fa45, type: 3}
   previousPrefab: {fileID: 4154312413488295907, guid: ec4d4a213117a2e4ca3c7b85dca8fa45, type: 3}
-  normalMusic: {fileID: 11400000, guid: 95fbb1d1ab3942646874d35f23ca139f, type: 2}
-  battleMusic: {fileID: 11400000, guid: b11dc627350e1194cb3685cb95bab70a, type: 2}
+  normalMusic: {fileID: 11400000, guid: 53c471aababce824aa3a13a907daa6c2, type: 2}
+  battleMusic: {fileID: 11400000, guid: 71811dd565e2fef469753d3c89089023, type: 2}
   roomNodeType: {fileID: 11400000, guid: 0f280553dd5924b4eafa074fa9feabdb, type: 2}
   lowerBounds: {x: -4, y: -7}
   upperBounds: {x: 72, y: 44}
@@ -71,12 +71,20 @@ MonoBehaviour:
   enemiesByLevelList:
   - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
     spawnableObjectRatioList:
-    - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
-      spawnRatio: 1
+    - dungeonObject: {fileID: 11400000, guid: d77f61f875c330c4fa49bed625f5e771, type: 2}
+      spawnRatio: 7
+    - dungeonObject: {fileID: 11400000, guid: 57fea29cb144da94cb759187548ed94c, type: 2}
+      spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: 543f2ceeadc70214c9dc833b5a65db8e, type: 2}
+      spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: 2cffcfc50ba6ef34c98f7b330e416a15, type: 2}
+      spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: a67840dd00d71514ca3ac4bb78b114e9, type: 2}
+      spawnRatio: 10
   roomEnemySpawnParemetersList:
   - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
     minTotalItemsToSpawn: 1
-    maxTotalItemsToSpawn: 2
+    maxTotalItemsToSpawn: 3
     minConcurrentItems: 1
     maxConcurrentItems: 2
     minSpawnInterval: 4
@@ -96,7 +104,7 @@ MonoBehaviour:
   - gameLevel: {fileID: 11400000, guid: 1c18cc59ada0f0a4e9fdcceafcd36613, type: 2}
     minTotalItemsToSpawn: 2
     maxTotalItemsToSpawn: 4
-    minConcurrentItems: 1
+    minConcurrentItems: 2
     maxConcurrentItems: 3
     minSpawnInterval: 1
     maxSpawnInterval: 2

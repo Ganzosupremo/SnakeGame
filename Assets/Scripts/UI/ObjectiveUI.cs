@@ -50,10 +50,7 @@ namespace SnakeGame.UI
 
         private void StaticEventHandler_OnRoomEnemiesDefeated(RoomEnemiesDefeatedArgs args)
         {
-            if (GameManager.CurrentGameState == GameState.Playing)
-            {
-                Run(0f, 1f, Settings.DisplayObjectivesTime, m_CancellationToken.Token,$"Go to the next Room and Defeat the Enemies.");
-            }
+            Run(0f, 1f, Settings.DisplayObjectivesTime, m_CancellationToken.Token,$"Go to the next Room and Defeat the Enemies.");
         }
 
         private async void Run(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken = default, params string[] texts)
@@ -81,24 +78,6 @@ namespace SnakeGame.UI
             }
         }
 
-        private async UniTask DisplayObjectivesAsync(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken)
-        {
-            if (cancellationToken.IsCancellationRequested)
-                return;
-
-            float timer = 0f;
-            while (timer <= displayTime)
-            {
-                timer += Time.deltaTime;
-                _CanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / 1.2f);
-                await UniTask.NextFrame(cancellationToken);
-            }
-
-            await UniTask.Delay((int)displayTime * 1000, false, PlayerLoopTiming.Update, cancellationToken);
-
-            await HideUI(displayTime, cancellationToken);
-        }
-
         private async UniTask ControlUIFadingAsync(float currentAlpha, float targetAlpha, float displayTime, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested || !gameObject.activeSelf) return;
@@ -109,24 +88,9 @@ namespace SnakeGame.UI
             {
                 timer += Time.deltaTime;
                 _CanvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / displayTime);
-                await UniTask.NextFrame(cancellationToken);
+                await UniTask.Yield(cancellationToken);
             }
-            await UniTask.NextFrame(cancellationToken);
-        }
-
-        private async UniTask HideUI(float displayTime, CancellationToken cancellationToken)
-        {
-            if (cancellationToken.IsCancellationRequested)
-                return;
-
-            float hideTimer = 0f;
-            while (hideTimer <= displayTime)
-            {
-                hideTimer += Time.deltaTime;
-                _CanvasGroup.alpha = Mathf.Lerp(1f, 0f, hideTimer / 1.2f);
-                await UniTask.NextFrame(cancellationToken);
-            }
-            await UniTask.NextFrame(cancellationToken);
+            await UniTask.Yield(cancellationToken);
         }
 
         private void BuildText(params string[] displayTexts)

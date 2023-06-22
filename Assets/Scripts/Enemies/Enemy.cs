@@ -118,8 +118,14 @@ namespace SnakeGame.Enemies
         private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
         {
             if (healthEventArgs.healthAmount <= 0f)
+            {
+                SetDeathEffect();
+
                 EnemyDestroyed();
+            }
         }
+
+
 
         public void InitialiseEnemy(EnemyDetailsSO enemyDetails, int enemySpawnNumber, GameLevelSO gameLevel)
         {
@@ -245,6 +251,19 @@ namespace SnakeGame.Enemies
 
             if (TryGetComponent(out DestroyEvent destroyEvent))
                 destroyEvent.CallOnDestroy(false, 0);
+        }
+
+        private void SetDeathEffect()
+        {
+            if (enemyDetails.EnemyDeathEffect != null && enemyDetails.EnemyDeathEffect.DeathEffectPrefab != null)
+            {
+                DeathEffect deathEffect = (DeathEffect)PoolManager.Instance.ReuseComponent
+                    (enemyDetails.EnemyDeathEffect.DeathEffectPrefab, transform.position, Quaternion.identity);
+
+                deathEffect.InitialiseDeathEffect(enemyDetails.EnemyDeathEffect);
+
+                deathEffect.gameObject.SetActive(true);
+            }
         }
 
         private void ChangeLightIntensity(DayCicle cicle)

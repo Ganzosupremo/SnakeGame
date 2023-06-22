@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using SnakeGame.GameUtilities;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -68,7 +70,7 @@ namespace SnakeGame.AudioSystem
             var source = audioSource;
             if (source == null)
             {
-                GameObject gameObject = new(name:"Sound",typeof(AudioSource));
+                GameObject gameObject = new(name: "Sound Preview", typeof(AudioSource));
                 source = gameObject.GetComponent<AudioSource>();
             }
 
@@ -77,11 +79,13 @@ namespace SnakeGame.AudioSystem
             source.pitch = Random.Range(soundEffectMinRandomValuePitch, soundEffectMaxRandomValuePitch);
 
             source.Play();
-            //DestroyImmediate(source.gameObject);
+            //await DestroySource(source, source.clip.length);
+            Destroy(source.gameObject, source.clip.length);
+            //await UniTask.Delay(1000);
             return source;
         }
 #endif
-    #endregion
+        #endregion
 
         #region Validation
 #if UNITY_EDITOR

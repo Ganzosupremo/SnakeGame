@@ -3,8 +3,8 @@ using SnakeGame.GameUtilities;
 using SnakeGame.Interfaces;
 using SnakeGame.SaveAndLoadSystem;
 using System;
+using System.Collections;
 using System.Threading;
-using UnityEditor;
 using UnityEngine;
 
 namespace SnakeGame.AudioSystem
@@ -18,13 +18,14 @@ namespace SnakeGame.AudioSystem
 
         public static event Action OnMusicVolumeIncreased;
         public static event Action OnMusicVolumeDecreased;
-        public static event Action<MusicSO, float> OnMusicClipChanged;
+        public static event Action<MusicClipChangeEventArgs> OnMusicClipChanged;
 
         [SerializeField] private AudioSource _MusicSource01, _MusicSource02;
         private AudioClip m_CurrentmusicClip = null;
         [SerializeField] private bool m_IsMusicSource01Playing = true;
 
         private CancellationTokenSource m_CancellationTokenSource;
+        private Coroutine _FadeMusicRoutine;
 
         // On the final build use this int internally and the property will fetch the value
         //private int m_MusicVolume;
@@ -79,13 +80,15 @@ namespace SnakeGame.AudioSystem
             DecreaseMusicVolume();
         }
 
-        private void MusicManager_OnMusicClipChanged(MusicSO musicSO, float timeToFade = Settings.MusicFadeTime)
+        private void MusicManager_OnMusicClipChanged(MusicClipChangeEventArgs args)
         {
-            OnMusicChanged(musicSO, timeToFade);
+            if (args.CanPlayMultipleClips)
+                OnMusicChanged(args);
+            else
+                OnMusicChanged(args.Music, args.TimeToFade);
         }
 
-        [ContextMenu("Increase Volume")]
-        public void IncreaseMusicVolume()
+        private void IncreaseMusicVolume()
         {
             int maxVolume = 20;
 
@@ -95,8 +98,7 @@ namespace SnakeGame.AudioSystem
             SetMusicVolume(MusicVolume);
         }
 
-        [ContextMenu("Decrease Volume")]
-        public void DecreaseMusicVolume()
+        private void DecreaseMusicVolume()
         {
             if (MusicVolume == 0) return;
 
@@ -116,6 +118,22 @@ namespace SnakeGame.AudioSystem
             }
         }
 
+        private async void OnMusicChanged(MusicClipChangeEventArgs args)
+        {
+            if (m_CurrentmusicClip != args.RandomClip)
+            {
+                m_CurrentmusicClip = args.RandomClip;
+                m_IsMusicSource01Playing = !m_IsMusicSource01Playing;
+
+                 await FadeMusicAsync(args, m_CancellationTokenSource.Token);
+            }
+        }
+
+        /// <summary>
+        /// Fades out the current music and fades in the new specified music, works with one audio clip only
+        /// </summary>
+        /// <param name="musicTrack">The new Music to fade in</param>
+        /// <param name="timeToFade">The time it takes to fade</param>
         private async UniTask FadeMusicAsync(MusicSO musicTrack, float timeToFade, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested || !gameObject.activeSelf) return;
@@ -125,9 +143,8 @@ namespace SnakeGame.AudioSystem
                 float timeElapsed = 0f;
                 if (m_IsMusicSource01Playing)
                 {
-
+                    _MusicSource01.clip = null;
                     _MusicSource01.clip = musicTrack.musicClip;
-                    _MusicSource02.Pause();
                     _MusicSource01.Play();
 
                     while (timeElapsed < timeToFade)
@@ -135,13 +152,14 @@ namespace SnakeGame.AudioSystem
                         timeElapsed += Time.deltaTime;
                         _MusicSource01.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
                         _MusicSource02.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);     
-                        await UniTask.NextFrame(cancellationToken);
+                        await UniTask.Yield(cancellationToken);
                     }
+                    _MusicSource02.Pause();
                 }
                 else
                 {
+                    _MusicSource02.clip = null;
                     _MusicSource02.clip = musicTrack.musicClip;
-                    _MusicSource01.Pause();
                     _MusicSource02.Play();
 
                     while (timeElapsed < timeToFade)
@@ -149,8 +167,10 @@ namespace SnakeGame.AudioSystem
                         timeElapsed += Time.deltaTime;
                         _MusicSource02.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
                         _MusicSource01.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
-                        await UniTask.NextFrame(cancellationToken);
+                        await UniTask.Yield(cancellationToken);
+                    
                     }
+                    _MusicSource01.Pause();
                 }
             }
             catch (OperationCanceledException)
@@ -159,43 +179,56 @@ namespace SnakeGame.AudioSystem
             }
         }
 
-        //private async UniTask FadeInNewMusic(MusicSO music, float timeToFade, CancellationToken token)
-        //{
-        //    float timeElapsed = 0f;
+        /// <summary>
+        /// Fades out the current music and fades in the new specified music, uses the randomly selected clip
+        /// </summary>
+        /// <param name="clip">The random selected clip</param>
+        /// <param name="timeToFade">The time it takes to fade</param>
+        private async UniTask FadeMusicAsync(MusicClipChangeEventArgs args, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested || !gameObject.activeSelf) return;
 
-        //    while (timeElapsed <= timeToFade)
-        //    {
-        //        _MusicSource01.clip = music.musicClip;
-        //        _MusicSource01.Play();
+            try
+            {
+                float timeElapsed = 0f;
+                if (m_IsMusicSource01Playing)
+                {
+                    _MusicSource01.clip = null;
+                    _MusicSource01.clip = args.RandomClip;
 
-        //        timeElapsed += Time.deltaTime;
-        //        _MusicSource01.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
-        //        //_MusicSource02.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
-        //        await UniTask.NextFrame(token);
-        //    }
-        //}
+                    _MusicSource01.Play();
 
-        //private async UniTask FadeOutCurrentMusic(float timeToFade, CancellationToken cancellationToken = default)
-        //{
-        //    try
-        //    {
-        //        float timeElapsed = 0f;
+                    while (timeElapsed <= args.TimeToFade)
+                    {
+                        timeElapsed += Time.deltaTime;
+                        _MusicSource01.volume = Mathf.LerpUnclamped(0, 1, timeElapsed / args.TimeToFade);
+                        _MusicSource02.volume = Mathf.LerpUnclamped(1, 0, timeElapsed / args.TimeToFade);
+                        await UniTask.Yield(cancellationToken);
+                    }
+                    _MusicSource02.Pause();
+                }
+                else
+                {
+                    _MusicSource02.clip = null;
+                    _MusicSource02.clip = args.RandomClip;
 
-        //        while (timeElapsed <= timeToFade)
-        //        {
-        //            timeElapsed += Time.deltaTime;
-        //            _MusicSource01.volume = Mathf.Lerp(1f, 0f, timeElapsed / timeToFade);
-        //            //_MusicSource02.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
-        //            await UniTask.NextFrame(cancellationToken);
-        //        }
-        //        _MusicSource01.Pause();
-        //        m_CurrentmusicClip = null;
-        //    }
-        //    catch (OperationCanceledException)
-        //    {
-        //        return;
-        //    }
-        //}
+                    _MusicSource02.Play();
+
+                    while (timeElapsed <= args.TimeToFade)
+                    {
+                        timeElapsed += Time.deltaTime;
+                        _MusicSource02.volume = Mathf.LerpUnclamped(0, 1, timeElapsed / args.TimeToFade);
+                        _MusicSource01.volume = Mathf.LerpUnclamped(1, 0, timeElapsed / args.TimeToFade);
+                        await UniTask.Yield(cancellationToken);
+                    }
+                    _MusicSource01.Pause();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+        }
 
         private void SetMusicVolume(int musicVolume)
         {
@@ -231,7 +264,57 @@ namespace SnakeGame.AudioSystem
 
         public static void CallOnMusicClipChangedEvent(MusicSO musicSO, float timeToFade = Settings.MusicFadeTime)
         {
-            OnMusicClipChanged?.Invoke(musicSO, timeToFade);
+            if (CanPlayMultipleClips(musicSO))
+            {
+                int randomInt = UnityEngine.Random.Range(0, musicSO.MusicClips.Length);
+                AudioClip randomClip = musicSO.MusicClips[randomInt];
+                string nameRandomClip = musicSO.MusicNames[randomInt];
+
+                MusicClipChangeEventArgs args = new()
+                {
+                    Index = randomInt,
+                    Music = musicSO,
+                    TimeToFade = timeToFade,
+
+                    CanPlayMultipleClips = true,
+                    RandomClip = randomClip,
+                    NameRandomClip = nameRandomClip
+                };
+
+                OnMusicClipChanged?.Invoke(args);
+            }
+            else
+            {
+                OnMusicClipChanged?.Invoke(new MusicClipChangeEventArgs()
+                {
+                    Music = musicSO,
+                    TimeToFade = timeToFade,
+                    CanPlayMultipleClips = false
+                });
+            }
+
+
+        }
+
+        /// <summary>
+        /// Checks if the specified MusicSO has the necessary arrays populated to play multiple clips.
+        /// </summary>
+        /// <param name="musicSO">The MusicSO to check</param>
+        /// <returns>True if the requirements are met, false otherwise</returns>
+        private static bool CanPlayMultipleClips(MusicSO musicSO)
+        {
+            if (musicSO.MusicClips == null)
+                return false;
+            else if (musicSO.MusicClips.Length <= 1)
+                return false;
+            else if (musicSO.MusicNames.Length <= 1)
+                return false;
+            else if (musicSO.MusicNames == null)
+                return false;
+            else if (musicSO.MusicClips.Length != musicSO.MusicNames.Length)
+                return false;
+            
+            return true;
         }
 
         public void Load(GameData data)
@@ -243,5 +326,16 @@ namespace SnakeGame.AudioSystem
         {
             data.VolumeDataSaved.MusicVolume = MusicVolume;
         }
+    }
+
+    public class MusicClipChangeEventArgs : EventArgs
+    {
+        public int Index;
+        public MusicSO Music;
+        public float TimeToFade;
+
+        public bool CanPlayMultipleClips;
+        public AudioClip RandomClip;
+        public string NameRandomClip;
     }
 }

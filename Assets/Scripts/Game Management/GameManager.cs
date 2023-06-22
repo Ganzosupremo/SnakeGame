@@ -521,12 +521,12 @@ namespace SnakeGame
                 // Skip the boos room for the moment
                 if (keyValuePair.Value.roomNodeType.isBossRoom)
                 {
-                    m_BossRoom = keyValuePair.Value.instantiatedRoom;
+                    m_BossRoom = keyValuePair.Value.InstantiatedRoom;
                     continue;
                 }
 
                 // Check if the other rooms have been cleared of enemies
-                if (!keyValuePair.Value.isClearOfEnemies)
+                if (!keyValuePair.Value.IsClearOfEnemies)
                 {
                     isDungeonClearOfNormalEnemies = false;
                     break;
@@ -537,7 +537,7 @@ namespace SnakeGame
             // If the dungeon level has been cleared completely - all the normal rooms have been cleared except the boss room,
             // Or if there's no boss room
             // Or all rooms and the boss room have been cleared
-            if ((isDungeonClearOfNormalEnemies && m_BossRoom == null) || (isDungeonClearOfNormalEnemies && m_BossRoom.room.isClearOfEnemies))
+            if ((isDungeonClearOfNormalEnemies && m_BossRoom == null) || (isDungeonClearOfNormalEnemies && m_BossRoom.room.IsClearOfEnemies))
             {
                 // If there are more dungeon level, then 
                 if (currentDungeonLevelListIndex < gameLevelList.Count - 1)
@@ -603,7 +603,6 @@ namespace SnakeGame
                 while (timer <= timeSeconds)
                 {
                     timer += Time.deltaTime;
-                    this.Log(timer);
                     canvasGroup.alpha = Mathf.Lerp(currentAlpha, targetAlpha, timer / timeSeconds);
                     await UniTask.Yield();
                 }

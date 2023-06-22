@@ -105,7 +105,7 @@ namespace SnakeGame.ProceduralGenerationSystem
                 await UniTask.NextFrame();
 
                 //Save gameobject reference
-                room.instantiatedRoom = instantiatedRoom;
+                room.InstantiatedRoom = instantiatedRoom;
             }
         }
 
@@ -192,7 +192,7 @@ namespace SnakeGame.ProceduralGenerationSystem
 
                     Room room = CreateRoomFromRoomTemplate(roomTemplate, roomNode);
 
-                    room.isPositioned = true;
+                    room.IsPositioned = true;
 
                     // Add room to room dictionary
                     dungeonBuilderRoomDictionary.Add(room.id, room);
@@ -245,28 +245,28 @@ namespace SnakeGame.ProceduralGenerationSystem
                 tilemapLowerBounds = roomTemplate.lowerBounds,
                 tilemapUpperBounds = roomTemplate.upperBounds,
 
-                childRoomIDList = CopyStringList(roomNode.childRoomNodeIDList),
+                ChildRoomIDList = CopyStringList(roomNode.childRoomNodeIDList),
                 doorwayList = CopyDoorwayList(roomTemplate.doorwayList)
             };
 
             //Set parent id for room
             if (roomNode.parentRoomNodeIDList.Count == 0) //This means is the Entrace
             {
-                room.parentRoomID = "";
-                room.isPreviouslyVisited = true;
+                room.ParentRoomID = "";
+                room.IsPreviouslyVisited = true;
 
                 //Set the entrance as the current room in the game manager
                 GameManager.Instance.SetCurrentRoom(room);
             }
             else
             {
-                room.parentRoomID = roomNode.parentRoomNodeIDList[0];
+                room.ParentRoomID = roomNode.parentRoomNodeIDList[0];
             }
 
             // If there are no enemies to spawn in this room, then default it to be clear of enemies
             if (room.GetNumberOfItemsToSpawn(GameManager.Instance.GetCurrentDungeonLevel()) == 0)
             {
-                room.isClearOfEnemies = true;
+                room.IsClearOfEnemies = true;
             }
 
             return room;
@@ -314,9 +314,9 @@ namespace SnakeGame.ProceduralGenerationSystem
                 {
                     Room room = keyValuePair.Value;
 
-                    if (room.instantiatedRoom != null)
+                    if (room.InstantiatedRoom != null)
                     {
-                        Destroy(room.instantiatedRoom.gameObject);
+                        Destroy(room.InstantiatedRoom.gameObject);
                     }
                 }
 

@@ -15,10 +15,12 @@ namespace SnakeGame.VisualEffects
         /// <summary>
         /// Sets The Shoot Effect From the AmmoHitEffectSO
         /// </summary>
-        public void SetAmmoHitEffect(AmmoHitEffectSO ammoHitEffect)
+        public void InitialiseAmmoHitEffect(AmmoHitEffectSO ammoHitEffect)
         {
             // Set shoot effect color gradient
             SetAmmoHitEffectColorGradient(ammoHitEffect.colorGradient);
+
+            SetShapeModule(ammoHitEffect.Type);
 
             // Set shoot effect particle system starting values
             SetAmmoHitEffectParticleStartingValues(ammoHitEffect.particleDuration, ammoHitEffect.startParticleSize, ammoHitEffect.startParticleSpeed,
@@ -39,12 +41,14 @@ namespace SnakeGame.VisualEffects
         /// </summary>
         /// <param name="ammoHitEffect"></param>
         /// <param name="spawnPosition"></param>
-        public void SetAmmoHitEffect(AmmoHitEffectSO ammoHitEffect, Vector3 spawnPosition)
+        public void InitialiseAmmoHitEffect(AmmoHitEffectSO ammoHitEffect, Vector3 spawnPosition)
         {
             SetAmmoHitEffectPosition(spawnPosition);
 
             // Set shoot effect color gradient
             SetAmmoHitEffectColorGradient(ammoHitEffect.colorGradient);
+
+            SetShapeModule(ammoHitEffect.Type);
 
             // Set shoot effect particle system starting values
             SetAmmoHitEffectParticleStartingValues(ammoHitEffect.particleDuration, ammoHitEffect.startParticleSize, ammoHitEffect.startParticleSpeed,
@@ -72,6 +76,64 @@ namespace SnakeGame.VisualEffects
         {
             ParticleSystem.ColorOverLifetimeModule colorOverLifetime = ammoHitEffectParticleSystem.colorOverLifetime;
             colorOverLifetime.color = colorGradient;
+        }
+
+        private void SetShapeModule(EffectType effectType = EffectType.None)
+        {
+            ParticleSystem.ShapeModule shapeModule = ammoHitEffectParticleSystem.shape;
+
+            switch (effectType)
+            {
+                case EffectType.Sphere_Burst:
+
+                    shapeModule.shapeType = ParticleSystemShapeType.Sphere;
+                    shapeModule.radius = 2f;
+                    shapeModule.radiusThickness = 0.5f;
+                    shapeModule.arc = 360f;
+                    shapeModule.arcMode = ParticleSystemShapeMultiModeValue.BurstSpread;
+                    shapeModule.arcSpread = 0f;
+
+                    break;
+                case EffectType.Circle_Explosion:
+
+                    shapeModule.shapeType = ParticleSystemShapeType.Circle;
+                    shapeModule.radius = 0.2f;
+                    shapeModule.radiusThickness = 0.2f;
+                    shapeModule.arc = 360f;
+                    shapeModule.arcMode = ParticleSystemShapeMultiModeValue.BurstSpread;
+                    shapeModule.arcSpread = 0.01f;
+
+                    break;
+                case EffectType.Cone_Upwards:
+
+                    float xRotation = -90f;
+                    gameObject.transform.localRotation = new Quaternion(xRotation, 0f, 0f, 0f);
+
+                    shapeModule.shapeType = ParticleSystemShapeType.Cone;
+                    shapeModule.radius = 4f;
+                    shapeModule.radiusThickness = 0.4f;
+                    shapeModule.arc = 180f;
+                    shapeModule.arcMode = ParticleSystemShapeMultiModeValue.Loop;
+                    shapeModule.arcSpread = 0f;
+
+                    break;
+                case EffectType.Circle_Whirpool:
+
+                    shapeModule.shapeType = ParticleSystemShapeType.Circle;
+                    shapeModule.angle = 25f;
+                    shapeModule.radius = 1f;
+                    shapeModule.radiusThickness = 0.5f;
+                    shapeModule.arc = 360f;
+                    shapeModule.arcMode = ParticleSystemShapeMultiModeValue.Loop;
+                    shapeModule.arcSpread = 0f;
+                    shapeModule.arcSpeed = 10f;
+
+                    break;
+                case EffectType.None:
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
