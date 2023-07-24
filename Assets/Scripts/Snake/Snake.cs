@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using SnakeGame.AbwehrSystem;
 using SnakeGame.AudioSystem;
+using SnakeGame.Debuging;
 using SnakeGame.FoodSystem;
 using SnakeGame.GameUtilities;
 using SnakeGame.HealthSystem;
@@ -119,15 +120,13 @@ namespace SnakeGame.PlayerSystem
             AddStartingSegments();
             ChangeLightIntensity(TimeManager.Instance.CurrentTime);
         }
-
+#if UNITY_EDITOR
         private void Update()
         {
             if (Input.GetKeyUp(KeyCode.K))
-            {
                 GrowSnake(1);
-            }
         }
-
+#endif
         private void AddStartingSegments()
         {
             // We add more segments to the snake on start
@@ -148,12 +147,14 @@ namespace SnakeGame.PlayerSystem
         {
             healthEvent.OnHealthChanged += OnHealthChanged;
             Food.OnFoodEaten += OnFoodEaten;
+            GameManager.OnLevelCompleted += OnLevelCompleted;
             TimeManager.OnTimeChanged += OnTimeChanged;
         }
 
         private void OnDisable()
         {
             healthEvent.OnHealthChanged -= OnHealthChanged;
+            GameManager.OnLevelCompleted -= OnLevelCompleted;
             Food.OnFoodEaten -= OnFoodEaten;
             TimeManager.OnTimeChanged -= OnTimeChanged;
         }
@@ -164,6 +165,15 @@ namespace SnakeGame.PlayerSystem
 
             IsSnakeColliding = true;
             GrowSnake(food.foodSO.HealthIncrease);
+        }
+
+        private void OnLevelCompleted(int obj)
+        {
+            foreach (Transform segment in SnakeSegmentsList)
+            {
+                segment.transform.position = this.transform.position;
+                this.Log(segment.transform.position);
+            }
         }
 
         private void OnTimeChanged(DayCicle dayCicle)

@@ -48,8 +48,8 @@ namespace SnakeGame
     /// </summary>
     public enum ChestSpawnEvent
     {
-        onRoomEntry,
-        onEnemiesDefeated
+        OnRoomEntry,
+        OnEnemiesDefeated
     }
 
     /// <summary>
@@ -113,6 +113,7 @@ namespace SnakeGame
         HighScores = 3,
         HowToPlay = 4,
         GameWon = 5,
+        PlayerSettings = 6,
     }
 }
 
@@ -135,5 +136,14 @@ namespace SnakeGame.VisualEffects
         Cone_Upwards,
         Circle_Whirpool,
         None,
+    }
+}
+
+namespace SnakeGame.UI
+{
+    public enum TabsType
+    {
+        Horizontal,
+        Vertical
     }
 }

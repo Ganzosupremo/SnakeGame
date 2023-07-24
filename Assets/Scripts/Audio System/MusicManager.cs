@@ -12,9 +12,7 @@ namespace SnakeGame.AudioSystem
     [DisallowMultipleComponent]
     public class MusicManager : SingletonMonoBehaviour<MusicManager>, IPersistenceData
     {
-        // On the final build change to a property
-        [Range(0, 20)]
-        public int MusicVolume = 9;
+        public int MusicVolume { get => _musicVolume; set => _musicVolume = value; }
 
         public static event Action OnMusicVolumeIncreased;
         public static event Action OnMusicVolumeDecreased;
@@ -22,14 +20,10 @@ namespace SnakeGame.AudioSystem
 
         [SerializeField] private AudioSource _MusicSource01, _MusicSource02;
         private AudioClip m_CurrentmusicClip = null;
-        [SerializeField] private bool m_IsMusicSource01Playing = true;
+        private bool m_IsMusicSource01Playing = true;
 
         private CancellationTokenSource m_CancellationTokenSource;
-        private Coroutine _FadeMusicRoutine;
-
-        // On the final build use this int internally and the property will fetch the value
-        //private int m_MusicVolume;
-
+        private int _musicVolume = 9;
         protected override void Awake()
         {
             base.Awake();
@@ -38,7 +32,7 @@ namespace SnakeGame.AudioSystem
 
         private void Start()
         {
-            SetMusicVolume(MusicVolume);
+            SetMusicVolume(_musicVolume);
             m_IsMusicSource01Playing = true;
         }
 
@@ -70,6 +64,8 @@ namespace SnakeGame.AudioSystem
             m_CancellationTokenSource.Dispose();
         }
 
+        #region Increase/Decrease Volume Methods
+
         private void MusicManager_OnMusicVolumeIncreased()
         {
             IncreaseMusicVolume();
@@ -80,33 +76,35 @@ namespace SnakeGame.AudioSystem
             DecreaseMusicVolume();
         }
 
-        private void MusicManager_OnMusicClipChanged(MusicClipChangeEventArgs args)
-        {
-            if (args.CanPlayMultipleClips)
-                OnMusicChanged(args);
-            else
-                OnMusicChanged(args.Music, args.TimeToFade);
-        }
-
         private void IncreaseMusicVolume()
         {
             int maxVolume = 20;
 
-            if (MusicVolume >= maxVolume) return;
+            if (_musicVolume >= maxVolume) return;
 
-            MusicVolume += 1;
-            SetMusicVolume(MusicVolume);
+            _musicVolume += 1;
+            SetMusicVolume(_musicVolume);
         }
 
         private void DecreaseMusicVolume()
         {
-            if (MusicVolume == 0) return;
+            if (_musicVolume == 0) return;
 
-            MusicVolume -= 1;
-            SetMusicVolume(MusicVolume);
+            _musicVolume -= 1;
+            SetMusicVolume(_musicVolume);
         }
 
-        private async void OnMusicChanged(MusicSO musicSO, float timeToFade)
+        #endregion
+
+        private async void MusicManager_OnMusicClipChanged(MusicClipChangeEventArgs args)
+        {
+            if (args.CanPlayMultipleClips)
+                await OnMusicChanged(args);
+            else
+                await OnMusicChanged(args.Music, args.TimeToFade);
+        }
+
+        private async UniTask OnMusicChanged(MusicSO musicSO, float timeToFade)
         {
             // If the audio clip changed, play the new audio
             if (m_CurrentmusicClip != musicSO.musicClip)
@@ -118,7 +116,7 @@ namespace SnakeGame.AudioSystem
             }
         }
 
-        private async void OnMusicChanged(MusicClipChangeEventArgs args)
+        private async UniTask OnMusicChanged(MusicClipChangeEventArgs args)
         {
             if (m_CurrentmusicClip != args.RandomClip)
             {
@@ -264,7 +262,7 @@ namespace SnakeGame.AudioSystem
 
         public static void CallOnMusicClipChangedEvent(MusicSO musicSO, float timeToFade = Settings.MusicFadeTime)
         {
-            if (CanPlayMultipleClips(musicSO))
+            if (HasMultipleClips(musicSO))
             {
                 int randomInt = UnityEngine.Random.Range(0, musicSO.MusicClips.Length);
                 AudioClip randomClip = musicSO.MusicClips[randomInt];
@@ -301,7 +299,7 @@ namespace SnakeGame.AudioSystem
         /// </summary>
         /// <param name="musicSO">The MusicSO to check</param>
         /// <returns>True if the requirements are met, false otherwise</returns>
-        private static bool CanPlayMultipleClips(MusicSO musicSO)
+        private static bool HasMultipleClips(MusicSO musicSO)
         {
             if (musicSO.MusicClips == null)
                 return false;
@@ -319,23 +317,23 @@ namespace SnakeGame.AudioSystem
 
         public void Load(GameData data)
         {
-            MusicVolume = data.VolumeDataSaved.MusicVolume;
+            _musicVolume = data.GameAudioData.MusicVolume;
         }
 
         public void Save(GameData data)
         {
-            data.VolumeDataSaved.MusicVolume = MusicVolume;
+            data.GameAudioData.MusicVolume = _musicVolume;
         }
-    }
 
-    public class MusicClipChangeEventArgs : EventArgs
-    {
-        public int Index;
-        public MusicSO Music;
-        public float TimeToFade;
+        public class MusicClipChangeEventArgs : EventArgs
+        {
+            public int Index;
+            public MusicSO Music;
+            public float TimeToFade;
 
-        public bool CanPlayMultipleClips;
-        public AudioClip RandomClip;
-        public string NameRandomClip;
+            public bool CanPlayMultipleClips;
+            public AudioClip RandomClip;
+            public string NameRandomClip;
+        }
     }
 }

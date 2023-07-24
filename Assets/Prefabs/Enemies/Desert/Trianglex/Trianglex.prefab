@@ -91,7 +91,7 @@ Transform:
   m_GameObject: {fileID: 4240344451616259182}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 1}
+  m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6727757720795439248}
@@ -202,7 +202,7 @@ Transform:
   m_GameObject: {fileID: 7249687755293974846}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3370419710436442679}
@@ -274,6 +274,7 @@ SortingGroup:
   m_SortingLayerID: -251573173
   m_SortingLayer: 4
   m_SortingOrder: 5
+  m_SortAtRoot: 0
 --- !u!114 &6930524932663728290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,7 +295,7 @@ MonoBehaviour:
   movementToPositionEvent: {fileID: 0}
   idleEvent: {fileID: 0}
   enemyMovementAI: {fileID: 0}
-  enemySpriteRenderer: {fileID: 8556901518463182782}
+  _BossNameUI: {fileID: 0}
 --- !u!114 &-8338609364974670955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,7 +308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69933635bd683e1488d4085df13a5899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementDetails: {fileID: 11400000, guid: b6a83e2d1448c214da7c2df9851db35b, type: 2}
   updateFramesNumber: 1
   enemySpeed: 0
 --- !u!114 &-8334500676304990584
@@ -369,6 +369,12 @@ Rigidbody2D:
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -433,6 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b01ce2fead2835479424933b96d632b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSpriteRenderer: {fileID: 0}
   weaponShootPosition: {fileID: 8014135867868925797}
   weaponEffectPosition: {fileID: 4927824317536328598}
 --- !u!114 &5458791980827728756
@@ -619,6 +626,25 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -626,7 +652,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.875, y: 0.875}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -639,6 +665,7 @@ PolygonCollider2D:
       - {x: -0.5877852, y: -0.80901706}
       - {x: 0.58778536, y: -0.80901694}
       - {x: 0.9510565, y: 0.30901712}
+  m_UseDelaunayMesh: 0
 --- !u!1 &8666032275487336328
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,6 +733,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6727757720795439248}
     m_Modifications:
     - target: {fileID: 789657008888275479, guid: 4177e3d39089bbc4595c16c376687603, type: 3}
@@ -757,6 +785,9 @@ PrefabInstance:
       value: HealthBar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4177e3d39089bbc4595c16c376687603, type: 3}
 --- !u!4 &37765920607604784 stripped
 Transform:

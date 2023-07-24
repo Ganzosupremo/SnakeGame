@@ -1,31 +1,41 @@
-using System.Collections;
+using SnakeGame.AudioSystem;
+using SnakeGame.Debuging;
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace SnakeGame.UI
 {
     [DisallowMultipleComponent]
-    public class TabGroup : MonoBehaviour
+    public abstract class TabGroup : MonoBehaviour
     {
-        private List<Tab> tabButtons;
-        public List<GameObject> ObjectsToSwap;
+        public List<GameObject> ObjectsToSwap = new List<GameObject>();
 
+        private static List<Tab> _TabButtonsList;
+
+        [Space(5)]
+        public SoundEffectSO TabSelectedSoundEffect;
+
+        [Space(5)]
         public Sprite TabIdle;
         public Sprite TabActive;
         public Sprite TabHover;
-        public Tab SelectedTab { get { return selectedTab; } set { selectedTab = value; } }
-        private Tab selectedTab;
 
-        public void Subscribe(Tab button)
+        private Tab _selectedTab;
+
+        public static void Subscribe(Tab button)
         {
-            tabButtons ??= new List<Tab>();
-            tabButtons.Add(button);
+            _TabButtonsList ??= new List<Tab>();
+            _TabButtonsList.Add(button);
         }
 
         public void OnTabEnter(Tab button)
         {
             ResetTabs();
-            if (selectedTab == null || button != selectedTab)
+            if (_selectedTab == null || button != _selectedTab)
                 button.Background.sprite = TabHover;
         }
 
@@ -35,39 +45,45 @@ namespace SnakeGame.UI
             button.Background.sprite = TabIdle;
         }
 
-        public void OnTabSelected(Tab button)
+        public void OnTabSelected(Tab tabButton)
         {
-            if (selectedTab != null)
-            {
-                selectedTab.Deselect();
-            }
+            if (_selectedTab != null)
+                _selectedTab.Deselect();
 
-            selectedTab = button;
-            selectedTab.Select();
+            _selectedTab = tabButton;
+            _selectedTab.Select();
+
             ResetTabs();
-            button.Background.sprite = TabActive;
-            int index = button.transform.GetSiblingIndex();
+            tabButton.Background.sprite = TabActive;
+
+            int index = tabButton.transform.GetSiblingIndex();
 
             for (int i = 0; i < ObjectsToSwap.Count; i++)
             {
                 if (i == index)
-                {
                     ObjectsToSwap[i].SetActive(true);
-                }
                 else
-                {
                     ObjectsToSwap[i].SetActive(false);
-                }
             }
         }
 
+        /// <summary>
+        /// Sets the images of all tabs to idle
+        /// </summary>
         public void ResetTabs()
         {
-            foreach (Tab tab in tabButtons)
+            foreach (Tab tab in _TabButtonsList)
             {
-                if (selectedTab != null && tab == selectedTab) continue;
+                if (_selectedTab != null && tab == _selectedTab) continue;
+
                 tab.Background.sprite = TabIdle;
             }
+        }
+
+        public void PlayAudio()
+        {
+            if (TabSelectedSoundEffect != null)
+                SoundEffectManager.CallOnSoundEffectChangedEvent(TabSelectedSoundEffect);
         }
     }
 }

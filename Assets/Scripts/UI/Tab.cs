@@ -12,6 +12,20 @@ namespace SnakeGame.UI
         public UnityEvent OnTabSelected;
         public UnityEvent OnTabDeselected;
 
+        public Button uiButton;
+        public Image uiImage;
+        public LayoutElement uiLayoutElement;
+
+        private void Awake()
+        {
+            if (uiButton == null)
+                uiButton = GetComponent<Button>();
+            if (uiImage == null)
+                uiImage = GetComponent<Image>();
+            if (uiLayoutElement == null)
+                uiLayoutElement = GetComponent<LayoutElement>();
+        }
+
         private void Start()
         {
             Background = GetComponent<Image>();
@@ -25,7 +39,7 @@ namespace SnakeGame.UI
 
         public virtual void Deselect()
         {
-            OnTabSelected?.Invoke();
+            OnTabDeselected?.Invoke();
         }
 
         public virtual void OnPointerClick(PointerEventData eventData)

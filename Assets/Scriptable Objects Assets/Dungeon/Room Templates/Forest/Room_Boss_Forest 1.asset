@@ -16,7 +16,7 @@ MonoBehaviour:
   prefab: {fileID: 4154312413488295907, guid: 5eeef162494656145a4ac298aca29bd0, type: 3}
   previousPrefab: {fileID: 4154312413488295907, guid: 5eeef162494656145a4ac298aca29bd0, type: 3}
   normalMusic: {fileID: 11400000, guid: bf14ce99b994ba94589eb523637c53fb, type: 2}
-  battleMusic: {fileID: 11400000, guid: 17b09e48df52f73468bc5fc2ec4a3205, type: 2}
+  battleMusic: {fileID: 11400000, guid: 401a21b2c3c512c4585a61cebce6a3f8, type: 2}
   roomNodeType: {fileID: 11400000, guid: 0f280553dd5924b4eafa074fa9feabdb, type: 2}
   lowerBounds: {x: -47, y: -24}
   upperBounds: {x: 51, y: 33}
@@ -69,6 +69,12 @@ MonoBehaviour:
     spawnableObjectRatioList:
     - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
       spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: 5fd3bea7116e5ae46a72d4dfbf877fae, type: 2}
+      spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: 40aa3d95b3379b34fb841d5b33470fc5, type: 2}
+      spawnRatio: 10
+    - dungeonObject: {fileID: 11400000, guid: 7d7c9b6b8628e354d86cbcd831aae02e, type: 2}
+      spawnRatio: 10
   - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
     spawnableObjectRatioList:
     - dungeonObject: {fileID: 11400000, guid: d79639de62c23834f8606c4b91b2672b, type: 2}
@@ -84,34 +90,13 @@ MonoBehaviour:
     - dungeonObject: {fileID: 11400000, guid: a67840dd00d71514ca3ac4bb78b114e9, type: 2}
       spawnRatio: 10
   roomEnemySpawnParemetersList:
-  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
-    minTotalItemsToSpawn: 2
-    maxTotalItemsToSpawn: 4
-    minConcurrentItems: 1
-    maxConcurrentItems: 3
-    minSpawnInterval: 4
-    maxSpawnInterval: 8
-  - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
-    minTotalItemsToSpawn: 2
-    maxTotalItemsToSpawn: 4
-    minConcurrentItems: 1
-    maxConcurrentItems: 3
-    minSpawnInterval: 4
-    maxSpawnInterval: 8
-  - gameLevel: {fileID: 11400000, guid: a3eb62fda039fc348bb3ad1eaa17e824, type: 2}
-    minTotalItemsToSpawn: 2
-    maxTotalItemsToSpawn: 4
-    minConcurrentItems: 1
-    maxConcurrentItems: 3
-    minSpawnInterval: 4
-    maxSpawnInterval: 8
   - gameLevel: {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
     minTotalItemsToSpawn: 2
     maxTotalItemsToSpawn: 4
     minConcurrentItems: 1
     maxConcurrentItems: 3
-    minSpawnInterval: 4
-    maxSpawnInterval: 8
+    minSpawnInterval: 3
+    maxSpawnInterval: 6
   foodByLevelList:
   - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
     spawnableObjectRatioList:

@@ -1,6 +1,4 @@
 using SnakeGame.GameUtilities;
-using UnityEditor;
-using UnityEditor.Rendering.PostProcessing;
 using UnityEngine;
 
 namespace SnakeGame.VisualEffects
@@ -98,10 +96,10 @@ namespace SnakeGame.VisualEffects
 
         #region Tooltip
         [Tooltip("Radius of the shape")]
-        [Range(1f, 10f)]
+        [Range(0.001f, 2.5f)]
         #endregion
         public float Radius = 1f;
-        
+
         #region Tooltip
         [Tooltip("Angle of the cone. Only works with Cone_Upwards")]
         [Range(0f, 90f)]
@@ -137,7 +135,7 @@ namespace SnakeGame.VisualEffects
         #endregion Tooltip
         public float Speed = 1f;
         #endregion
-        
+
         #region Validation
 #if UNITY_EDITOR
         private void OnValidate()

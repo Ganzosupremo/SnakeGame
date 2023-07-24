@@ -98,6 +98,8 @@ namespace SnakeGame
             base.Awake();
             m_SnakeDetails = GameResources.Instance.currentSnake.snakeDetails;
 
+            Application.targetFrameRate = 200;
+
             InstantiatePlayer();
         }
 
@@ -128,8 +130,10 @@ namespace SnakeGame
 
         private async void Update()
         {
+#if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.P))
                 CurrentGameState = GameState.Started;
+#endif
 
             await HandleGameStatesAsync();
         }
@@ -244,7 +248,7 @@ namespace SnakeGame
                     // Just call this once
                     if (m_PreviousGameState != GameState.GameWon)
                         //GameWonAsync();
-                        StartCoroutine(GameWon());
+                        StartCoroutine(GameWonRoutine());
 
                     break;
                 case GameState.GameLost:
@@ -316,11 +320,11 @@ namespace SnakeGame
                     await LevelCompletedAsync(m_CancellationTokenSource.Token);
                     break;
                 case GameState.GameWon:
-                    if (GetSnake().GetSnakeControler().GetInputActions().Snake.Pause.WasPressedThisFrame())
-                        PauseGameMenu();
+                    //if (GetSnake().GetSnakeControler().GetInputActions().Snake.Pause.WasPressedThisFrame())
+                    //    PauseGameMenu();
 
-                    if (GetSnake().GetSnakeControler().GetInputActions().Snake.DisplayMap.IsPressed())
-                        DisplayOverviewMap();
+                    //if (GetSnake().GetSnakeControler().GetInputActions().Snake.DisplayMap.IsPressed())
+                    //    DisplayOverviewMap();
 
                     // Just call this once
                     if (m_PreviousGameState != GameState.GameWon)
@@ -694,6 +698,7 @@ namespace SnakeGame
             yield return StartCoroutine(FadeScreen(0f, 1f, 2f, new(0f, 0f, 0f, 0.4f)));
 
             currentDungeonLevelListIndex++;
+            //CallOnLevelCompletedEvent();
 
             string name = GameResources.Instance.currentSnake.snakeName;
             if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
@@ -726,7 +731,7 @@ namespace SnakeGame
             await FadeScreenAsync(0f, 1f, 2f, new(0f, 0f, 0f, 0.4f));
 
             currentDungeonLevelListIndex++;
-            CallOnLevelCompletedEvent();
+            //CallOnLevelCompletedEvent();
 
             string name = GameResources.Instance.currentSnake.snakeName;
             if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
@@ -748,106 +753,13 @@ namespace SnakeGame
             PlayGameLevel(currentDungeonLevelListIndex);
         }
 
-        private IEnumerator GameWon()
+        private IEnumerator GameWonRoutine()
         {
             m_PreviousGameState = GameState.GameWon;
 
             //Fade in the canvas to display a message
             yield return StartCoroutine(FadeScreen(0f, 1f, 2f, Color.black));
-
-            //GetSnake().GetSnakeControler().DisableSnake();
-
-            int rank = HighScoreManager.Instance.GetRank(m_GameScore);
-            string rankText;
-
-            if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
-            {
-                rankText = $"Your Score this time was ranked {rank} on the Top {Settings.maxNumberOfHighScoresToSave}.";
-
-                string playerName = GameResources.Instance.currentSnake.snakeName;
-                if (playerName == "")
-                    playerName = m_SnakeDetails.snakeName.ToUpper();
-
-                //Update the score
-                HighScoreManager.Instance.AddScore(new Score()
-                {
-                    PlayerName = playerName,
-                    LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
-                    $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
-                    PlayerScore = m_GameScore
-                }, rank);
-            }
-            else
-            {
-                rankText = $"Your Score could not get on the Top {Settings.maxNumberOfHighScoresToSave} this Time.\n Try Next Time!";
-            }
-
-            //yield return new WaitForSeconds(0.5f);
-
-            //Display the game complete message
-            yield return StartCoroutine(DisplayMessageRoutine($"Well Done {GameResources.Instance.currentSnake.snakeName}!\n You Defeated every Boss on Every Biome. " +
-                $"\n\nYou're now the Ultimate Snake.", Color.white, 5.5f));
-
-            yield return StartCoroutine(DisplayMessageRoutine($"Your final Score: {m_GameScore:###,###}. \n\n{rankText}", Color.white, 6f));
-            yield return StartCoroutine(DisplayMessageRoutine($"Thanks For Playing. Head to the Exit or Press 'Enter' to restart the game", Color.white, 4f));
-            yield return StartCoroutine(FadeScreen(1f, 0f, 1.5f, Color.black));
-
-            // Change later to the new input system
-            while (!Input.GetKeyDown(KeyCode.Return))
-                yield return null;
-
-            m_CurrentGameState = GameState.Restarted;
-        }
-
-        private async UniTask GameWonAsync(CancellationToken cancellationToken)
-        {
-            if (cancellationToken.IsCancellationRequested) return;
-
-            m_PreviousGameState = GameState.GameWon;
-
-            await FadeScreenAsync(0f, 1f, 2f, Color.black);
-
-            int rank = HighScoreManager.Instance.GetRank(m_GameScore);
-            string rankText;
-
-            if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
-            {
-                rankText = $"Your Score this time was ranked {rank} on the Top {Settings.maxNumberOfHighScoresToSave}.";
-
-                string playerName = GameResources.Instance.currentSnake.snakeName;
-                if (playerName == "")
-                    playerName = m_SnakeDetails.snakeName.ToUpper();
-
-                //Update the score
-                HighScoreManager.Instance.AddScore(new Score()
-                {
-                    PlayerName = playerName,
-                    LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
-                    $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
-                    PlayerScore = m_GameScore
-                }, rank);
-            }
-            else
-            {
-                rankText = $"Your Score could not get on the Top {Settings.maxNumberOfHighScoresToSave} this Time.\n Try Next Time!";
-            }
-
-            await DisplayMessageAsync($"Well Done {GameResources.Instance.currentSnake.snakeName}!\n You Defeated every Boss on Every Biome. " +
-                $"\n\nYou're now the Ultimate Snake.", Color.white, 5.5f, m_CancellationTokenSource.Token);
-            await DisplayMessageAsync($"Your final Score: {m_GameScore:###,###}. \n\n{rankText}", Color.white, 6f, m_CancellationTokenSource.Token);
-            await DisplayMessageAsync($"Thanks For Playing! Press 'Enter' to restart the game", Color.white, 0f, m_CancellationTokenSource.Token);
-            await FadeScreenAsync(1f, 0f, 1.5f, Color.black);
-
-            // Change later to the new input system
-            while (!Input.GetKeyDown(KeyCode.Return))
-                await UniTask.NextFrame();
-
-            m_CurrentGameState = GameState.Restarted;
-        }
-
-        private IEnumerator GameLost()
-        {
-            m_PreviousGameState = GameState.GameLost;
+            
             GetSnake().GetSnakeControler().DisableSnake();
 
             int rank = HighScoreManager.Instance.GetRank(m_GameScore);
@@ -877,36 +789,28 @@ namespace SnakeGame
 
             yield return new WaitForSeconds(1f);
 
-            yield return StartCoroutine(FadeScreen(0f, 1f, 2f, Color.black));
+            MusicManager.CallOnMusicClipChangedEvent(GameResources.Instance.OnGameWon);
 
-            // Disable the enemies that are present(FindObjectOfType requires a lot of resourcess - it's ok in this stage of the game)
-            Enemy[] enemiesArray = FindObjectsOfType<Enemy>();
-            foreach (Enemy enemy in enemiesArray)
-            {
-                enemy.gameObject.SetActive(false);
-            }
+            //Display the game complete message
+            yield return StartCoroutine(DisplayMessageRoutine($"Well Done {GameResources.Instance.currentSnake.snakeName}!\n You defeated every Boss on every biome. " +
+                $"\n\nYou're now the Ultimate Snake.", Color.white, 5.5f));
 
-            string name = GameResources.Instance.currentSnake.snakeName;
-            if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
-
-            yield return StartCoroutine(DisplayMessageRoutine($"You Died {name}!" +
-                    $"\nYou Failed (Miserably), But Are YOU Gonna Give Up?", Color.white, 3.5f));
-
-            yield return StartCoroutine(DisplayMessageRoutine($"Your Final Score: {m_GameScore:###.###}\n\n {rankText}", Color.white, 4f));
-
-            yield return StartCoroutine(DisplayMessageRoutine("Press 'Enter' to Try Again", Color.white, 0f));
+            yield return StartCoroutine(DisplayMessageRoutine($"Your final Score: {m_GameScore:###,###}. \n\n{rankText}", Color.white, 6f));
+            
+            yield return StartCoroutine(DisplayMessageRoutine("Thanks For Playing! Press 'Enter' to restart the game", Color.white, 4f));
 
             m_CurrentGameState = GameState.Restarted;
         }
 
-        private async UniTask GameLostAsync(CancellationToken cancellationToken)
+        private async UniTask GameWonAsync(CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return;
 
-            m_PreviousGameState = GameState.GameLost;
-            GetSnake().GetSnakeControler().DisableSnake();
+            m_PreviousGameState = GameState.GameWon;
 
-            MusicManager.CallOnMusicClipChangedEvent(_GameOverMusic);
+            await FadeScreenAsync(0f, 1f, 2f, Color.black);
+
+            GetSnake().GetSnakeControler().DisableSnake();
 
             int rank = HighScoreManager.Instance.GetRank(m_GameScore);
             string rankText;
@@ -933,8 +837,117 @@ namespace SnakeGame
                 rankText = $"Your Score could not get on the Top {Settings.maxNumberOfHighScoresToSave} this Time.\n Try Next Time!";
             }
 
-            await UniTask.Delay(1000);
+            await DisplayMessageAsync($"Well Done {GameResources.Instance.currentSnake.snakeName}!\n You Defeated every Boss on Every Biome. " +
+                $"\n\nYou're now the Ultimate Snake.", Color.white, 5.5f, m_CancellationTokenSource.Token);
+            
+            MusicManager.CallOnMusicClipChangedEvent(GameResources.Instance.OnGameWon);
+
+            await DisplayMessageAsync($"Your final Score: {m_GameScore:###,###}. \n\n{rankText}", Color.white, 6f, m_CancellationTokenSource.Token);
+            
+            await DisplayMessageAsync($"Thanks For Playing! Press 'Enter' to restart the game", Color.white, 0f, m_CancellationTokenSource.Token);
+            //await FadeScreenAsync(1f, 0f, 1.5f, Color.black);
+
+            //// Change later to the new input system
+            //while (!Input.GetKeyDown(KeyCode.Return))
+            //    await UniTask.NextFrame();
+
+            m_CurrentGameState = GameState.Restarted;
+        }
+
+        private IEnumerator GameLost()
+        {
+            m_PreviousGameState = GameState.GameLost;
+            
+            yield return StartCoroutine(FadeScreen(0f, 1f, 2f, Color.black));
+            
+            GetSnake().GetSnakeControler().DisableSnake();
+
+            int rank = HighScoreManager.Instance.GetRank(m_GameScore);
+            string rankText;
+
+            if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
+            {
+                rankText = $"Your Score this time was ranked {rank} on the Top {Settings.maxNumberOfHighScoresToSave}.";
+
+                string playerName = GameResources.Instance.currentSnake.snakeName;
+                if (playerName == "")
+                    playerName = m_SnakeDetails.snakeName.ToUpper();
+
+                //Update the score
+                HighScoreManager.Instance.AddScore(new Score()
+                {
+                    PlayerName = playerName,
+                    LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
+                    $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
+                    PlayerScore = m_GameScore
+                }, rank);
+            }
+            else
+            {
+                rankText = $"Your Score could not get on the Top {Settings.maxNumberOfHighScoresToSave} this Time.\n Try Next Time!";
+            }
+
+            yield return new WaitForSeconds(1f);
+
+
+            // Disable the enemies that are present(FindObjectOfType requires a lot of resourcess - it's ok in this stage of the game)
+            Enemy[] enemiesArray = FindObjectsOfType<Enemy>();
+            foreach (Enemy enemy in enemiesArray)
+            {
+                enemy.gameObject.SetActive(false);
+            }
+
+            string name = GameResources.Instance.currentSnake.snakeName;
+            if (name == "") name = m_SnakeDetails.snakeName.ToUpper();
+
+            yield return StartCoroutine(DisplayMessageRoutine($"You Died {name}!" +
+                    $"\nYou Failed (Miserably), But Are YOU Gonna Give Up?", Color.white, 3.5f));
+
+            yield return StartCoroutine(DisplayMessageRoutine($"Your Final Score: {m_GameScore:###.###}\n\n {rankText}", Color.white, 4f));
+
+            yield return StartCoroutine(DisplayMessageRoutine("Press 'Enter' to Try Again", Color.white, 0f));
+
+            m_CurrentGameState = GameState.Restarted;
+        }
+
+        private async UniTask GameLostAsync(CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested) return;
+
+            m_PreviousGameState = GameState.GameLost;
+            
             await FadeScreenAsync(0f, 1f, 2f, Color.black);
+            
+            GetSnake().GetSnakeControler().DisableSnake();
+
+            MusicManager.CallOnMusicClipChangedEvent(GameResources.Instance.OnGameLost);
+
+            int rank = HighScoreManager.Instance.GetRank(m_GameScore);
+            string rankText;
+
+            if (rank > 0 && rank <= Settings.maxNumberOfHighScoresToSave)
+            {
+                rankText = $"Your Score this time was ranked {rank} on the Top {Settings.maxNumberOfHighScoresToSave}.";
+
+                string playerName = GameResources.Instance.currentSnake.snakeName;
+                if (playerName == "")
+                    playerName = m_SnakeDetails.snakeName.ToUpper();
+
+                //Update the score
+                HighScoreManager.Instance.AddScore(new Score()
+                {
+                    PlayerName = playerName,
+                    LevelDescription = $"Level {currentDungeonLevelListIndex + 1} " +
+                    $"- {GetCurrentDungeonLevel().levelName.ToUpper()}",
+                    PlayerScore = m_GameScore
+                }, rank);
+            }
+            else
+            {
+                rankText = $"Your Score could not get on the Top {Settings.maxNumberOfHighScoresToSave} this Time.\n Try Next Time!";
+            }
+
+            //await UniTask.Delay(500);
 
             // Disable the enemies that are present(FindObjectOfType requires a lot of resourcess - it's ok in this stage of the game)
             Enemy[] enemiesArray = FindObjectsOfType<Enemy>();
@@ -948,7 +961,9 @@ namespace SnakeGame
 
             await DisplayMessageAsync($"You Died {name}!" +
                     $"\nYou Failed (Miserably), But Are YOU Gonna Give Up?", Color.white, 3.5f, m_CancellationTokenSource.Token);
+            
             await DisplayMessageAsync($"Your Final Score: {m_GameScore:###.###}\n\n {rankText}", Color.white, 4f, m_CancellationTokenSource.Token);
+            
             await DisplayMessageAsync("Press 'Enter' to Try Again", Color.white, 0f,m_CancellationTokenSource.Token);
 
             m_CurrentGameState = GameState.Restarted;
@@ -990,6 +1005,8 @@ namespace SnakeGame
 
         private void CallOnLevelCompletedEvent()
         {
+            m_ShouldTriggerOnLevelCompletedEvent = true;
+
             if (!m_ShouldTriggerOnLevelCompletedEvent) return;
 
             OnLevelCompleted?.Invoke(currentDungeonLevelListIndex);

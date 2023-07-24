@@ -17,22 +17,22 @@ namespace SnakeGame.UI
         [SerializeField] private TextMeshProUGUI minigunFireVolume;
         [SerializeField] private TMP_Dropdown dayCicleDropdown;
 
-        private DayCicle selectedTime;
+        private DayCicle _selectedTime;
 
         void Start()
         {
-            dayCicleDropdown.onValueChanged.RemoveAllListeners();
-            dayCicleDropdown.onValueChanged.AddListener(delegate
-            {
-                OnValueChanged(dayCicleDropdown);
-            });
+            //dayCicleDropdown.onValueChanged.RemoveAllListeners();
+            //dayCicleDropdown.onValueChanged.AddListener(delegate
+            //{
+            //    OnValueChanged(dayCicleDropdown);
+            //});
 
             gameObject.SetActive(false);
         }
 
         private void OnEnable()
         {
-            //SaveDataManager.Instance.LoadGame();
+            SaveDataManager.Instance.LoadGame();
             Time.timeScale = 0f;
             StartCoroutine(InitializeUI());
         }
@@ -41,22 +41,17 @@ namespace SnakeGame.UI
         {
             Time.timeScale = 1f;
             SaveDataManager.Instance.SaveGame();
-            //PlayerPrefs.SetInt("CurrentTime", (int)selectedTime);
         }
 
         private void OnValueChanged(TMP_Dropdown dayCicleDropdown)
         {
             TimeManager.Instance.CallOnTimeChangedEvent((DayCicle)dayCicleDropdown.value);
-            //selectedTime = (DayCicle)dayCicleDropdown.value;
-            //ChangeDayCicle();
         }
 
-        /// <summary>
-        /// Change the global light intensity depending on the selected day time
-        /// </summary>
-        public void ChangeDayCicle()
+        public void SetDayTime(int dayIndex)
         {
-            TimeManager.Instance.CallOnTimeChangedEvent(selectedTime);
+            _selectedTime = (DayCicle)dayIndex;
+            TimeManager.Instance.CallOnTimeChangedEvent((DayCicle)dayIndex);
         }
 
         private IEnumerator InitializeUI()
@@ -65,8 +60,8 @@ namespace SnakeGame.UI
 
             soundsLevelText.SetText(SoundEffectManager.Instance.SoundsVolume.ToString());
             musicLevelText.SetText(MusicManager.Instance.MusicVolume.ToString());
-            minigunFireVolume.SetText(SoundEffectManager.Instance.MinigunFireVolume.ToString());
-            dayCicleDropdown.value = (int)selectedTime;
+            minigunFireVolume.SetText(SoundEffectManager.Instance.HeavyArsenalVolume.ToString());
+            dayCicleDropdown.value = (int)_selectedTime;
         }
 
         public void LoadMainMenu()
@@ -114,25 +109,25 @@ namespace SnakeGame.UI
 
         public void IncreaseMinigunFireSound()
         {
-            SoundEffectManager.CallMinigunSFXVolumeIncreasedEvent();
-            minigunFireVolume.SetText(SoundEffectManager.Instance.MinigunFireVolume.ToString());
+            SoundEffectManager.CallHeavyArsenalVolumeIncreasedEvent();
+            minigunFireVolume.SetText(SoundEffectManager.Instance.HeavyArsenalVolume.ToString());
         }
 
         public void DecreaseMinigunFireSound()
         {
-            SoundEffectManager.CallMinigunSFXVolumeDecreasedEvent();
-            minigunFireVolume.SetText(SoundEffectManager.Instance.MinigunFireVolume.ToString());
+            SoundEffectManager.CalHeavyArsenalVolumeDecreasedEvent();
+            minigunFireVolume.SetText(SoundEffectManager.Instance.HeavyArsenalVolume.ToString());
         }
 
         public void Load(GameData data)
         {
-            selectedTime = data.SavedTime;
-            dayCicleDropdown.value = (int)selectedTime;
+            _selectedTime = data.TimeDataSaved.SavedTime;
+            dayCicleDropdown.value = (int)_selectedTime;
         }
 
         public void Save(GameData data)
         {
-            data.SavedTime = selectedTime;
+            data.TimeDataSaved.SavedTime = _selectedTime;
         }
 
         #region Validation

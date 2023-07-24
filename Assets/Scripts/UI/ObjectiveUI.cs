@@ -50,6 +50,8 @@ namespace SnakeGame.UI
 
         private void StaticEventHandler_OnRoomEnemiesDefeated(RoomEnemiesDefeatedArgs args)
         {
+            if (args.room.roomNodeType.isBossRoom) return;
+
             Run(0f, 1f, Settings.DisplayObjectivesTime, m_CancellationToken.Token,$"Go to the next Room and Defeat the Enemies.");
         }
 
@@ -61,6 +63,7 @@ namespace SnakeGame.UI
             try
             {
                 _ObjectiveBackground.SetActive(true);
+                BuildText(string.Empty);
                 BuildText(texts);
 
                 await ControlUIFadingAsync(currentAlpha, targetAlpha, displayTime, cancellationToken);

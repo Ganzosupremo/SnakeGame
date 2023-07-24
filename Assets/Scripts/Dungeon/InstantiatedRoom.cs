@@ -26,11 +26,23 @@ namespace SnakeGame.ProceduralGenerationSystem
         public Tilemap CollisionTilemap { get; private set; }
         public Tilemap MinimapTilemap { get; private set; }
 
-        [HideInInspector] public int[,] aStarMovementPenalty; // This is used to store the movement penalties for the AStar Pathfinding
-        [HideInInspector] public int[,] aStarItemObstacles; // Store the position of moveable items which acts as an obstacle
+        /// <summary>
+        /// Used to store the movement penalties for the AStar Pathfinding
+        /// </summary>
+        [HideInInspector] public int[,] aStarMovementPenalty;
+        /// <summary>
+        /// Store the position of moveable items which acts as an obstacle
+        /// </summary>
+        [HideInInspector] public int[,] aStarMoveableObstacles;
+        /// <summary>
+        /// Store the position of static environment objects
+        /// </summary>
+        [HideInInspector] public int[,] AStartStaticObstacles;
+
 
         [HideInInspector] public Bounds roomColliderBounds;
         [HideInInspector] public List<MoveableObstacle> moveableItemsList = new();
+        [HideInInspector] public List<Decoration> StaticDecorations = new();
 
         private BoxCollider2D boxCollider2D;
 
@@ -98,7 +110,9 @@ namespace SnakeGame.ProceduralGenerationSystem
 
             AddObstaclesAndPreferredPaths();
 
-            CreateObstaclesArray();
+            CreateMoveableObstaclesArray();
+
+            CreateStaticObstaclesArray();
 
             AddDoorsToRooms();
 
@@ -479,23 +493,40 @@ namespace SnakeGame.ProceduralGenerationSystem
             DisableRoomCollider(true);
         }
 
-        private void CreateObstaclesArray()
+        private void CreateMoveableObstaclesArray()
         {
-            aStarItemObstacles = new int[room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
+            aStarMoveableObstacles = new int[room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
+                room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1];
+        }
+
+        private void CreateStaticObstaclesArray()
+        {
+            AStartStaticObstacles = new int[room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1,
                 room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1];
         }
 
         /// <summary>
         /// Set the default A* penalty on the obstacles array
         /// </summary>
-        private void InitializeObstaclesArray()
+        private void InitializeMoveableObstaclesArray()
         {
             for (int x = 0; x < (room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1); x++)
             {
                 for (int y = 0; y < (room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1); y++)
                 {
                     // Set the default penalty for the grid squares, with higher penalty the enemies will avoid this grid squares
-                    aStarItemObstacles[x, y] = Settings.defaultAStarMovementPenalty;
+                    aStarMoveableObstacles[x, y] = Settings.defaultAStarMovementPenalty;
+                }
+            }
+        }
+
+        private void InitializeStaticObstaclesArray()
+        {
+            for (int x = 0; x < (room.tilemapUpperBounds.x - room.tilemapLowerBounds.x + 1); x++)
+            {
+                for (int y = 0; y < (room.tilemapUpperBounds.y - room.tilemapLowerBounds.y + 1); y++)
+                {
+                    AStartStaticObstacles[x, y] = Settings.defaultAStarMovementPenalty;
                 }
             }
         }
@@ -505,7 +536,7 @@ namespace SnakeGame.ProceduralGenerationSystem
         /// </summary>
         public void UpdateMoveableObstacles()
         {
-            InitializeObstaclesArray();
+            InitializeMoveableObstaclesArray();
 
             foreach (MoveableObstacle moveable in moveableItemsList)
             {
@@ -517,7 +548,27 @@ namespace SnakeGame.ProceduralGenerationSystem
                 {
                     for (int j = minColliderBounds.y; j <= maxColliderBounds.y; j++)
                     {
-                        aStarItemObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
+                        aStarMoveableObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
+                    }
+                }
+            }
+        }
+
+        public void UpdateStaticObstaclesArray()
+        {
+            InitializeStaticObstaclesArray();
+
+            foreach (Decoration decoration in StaticDecorations)
+            {
+                Vector3Int minColliderBounds = grid.WorldToCell(decoration.BoxCollider2D.bounds.min);
+                Vector3Int maxColliderBounds = grid.WorldToCell(decoration.BoxCollider2D.bounds.max);
+
+                //Loop through and add the static's decoration collider bounds to the obstacle array
+                for (int i = minColliderBounds.x; i <= maxColliderBounds.x; i++)
+                {
+                    for (int j = minColliderBounds.y; j <= maxColliderBounds.y; j++)
+                    {
+                        aStarMoveableObstacles[i - room.tilemapLowerBounds.x, j - room.tilemapLowerBounds.y] = 0;
                     }
                 }
             }

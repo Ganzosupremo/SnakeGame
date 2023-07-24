@@ -11,7 +11,6 @@ namespace SnakeGame.UI
 
         #region Header Button References
         [Header("Button References")]
-        [Space(5)]
         #endregion
         
         [SerializeField] private GameObject playButton;
@@ -22,12 +21,21 @@ namespace SnakeGame.UI
         [SerializeField] private GameObject quitButton;
         
         #region Header Audio References
+        [Space]
         [Header("Audio References")]
-        [Space(5)]
         #endregion
         [SerializeField] private MusicSO mainMenuMusic;
 
+        [Space]
+        [Header("Modal Window Reference")]
+        [SerializeField] private ModalWindow _mainMenuModalWindow;
+        [SerializeField] string _modalWindowTitle;
+        [SerializeField] private Sprite _modalWindowHeroImage;
+        [SerializeField] string _modalWindowMessage;
+
+
         private LoadedScene m_loadedScene;
+        private bool _characterSceneLoaded = true;
 
         protected override void Awake()
         {
@@ -38,12 +46,13 @@ namespace SnakeGame.UI
         {
             returnButton.SetActive(false);
             MusicManager.CallOnMusicClipChangedEvent(mainMenuMusic);
+
+            SceneManager.LoadScene((int)SceneIndex.PlayerSettings, LoadSceneMode.Additive);
         }
 
         public void StartGame()
         {
             SceneManager.LoadScene((int)SceneIndex.MainGame);
-            DifficultyManager.CallOnDifficultyChangedEvent(Difficulty.None);
         }
 
         public void LoadSettings()
@@ -53,6 +62,9 @@ namespace SnakeGame.UI
             instructionsButton.SetActive(false);
             highScoresButton.SetActive(false);
             quitButton.SetActive(false);
+            
+            SceneManager.UnloadSceneAsync((int)SceneIndex.PlayerSettings);
+            
             returnButton.SetActive(false);
 
             m_loadedScene = LoadedScene.Settings;
@@ -65,8 +77,11 @@ namespace SnakeGame.UI
             settingsButton.SetActive(false);
             instructionsButton.SetActive(false);
             highScoresButton.SetActive(false);
+            quitButton.SetActive(false);
+
+            SceneManager.UnloadSceneAsync((int)SceneIndex.PlayerSettings);
+
             returnButton.SetActive(false);
-            quitButton.SetActive(true);
 
             m_loadedScene = LoadedScene.HighScores;
             SceneManager.LoadScene((int)SceneIndex.HighScores, LoadSceneMode.Additive);
@@ -79,6 +94,9 @@ namespace SnakeGame.UI
             instructionsButton.SetActive(false);
             highScoresButton.SetActive(false);
             quitButton.SetActive(false);
+
+            SceneManager.UnloadSceneAsync((int)SceneIndex.PlayerSettings);
+
             returnButton.SetActive(false);
 
             m_loadedScene = LoadedScene.HowToPlay;
@@ -107,6 +125,8 @@ namespace SnakeGame.UI
                 default:
                     break;
             }
+            
+            SceneManager.LoadScene((int)SceneIndex.PlayerSettings, LoadSceneMode.Additive);
 
             returnButton.SetActive(false);
 
@@ -117,19 +137,31 @@ namespace SnakeGame.UI
             quitButton.SetActive(true);
         }
 
-        /// <summary>
-        /// Returns to the main menu without unloading the scene that was opened additively.
-        /// Recomended to use on the buttons or gameobjects that are outside the Main Menu Scene.
-        /// </summary>
-        [Obsolete("Use the LoadMainMenu() instead.")]
-        public void ReturnButtonMainMenu()
+        private void ChangeStateCharacterSelectorScene()
         {
-            returnButton.SetActive(false);
-            playButton.SetActive(true);
-            settingsButton.SetActive(true);
-            instructionsButton.SetActive(true);
-            highScoresButton.SetActive(true);
-            quitButton.SetActive(true);
+            if (_characterSceneLoaded)
+            {
+                SceneManager.UnloadSceneAsync((int)SceneIndex.PlayerSettings);
+                _characterSceneLoaded = false;
+            }
+            else
+            {
+                SceneManager.LoadScene((int)SceneIndex.PlayerSettings, LoadSceneMode.Additive);
+                _characterSceneLoaded = true;
+            }
+        }
+
+        public void QuitGameButton()
+        {
+            ChangeStateCharacterSelectorScene();
+            _mainMenuModalWindow.ShowWindow(_modalWindowTitle, _modalWindowHeroImage,
+                _modalWindowMessage,QuitGame, "Quit Game", CloseWindow, "Return");
+        }
+
+        private void CloseWindow()
+        {
+            ChangeStateCharacterSelectorScene();
+            _mainMenuModalWindow.CloseWindow();
         }
 
         public void QuitGame()

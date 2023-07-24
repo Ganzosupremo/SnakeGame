@@ -144,9 +144,9 @@ namespace SnakeGame.SaveAndLoadSystem
             // Start the auto save
             await AutoSaveAsync();
 
-            //if (autoSaveRoutine != null)
-            //    StopCoroutine(autoSaveRoutine);
-            //autoSaveRoutine = StartCoroutine(AutoSave());
+            if (autoSaveRoutine != null)
+                StopCoroutine(autoSaveRoutine);
+            autoSaveRoutine = StartCoroutine(AutoSave());
         }
 
         private void OnSceneUnloaded(Scene scene)
@@ -283,8 +283,7 @@ namespace SnakeGame.SaveAndLoadSystem
             {
                 yield return new WaitForSeconds(autoSaveTimeSeconds);
                 SaveGame();
-                string newMessage = string.Format("The game has been autosaved");
-                StartCoroutine(DisplayMessage(newMessage, 3f));
+                StartCoroutine(DisplaySaveIcon());
             }
         }
 
@@ -320,6 +319,16 @@ namespace SnakeGame.SaveAndLoadSystem
             _saveIconImage.sprite = _saveIconSprite;
             
             await UniTask.Delay(1000);
+            _saveIconImage.gameObject.SetActive(false);
+        }
+
+        private IEnumerator DisplaySaveIcon()
+        {
+            _saveIconImage.gameObject.SetActive(true);
+            _saveIconImage.sprite = _saveIconSprite;
+
+            yield return new WaitForSeconds(1000);
+
             _saveIconImage.gameObject.SetActive(false);
         }
     }

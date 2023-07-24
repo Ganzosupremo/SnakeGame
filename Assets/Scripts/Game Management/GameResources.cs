@@ -62,7 +62,7 @@ namespace SnakeGame
         public SoundEffectSO LowHealthSoundEffect;
 
         #region Header Game Audio
-        [Header("AUDIO MANAGEMENT")]
+        [Header("GAME AUDIO")]
         [Space(10)]
         #endregion
         #region Tooltip
@@ -93,10 +93,14 @@ namespace SnakeGame
         #endregion
         public AudioMixerGroup soundMasterMixerGroup;
 
-        #region Tooltip
-        [Tooltip("The sound effects for the door")]
-        #endregion
-        public SoundEffectSO doorSoundEffect;
+        public MusicSO OnGameWon;
+
+        public MusicSO OnGameLost;
+
+        //#region Tooltip
+        //[Tooltip("The sound effects for the door")]
+        //#endregion
+        //public SoundEffectSO doorSoundEffect;
 
         #region Header Materials
         [Header("MATERIALS")]
@@ -199,7 +203,7 @@ namespace SnakeGame
             HelperUtilities.ValidateCheckNullValue(this, nameof(musicOff), musicOff);
 
             HelperUtilities.ValidateCheckNullValue(this, nameof(soundMasterMixerGroup), soundMasterMixerGroup);
-            HelperUtilities.ValidateCheckNullValue(this, nameof(doorSoundEffect), doorSoundEffect);
+            //HelperUtilities.ValidateCheckNullValue(this, nameof(doorSoundEffect), doorSoundEffect);
 
             HelperUtilities.ValidateCheckEnumerableValues(this, nameof(enemyUnwalkableCollisionTilesArray), enemyUnwalkableCollisionTilesArray);
             HelperUtilities.ValidateCheckNullValue(this, nameof(preferredEnemyPathTile), preferredEnemyPathTile);

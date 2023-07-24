@@ -94,9 +94,7 @@ namespace SnakeGame.FoodSystem
                     Vector3Int foodPosition = (Vector3Int)currentRoom.spawnPositionArray[Random.Range(0, currentRoom.spawnPositionArray.Length)];
 
                     // Creates the food and get the next one to spawn
-                    this.Log(grid.CellToWorld(foodPosition));
                     FoodSO a = randomSpawnableObject.GetRandomItem();
-                    this.Log(a);
                     CreateFood(a, grid.CellToWorld(foodPosition));
 
                     yield return new WaitForSeconds(GetFoodSpawnInterval());

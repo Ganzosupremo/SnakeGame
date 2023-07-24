@@ -1,15 +1,17 @@
 using System;
-using UnityEngine;
 
 namespace SnakeGame
 {
-    public class DifficultyManager : MonoBehaviour
+    public static class DifficultyManager
     {
-        public static event Action<Difficulty> OnDifficultyChanged;
+        public static event Action<DifficultyEventArgs> OnDifficultyChanged;
 
         public static void CallOnDifficultyChangedEvent(Difficulty difficulty)
         {
-            OnDifficultyChanged?.Invoke(difficulty);
+            OnDifficultyChanged?.Invoke(new DifficultyEventArgs
+            {
+                Difficulty = difficulty
+            });
         }
     }
 

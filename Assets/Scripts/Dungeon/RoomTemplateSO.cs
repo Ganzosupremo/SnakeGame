@@ -154,7 +154,7 @@ namespace SnakeGame.ProceduralGenerationSystem
                     HelperUtilities.ValidateCheckPositiveRange(this, nameof(enemySpawnParameters.minConcurrentItems), enemySpawnParameters.minConcurrentItems,
                         nameof(enemySpawnParameters.maxConcurrentItems), enemySpawnParameters.maxConcurrentItems, true);
 
-                    bool isEnemyTypeListForDungeonLevelFound = false;
+                    bool isEnemyTypeListForDungeonLevelFound = true;
 
                     foreach (SpawnableObjectByLevel<EnemyDetailsSO> spawnableObjectsByLevel in enemiesByLevelList)
                     {
@@ -203,7 +203,7 @@ namespace SnakeGame.ProceduralGenerationSystem
                     HelperUtilities.ValidateCheckPositiveRange(this, nameof(foodSpawnParameters.minConcurrentItems), foodSpawnParameters.minConcurrentItems,
                         nameof(foodSpawnParameters.maxConcurrentItems), foodSpawnParameters.maxConcurrentItems, true);
 
-                    bool isFoodTypeListForDungeonLevelFound = false;
+                    bool isFoodTypeListForDungeonLevelFound = true;
 
                     foreach (SpawnableObjectByLevel<FoodSO> spawnableObjectsByLevel in foodByLevelList)
                     {

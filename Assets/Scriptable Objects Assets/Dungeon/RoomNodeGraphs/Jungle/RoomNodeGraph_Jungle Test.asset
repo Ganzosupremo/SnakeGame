@@ -21,8 +21,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 944
-    y: 467
+    x: 1316
+    y: 612
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -31,6 +31,101 @@ MonoBehaviour:
     m_Name: 
     m_Normal:
       m_Background: {fileID: 5202992452772842320, guid: 0000000000000000d000000000000000, type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 12
+      m_Right: 12
+      m_Top: 12
+      m_Bottom: 12
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 20
+      m_Right: 20
+      m_Top: 20
+      m_Bottom: 20
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+--- !u!114 &-5801538728714198392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388ee1bef43b06a47ba147f38c6c4cdc, type: 3}
+  m_Name: RoomNode
+  m_EditorClassIdentifier: 
+  id: 7149d030-bb36-476f-9f0c-98f808ad3ea9
+  parentRoomNodeIDList:
+  - e705cbe3-ed46-4f06-842c-5bc2d9570056
+  childRoomNodeIDList:
+  - b0afad04-7fa2-4238-b9c4-2ca8a2a158a4
+  roomNodeGraph: {fileID: 11400000}
+  roomNodeType: {fileID: 11400000, guid: 8ea8d393d5ce9a14384d427dcf611f8a, type: 2}
+  roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
+  rect:
+    serializedVersion: 2
+    x: 1121
+    y: 362
+    width: 125
+    height: 75
+  isLeftClickDragging: 0
+  isSelected: 0
+  style:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: -8879322592709600312, guid: 0000000000000000d000000000000000, type: 0}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 1, g: 1, b: 1, a: 1}
     m_Hover:
@@ -110,14 +205,14 @@ MonoBehaviour:
   parentRoomNodeIDList:
   - dbee5d2c-f5db-4fad-a512-0e9784a56176
   childRoomNodeIDList:
-  - b0afad04-7fa2-4238-b9c4-2ca8a2a158a4
+  - e705cbe3-ed46-4f06-842c-5bc2d9570056
   roomNodeGraph: {fileID: 11400000}
   roomNodeType: {fileID: 11400000, guid: 8ea8d393d5ce9a14384d427dcf611f8a, type: 2}
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 796
-    y: 249
+    x: 812
+    y: 375
     width: 125
     height: 75
   isLeftClickDragging: 0
@@ -211,8 +306,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 975
-    y: 354
+    x: 1331
+    y: 479
     width: 125
     height: 75
   isLeftClickDragging: 0
@@ -305,8 +400,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 555
-    y: 268
+    x: 571
+    y: 394
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -397,6 +492,8 @@ MonoBehaviour:
   - {fileID: -3869139506246155060}
   - {fileID: -5075061054203585479}
   - {fileID: 4831131189096814952}
+  - {fileID: -5801538728714198392}
+  - {fileID: 9207913418113258879}
   roomNodeToDrawLineFrom: {fileID: 0}
   linePosition: {x: 0, y: 0}
 --- !u!114 &4831131189096814952
@@ -413,7 +510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: b0afad04-7fa2-4238-b9c4-2ca8a2a158a4
   parentRoomNodeIDList:
-  - 360829ca-4cf8-46a9-b2a2-9df77b8e5c0c
+  - 7149d030-bb36-476f-9f0c-98f808ad3ea9
   childRoomNodeIDList:
   - 19cd0fba-f2fa-4470-b6ac-e442e6fcddbc
   roomNodeGraph: {fileID: 11400000}
@@ -421,8 +518,8 @@ MonoBehaviour:
   roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
   rect:
     serializedVersion: 2
-    x: 958
-    y: 246
+    x: 1306
+    y: 376
     width: 160
     height: 75
   isLeftClickDragging: 0
@@ -433,6 +530,101 @@ MonoBehaviour:
       m_Background: {fileID: -4248255156046489956, guid: 0000000000000000d000000000000000, type: 0}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 12
+      m_Right: 12
+      m_Top: 12
+      m_Bottom: 12
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 20
+      m_Right: 20
+      m_Top: 20
+      m_Bottom: 20
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+--- !u!114 &9207913418113258879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388ee1bef43b06a47ba147f38c6c4cdc, type: 3}
+  m_Name: RoomNode
+  m_EditorClassIdentifier: 
+  id: e705cbe3-ed46-4f06-842c-5bc2d9570056
+  parentRoomNodeIDList:
+  - 360829ca-4cf8-46a9-b2a2-9df77b8e5c0c
+  childRoomNodeIDList:
+  - 7149d030-bb36-476f-9f0c-98f808ad3ea9
+  roomNodeGraph: {fileID: 11400000}
+  roomNodeType: {fileID: 11400000, guid: bbe5babe8a7cec64483186664b4cdff1, type: 2}
+  roomNodeTypeList: {fileID: 11400000, guid: 166bc5f5725e96d408012a86b861ba70, type: 2}
+  rect:
+    serializedVersion: 2
+    x: 963
+    y: 371
+    width: 160
+    height: 75
+  isLeftClickDragging: 0
+  isSelected: 0
+  style:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: -3453378117783705200, guid: 0000000000000000d000000000000000, type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []

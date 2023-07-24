@@ -18,10 +18,9 @@ namespace SnakeGame.Enemies
         {
             DifficultyManager.OnDifficultyChanged += OnUIDifficultyChanged;
             Timer.OnStatusChanged += OnTimeElapsed;
-            //SaveDataManager.Instance.LoadGame();
-            //SetDefaultWeaponValues();
         }
 
+        [Obsolete]
         private void SetDefaultWeaponValues()
         {
             // Set the default weapon values and save them for later
@@ -43,6 +42,7 @@ namespace SnakeGame.Enemies
             //ResetWeaponValues();
         }
 
+        [Obsolete]
         private void ResetWeaponValues()
         {
             // Reset the overrided weapon values to default
@@ -54,12 +54,9 @@ namespace SnakeGame.Enemies
             lineOfSightRequired = m_DefaultRequireLineOfSight;
         }
 
-        private void OnUIDifficultyChanged(Difficulty difficulty)
+        private void OnUIDifficultyChanged(DifficultyEventArgs args)
         {
-            difficulty = SaveOrLoadDiff(difficulty);
-            //Debuger.Log(this, $"Diff saved on disk {_DifficultyToSave}", $"Diff passed on method {difficulty}");
-
-            switch (difficulty)
+            switch (args.Difficulty)
             {
                 case Difficulty.Noob:
 
@@ -108,21 +105,6 @@ namespace SnakeGame.Enemies
                 default:
                     break;
             }
-        }
-
-        private Difficulty SaveOrLoadDiff(Difficulty difficulty)
-        {
-            if (difficulty != Difficulty.None)
-            {
-                _DifficultyToSave = difficulty;
-                return difficulty;
-            }
-            else if (difficulty == Difficulty.None)
-            {
-                difficulty = _DifficultyToSave;
-                return difficulty;
-            }
-            return default;
         }
 
         private void OnTimeElapsed(TimerEventArgs args)
@@ -202,6 +184,7 @@ namespace SnakeGame.Enemies
         /// <param name="requieresLineOfSight">True if the enemy needs to have a sight of the player before firing.</param>
         /// <param name="increaseDamage">Always set to true so the damage reset whenever the difficulty is changed.</param>
         /// <param name="damageToIncrease"></param>
+        [Obsolete]
         private void ReconfigureWeapon(float minFireDelay = 0.5f, float maxFireDelay = 1f, float minFireDuration = 1f, float maxFireDuration = 2f, 
             bool requieresLineOfSight = true, bool increaseDamage = false, int damageToIncrease = 0)
         {

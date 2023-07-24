@@ -127,6 +127,15 @@ namespace SnakeInput
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NextLevel"",
+                    ""type"": ""Button"",
+                    ""id"": ""f8661c6f-fe9f-4479-9747-dd5c8fbd25e3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -393,6 +402,17 @@ namespace SnakeInput
                     ""action"": ""test"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9994172f-96ac-4003-a548-38c3b915de43"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextLevel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -488,6 +508,7 @@ namespace SnakeInput
             m_Snake_DisplayMap = m_Snake.FindAction("DisplayMap", throwIfNotFound: true);
             m_Snake_SpecialAbility = m_Snake.FindAction("SpecialAbility", throwIfNotFound: true);
             m_Snake_test = m_Snake.FindAction("test", throwIfNotFound: true);
+            m_Snake_NextLevel = m_Snake.FindAction("NextLevel", throwIfNotFound: true);
             // OverviewMap
             m_OverviewMap = asset.FindActionMap("OverviewMap", throwIfNotFound: true);
             m_OverviewMap_Click = m_OverviewMap.FindAction("Click", throwIfNotFound: true);
@@ -564,6 +585,7 @@ namespace SnakeInput
         private readonly InputAction m_Snake_DisplayMap;
         private readonly InputAction m_Snake_SpecialAbility;
         private readonly InputAction m_Snake_test;
+        private readonly InputAction m_Snake_NextLevel;
         public struct SnakeActions
         {
             private @SnakeControl m_Wrapper;
@@ -579,6 +601,7 @@ namespace SnakeInput
             public InputAction @DisplayMap => m_Wrapper.m_Snake_DisplayMap;
             public InputAction @SpecialAbility => m_Wrapper.m_Snake_SpecialAbility;
             public InputAction @test => m_Wrapper.m_Snake_test;
+            public InputAction @NextLevel => m_Wrapper.m_Snake_NextLevel;
             public InputActionMap Get() { return m_Wrapper.m_Snake; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -621,6 +644,9 @@ namespace SnakeInput
                 @test.started += instance.OnTest;
                 @test.performed += instance.OnTest;
                 @test.canceled += instance.OnTest;
+                @NextLevel.started += instance.OnNextLevel;
+                @NextLevel.performed += instance.OnNextLevel;
+                @NextLevel.canceled += instance.OnNextLevel;
             }
 
             private void UnregisterCallbacks(ISnakeActions instance)
@@ -658,6 +684,9 @@ namespace SnakeInput
                 @test.started -= instance.OnTest;
                 @test.performed -= instance.OnTest;
                 @test.canceled -= instance.OnTest;
+                @NextLevel.started -= instance.OnNextLevel;
+                @NextLevel.performed -= instance.OnNextLevel;
+                @NextLevel.canceled -= instance.OnNextLevel;
             }
 
             public void RemoveCallbacks(ISnakeActions instance)
@@ -760,6 +789,7 @@ namespace SnakeInput
             void OnDisplayMap(InputAction.CallbackContext context);
             void OnSpecialAbility(InputAction.CallbackContext context);
             void OnTest(InputAction.CallbackContext context);
+            void OnNextLevel(InputAction.CallbackContext context);
         }
         public interface IOverviewMapActions
         {

@@ -16,35 +16,34 @@ namespace SnakeGame.AudioSystem
     [DisallowMultipleComponent]
     public class SoundEffectManager : SingletonMonoBehaviour<SoundEffectManager>, IPersistenceData
     {
-        [Range(0, 20)]
-        public int SoundsVolume = 9;
-        [Range(0, 20)]
-        public int MinigunFireVolume = 9;
-
-        public SoundEffectSO RailgunReloadTest;
+        public int SoundsVolume { get => _soundsVolume; set => _soundsVolume = value; }
+        public int HeavyArsenalVolume { get => _heavyArsenalVolume; set => _heavyArsenalVolume = value; }
 
         private static event Action OnSFXVolumeIncreased;
         private static event Action OnSFXVolumeDecreased;
-        private static event Action OnMinigunSFXVolumeIncreased;
-        private static event Action OnMinigunSFXVolumeDecreased;
+        private static event Action OnHeavyArsenalVolumeIncreased;
+        private static event Action OnHeavyArsenalVolumeDecreased;
 
-        private static event Action<SoundEffectSO> OnSoundEffectChanged;
+        private static event Action<SoundEffectSO, bool> OnSoundEffectChanged;
 
         private static SoundEffectSO _CurrentSoundEffect;
-        private static Dictionary<SoundEffectSO, SoundEffect> _ActiveSoundEffects = new();
+        private readonly static Dictionary<SoundEffectSO, SoundEffect> _ActiveSoundEffects = new();
 
+
+        private int _soundsVolume = 9;
+        private int _heavyArsenalVolume = 7;
         private void Start()
         {
-            SetSoundsVolume(SoundsVolume);
-            SetMinigunFireSound(MinigunFireVolume);
+            SetSoundsVolume(_soundsVolume);
+            SetHeavyArsenalVolume(_heavyArsenalVolume);
         }
 
         private void OnEnable()
         {
             OnSFXVolumeIncreased += SFXVolumeIncreased;
             OnSFXVolumeDecreased += SFXVolumeDecreased;
-            OnMinigunSFXVolumeIncreased += MinigunSFXVolumeIncreased;
-            OnMinigunSFXVolumeDecreased += MninigunSFXVolumeDecreased;
+            OnHeavyArsenalVolumeIncreased += MinigunSFXVolumeIncreased;
+            OnHeavyArsenalVolumeDecreased += MninigunSFXVolumeDecreased;
             OnSoundEffectChanged += SoundEffectChanged;
             
             if (GameManager.Instance != null)
@@ -55,8 +54,8 @@ namespace SnakeGame.AudioSystem
         {
             OnSFXVolumeIncreased -= SFXVolumeIncreased;
             OnSFXVolumeDecreased -= SFXVolumeDecreased;
-            OnMinigunSFXVolumeIncreased -= MinigunSFXVolumeIncreased;
-            OnMinigunSFXVolumeDecreased -= MninigunSFXVolumeDecreased;
+            OnHeavyArsenalVolumeIncreased -= MinigunSFXVolumeIncreased;
+            OnHeavyArsenalVolumeDecreased -= MninigunSFXVolumeDecreased;
             OnSoundEffectChanged -= SoundEffectChanged;
             
             if (GameManager.Instance != null)
@@ -65,33 +64,32 @@ namespace SnakeGame.AudioSystem
 
         private void OnHealthChanged(HealthEvent healthEvent, HealthEventArgs args)
         {
-            float lowHealthThreshold = .33f;
+            float lowHealthThreshold = .35f;
             if (args.healthPercent <= lowHealthThreshold && args.healthPercent >= 0f)
             {
                 if (!_ActiveSoundEffects.ContainsKey(GameResources.Instance.LowHealthSoundEffect))
-                {
                     PlaySoundEffect(GameResources.Instance.LowHealthSoundEffect, true);
-                }
             }
             else
-            {
                 StopSoundEffect(GameResources.Instance.LowHealthSoundEffect);
-            }
         }
 
-        private void SoundEffectChanged(SoundEffectSO soundEffect)
+        private void SoundEffectChanged(SoundEffectSO soundEffect, bool usePoolManager)
         {
-            PlaySoundEffect(soundEffect);
+            if (usePoolManager)
+                PlaySoundEffect(soundEffect);
+            else
+                PlaySoundEffect(soundEffect, 0);
         }
 
         private void MninigunSFXVolumeDecreased()
         {
-            DecreaseMinigunFireSound();
+            DecreaseHeavyArsenalVolume();
         }
 
         private void MinigunSFXVolumeIncreased()
         {
-            IncreaseMinigunFireSound();
+            IncreaseHeavyArsenalVolume();
         }
 
         private void SFXVolumeDecreased()
@@ -115,10 +113,34 @@ namespace SnakeGame.AudioSystem
             
             AddSoundToDictionary(soundEffect, sound);
             
-            StartCoroutine(DisableSound(sound, soundEffect.soundEffectClip.length));
+            StartCoroutine(StopSoundEffectRoutine(sound, soundEffect.soundEffectClip.length));
             RemoveSoundFromDictionary(soundEffect);
         }
 
+        /// <summary>
+        /// User this method only when the PoolManager Instance is not available
+        /// </summary>
+        /// <param name="soundEffect"></param>
+        /// <param name="i"></param>
+        private void PlaySoundEffect(SoundEffectSO soundEffect, int i = 0)
+        {
+            SoundEffect sound = Instantiate(soundEffect.soundPrefab.GetComponent<SoundEffect>(), this.transform);
+
+            sound.SetSound(soundEffect);
+            sound.gameObject.SetActive(true);
+
+            AddSoundToDictionary(soundEffect, sound);
+
+            StartCoroutine(StopSoundEffectRoutine(sound, soundEffect.soundEffectClip.length));
+            RemoveSoundFromDictionary(soundEffect);
+        }
+
+        /// <summary>
+        /// Plays sounds and makes them loop indefinitely.
+        /// The sounds should be stopped manually with the StopSoundEffect method.
+        /// </summary>
+        /// <param name="soundEffect"></param>
+        /// <param name="shouldLoop"></param>
         private void PlaySoundEffect(SoundEffectSO soundEffect, bool shouldLoop)
         {
             SoundEffect sound = (SoundEffect)PoolManager.Instance.ReuseComponent(soundEffect.soundPrefab, Vector3.zero);
@@ -134,7 +156,7 @@ namespace SnakeGame.AudioSystem
         {
             if (_ActiveSoundEffects.TryGetValue(soundEffect, out SoundEffect sound))
             {
-                StartCoroutine(DisableSound(sound, soundEffect.soundEffectClip.length));
+                StartCoroutine(StopSoundEffectRoutine(sound, soundEffect.soundEffectClip.length));
                 RemoveSoundFromDictionary(soundEffect);
             }
         }
@@ -142,9 +164,9 @@ namespace SnakeGame.AudioSystem
         /// <summary>
         /// Disable The Sound GameObject After It Has Finished Playing And Thus Returning It To The Pool
         /// </summary>
-        private IEnumerator DisableSound(SoundEffect sound, float soundDuration)
+        private IEnumerator StopSoundEffectRoutine(SoundEffect sound, float soundDuration)
         {
-            yield return new WaitForSeconds(soundDuration);
+            yield return new WaitForSeconds(soundDuration + 0.5f);
 
             sound.StopSound();
             sound.AudioSource.loop = false;
@@ -160,9 +182,7 @@ namespace SnakeGame.AudioSystem
         private void RemoveSoundFromDictionary(SoundEffectSO soundEffectSO)
         {
             if (_ActiveSoundEffects.ContainsKey(soundEffectSO))
-            {
                 _ActiveSoundEffects.Remove(soundEffectSO);
-            }
         }
 
         /// <summary>
@@ -172,10 +192,10 @@ namespace SnakeGame.AudioSystem
         public void IncreaseSoundsVolume()
         {
             int maxVolume = 20;
-            if (SoundsVolume >= maxVolume) return;
+            if (_soundsVolume >= maxVolume) return;
 
-            SoundsVolume += 1;
-            SetSoundsVolume(SoundsVolume);
+            _soundsVolume += 1;
+            SetSoundsVolume(_soundsVolume);
         }
 
         /// <summary>
@@ -184,33 +204,33 @@ namespace SnakeGame.AudioSystem
         [ContextMenu("Decrease Volume")]
         public void DecreaseSoundsVolume()
         {
-            if (SoundsVolume == 0) return;
+            if (_soundsVolume == 0) return;
 
-            SoundsVolume -= 1;
+            _soundsVolume -= 1;
 
-            SetSoundsVolume(SoundsVolume);
+            SetSoundsVolume(_soundsVolume);
         }
 
-        public void IncreaseMinigunFireSound()
+        public void IncreaseHeavyArsenalVolume()
         {
             int maxVolume = 20;
-            if (MinigunFireVolume >= maxVolume) return;
+            if (_heavyArsenalVolume >= maxVolume) return;
 
-            MinigunFireVolume += 1;
+            _heavyArsenalVolume += 1;
 
-            SetMinigunFireSound(MinigunFireVolume);
+            SetHeavyArsenalVolume(_heavyArsenalVolume);
         }
 
-        public void DecreaseMinigunFireSound()
+        public void DecreaseHeavyArsenalVolume()
         {
-            if (MinigunFireVolume == 0) return;
+            if (_heavyArsenalVolume == 0) return;
 
-            MinigunFireVolume -= 1;
+            _heavyArsenalVolume -= 1;
 
-            SetMinigunFireSound(MinigunFireVolume);
+            SetHeavyArsenalVolume(_heavyArsenalVolume);
         }
 
-        private void SetMinigunFireSound(int volume)
+        private void SetHeavyArsenalVolume(int volume)
         {
             float mutevolumedecibels = -80f;
 
@@ -262,21 +282,21 @@ namespace SnakeGame.AudioSystem
         }
 
         /// <summary>
-        /// Calls the <seealso cref="OnMinigunSFXVolumeIncreased"/> event, which only increases
+        /// Calls the <seealso cref="OnHeavyArsenalVolumeIncreased"/> event, which only increases
         /// the volume of the sound effects of the weapon minigun.
         /// </summary>
-        public static void CallMinigunSFXVolumeIncreasedEvent()
+        public static void CallHeavyArsenalVolumeIncreasedEvent()
         {
-            OnMinigunSFXVolumeIncreased?.Invoke();
+            OnHeavyArsenalVolumeIncreased?.Invoke();
         }
 
         /// <summary>
-        /// Calls the <seealso cref="OnMinigunSFXVolumeIncreased"/> event, which only lowers
+        /// Calls the <seealso cref="OnHeavyArsenalVolumeIncreased"/> event, which only lowers
         /// the volume of the sound effects of the weapon minigun.
         /// </summary>
-        public static void CallMinigunSFXVolumeDecreasedEvent()
+        public static void CalHeavyArsenalVolumeDecreasedEvent()
         {
-            OnMinigunSFXVolumeDecreased?.Invoke();
+            OnHeavyArsenalVolumeDecreased?.Invoke();
         }
 
         /// <summary>
@@ -284,27 +304,22 @@ namespace SnakeGame.AudioSystem
         /// That event plays the selected SoundEffectSO.
         /// </summary>
         /// <param name="soundEffect"></param>
-        public static void CallOnSoundEffectChangedEvent(SoundEffectSO soundEffect)
+        public static void CallOnSoundEffectChangedEvent(SoundEffectSO soundEffect, bool usePoolManager = true)
         {
             _CurrentSoundEffect = soundEffect;
-            OnSoundEffectChanged?.Invoke(soundEffect);
-        }
-
-        public static float GetSoundEffectLength()
-        {
-            return _CurrentSoundEffect.soundEffectClip.length;
+            OnSoundEffectChanged?.Invoke(soundEffect, usePoolManager);
         }
 
         public void Load(GameData data)
         {
-            SoundsVolume = data.VolumeDataSaved.GetSoundsVolume();
-            MinigunFireVolume = data.VolumeDataSaved.GetMinigunVolume();
+            SoundsVolume = data.GameAudioData.GetSoundsVolume();
+            HeavyArsenalVolume = data.GameAudioData.GetHeavyArsenalVolume();
         }
 
         public void Save(GameData data)
         {
-            data.VolumeDataSaved.SoundsVolume = SoundsVolume;
-            data.VolumeDataSaved.MinigunVolume = MinigunFireVolume;
+            data.GameAudioData.SoundsVolume = SoundsVolume;
+            data.GameAudioData.HeavyArsenalVolume = HeavyArsenalVolume;
         }
     }
 }

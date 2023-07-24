@@ -80,6 +80,51 @@ namespace SnakeGame.VisualEffects
         [Tooltip("ammoHitEffectPrefab contains the particle system for the shoot effect - and is configured by the weaponShootEffect SO")]
         #endregion Tooltip
         public GameObject ammoHitEffectPrefab;
+        
+        #region Shape Module
+        [Header("Shape Module")]
+
+        #region Tooltip
+        [Tooltip("Radius of the shape")]
+        [Range(1f, 10f)]
+        #endregion
+        public float Radius = 1f;
+
+        #region Tooltip
+        [Tooltip("Angle of the cone. Only works with Cone_Upwards")]
+        [Range(0f, 90f)]
+        #endregion
+        public float Angle = 25f;
+
+        #region Tooltip
+        [Tooltip("Controls the thickness of the spawn volume.")]
+        [Range(0f, 1f)]
+        #endregion
+        public float RadiusThickness = 0f;
+
+        #region Tooltip
+        [Tooltip("Particles are spawned around the arc.")]
+        [Range(0f, 360f)]
+        #endregion
+        public float Arc = 360f;
+
+        #region Tooltip
+        [Tooltip("Controls how particles are spawned around the arc")]
+        #endregion
+        public ParticleSystemShapeMultiModeValue Mode = ParticleSystemShapeMultiModeValue.Random;
+
+        #region Tooltip
+        [Tooltip("Spawns particles only at specific angles around the arc. 0 to disable.")]
+        [Range(0f, 1f)]
+        #endregion Tooltip
+        public float Spread = 0f;
+
+        #region Tooltip
+        [Tooltip("The speed at which the particles will loop if the mode Loop or Ping Pong is selected.")]
+        [Range(0f, 10f)]
+        #endregion Tooltip
+        public float Speed = 1f;
+        #endregion
 
         #region Validation
 #if UNITY_EDITOR

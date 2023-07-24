@@ -46,13 +46,13 @@ namespace SnakeGame.AStarPathfinding
                 }
                 catch (IndexOutOfRangeException e)
                 {
+                    this.LogError($"Out of Range: {e.Message} \n Source: {e.Source}.");
                     return gridNode[1, 1];
-                    throw new Exception($"Out of Range: {e.Message} \n Source: {e.Source}.");
                 }
             }
             else
             {
-                Debuger.Log("Requested Grid Node is out of range");
+                this.Log("Requested Grid Node is out of range");
                 return null;
             }
         }

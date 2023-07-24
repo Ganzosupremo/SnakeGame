@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e02a29ac514deb4b8c5e8ad55799fd7, type: 3}
+  m_Name: Enemy_Batterius
+  m_EditorClassIdentifier: 
+  enemyName: Batterius
+  enemyPrefab: {fileID: 1084845422307810473, guid: f97fc1ee90e94af4f80fdc02341c7e5e, type: 3}
+  IsBoss: 1
+  MovementDetails: {fileID: 11400000, guid: 0cf27559af532e0458105dbb0e5771ec, type: 2}
+  hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
+  deathSoundEffect: {fileID: 11400000, guid: 8788a05de1c66b9448de653c9c90edf6, type: 2}
+  EnemyDeathEffect: {fileID: 11400000, guid: 14e2a67a88e1d564aaea01bc54cb0ac1, type: 2}
+  enemyColor: {r: 3.091191, g: 3.091191, b: 3.091191, a: 1}
+  EnemySprite: {fileID: 1483185123, guid: 86c70cc9b714d8c4892ba7f47e4527ab, type: 3}
+  enemyChaseDistance: 50
+  enemyMaterializeTime: 3.5
+  enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
+  enemyMaterializeColor: {r: 0.22935198, g: 2.315363, b: 0.9859361, a: 1}
+  standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  enemyWeapon: {fileID: 11400000, guid: ecbbec37c0a507545a481d048dbaa0ae, type: 2}
+  firingMinDelay: 2.7
+  firingMaxDelay: 5.76
+  firingMinDuration: 2.93
+  firingMaxDuration: 4.2
+  lineOfSightRequired: 0
+  enemyHealthDetailsArray:
+  - gameLevel: {fileID: 11400000, guid: 70217039f95e92048bbaef7fc71a7ab9, type: 2}
+    healthAmount: 1960
+    defaultHealthAmount: 1600
+  immuneAfterHit: 0
+  immunityTime: 0
+  startDazeTime: 0
+  isHealthBarDisplayed: 1

@@ -583,11 +583,14 @@ namespace SnakeGame.PlayerSystem
         public void EnableSnake()
         {
             IsSnakeEnabled = true;
+            //snakeInputActions.Snake.Enable();
         }
 
         public void DisableSnake()
         {
             IsSnakeEnabled = false;
+            snake.idleEvent.CallIdleEvent();
+            //snakeInputActions.Snake.Disable();
         }
 
         /// <summary>

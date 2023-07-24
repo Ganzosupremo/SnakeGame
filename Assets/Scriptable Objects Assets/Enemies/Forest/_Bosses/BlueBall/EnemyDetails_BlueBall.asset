@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e02a29ac514deb4b8c5e8ad55799fd7, type: 3}
+  m_Name: EnemyDetails_BlueBall
+  m_EditorClassIdentifier: 
+  enemyName: Blue Ball
+  enemyPrefab: {fileID: 5362251548040858630, guid: 0bb3a98fff55f514b9dd90049e2c4851, type: 3}
+  IsBoss: 1
+  MovementDetails: {fileID: 11400000, guid: 355219484043a164d9d852dc2d022509, type: 2}
+  hitSoundEffect: {fileID: 11400000, guid: 53a432223318d6b409eaedbc5094c120, type: 2}
+  deathSoundEffect: {fileID: 11400000, guid: a8785ea3889f5a643a2eea3eeee6e0f2, type: 2}
+  EnemyDeathEffect: {fileID: 11400000, guid: a394ab4195e297a408ffba2cf06d5ea2, type: 2}
+  enemyColor: {r: 1, g: 1, b: 1, a: 1}
+  EnemySprite: {fileID: 706379533, guid: ac0694adad137c6488bcc67b3fe98c0f, type: 3}
+  enemyChaseDistance: 100
+  enemyMaterializeTime: 4
+  enemyMaterializeShader: {fileID: -6465566751694194690, guid: 5fec8f8e6ea244648a3c6ede24a56288, type: 3}
+  enemyMaterializeColor: {r: 2.5039914, g: 1.1423291, b: 7.3385983, a: 1}
+  standardEnemyMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  enemyWeapon: {fileID: 11400000, guid: 2d85811447003ea4e99bf086daa7d527, type: 2}
+  firingMinDelay: 1
+  firingMaxDelay: 2.5
+  firingMinDuration: 1.5
+  firingMaxDuration: 3
+  lineOfSightRequired: 0
+  enemyHealthDetailsArray:
+  - gameLevel: {fileID: 11400000, guid: 310cf3d3bbc1d2144ac85e91a946c8ac, type: 2}
+    healthAmount: 1800
+    defaultHealthAmount: 1800
+  immuneAfterHit: 0
+  immunityTime: 0
+  startDazeTime: 0
+  isHealthBarDisplayed: 1

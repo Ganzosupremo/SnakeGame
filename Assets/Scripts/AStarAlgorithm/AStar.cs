@@ -85,7 +85,7 @@ namespace SnakeGame.AStarPathfinding
         /// <returns>Returns the Stack<Vector3> with all the movement path</returns>
         private static Stack<Vector3> CreatePathStack(AStarNode targetNode, Room room)
         {
-            Stack<Vector3> movementPathStack = new Stack<Vector3>();
+            Stack<Vector3> movementPathStack = new();
 
             AStarNode nextNode = targetNode;
 
@@ -109,7 +109,6 @@ namespace SnakeGame.AStarPathfinding
             }
 
             return movementPathStack;
-
         }
 
         /// <summary>
@@ -197,7 +196,7 @@ namespace SnakeGame.AStarPathfinding
 
             //Check for obstacles at that position
             int movementPenaltyForGridSpace = instantiatedRoom.aStarMovementPenalty[neighbourNodeXPos, neighbourNodeYPos];
-            int itemObstacleForGridSpace = instantiatedRoom.aStarItemObstacles[neighbourNodeXPos, neighbourNodeYPos];
+            int itemObstacleForGridSpace = instantiatedRoom.aStarMoveableObstacles[neighbourNodeXPos, neighbourNodeYPos];
 
             //int snakeSegmentForGridSpace = instantiatedRoom.aStarSnakeSegmentsObstacles[neighbourNodeXPos, neighbourNodeYPos];
 

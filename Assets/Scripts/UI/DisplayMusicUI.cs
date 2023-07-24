@@ -2,9 +2,9 @@ using Cysharp.Threading.Tasks;
 using SnakeGame.AudioSystem;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using static SnakeGame.AudioSystem.MusicManager;
 
 namespace SnakeGame.UI
 {

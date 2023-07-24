@@ -106,9 +106,9 @@ namespace SnakeGame.PlayerSystem
             DifficultyManager.OnDifficultyChanged -= DifficultyManager_OnDifficultyChanged;
         }
 
-        private void DifficultyManager_OnDifficultyChanged(Difficulty difficulty)
+        private void DifficultyManager_OnDifficultyChanged(DifficultyEventArgs difficulty)
         {
-            switch (difficulty)
+            switch (difficulty.Difficulty)
             {
                 case Difficulty.Noob:
 

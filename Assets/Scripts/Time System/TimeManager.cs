@@ -73,12 +73,12 @@ namespace SnakeGame.TimeSystem
 
         public void Load(GameData data)
         {
-            CurrentTime = data.SavedTime;
+            CurrentTime = data.TimeDataSaved.SavedTime;
         }
 
         public void Save(GameData data)
         {
-            data.SavedTime = CurrentTime;
+            data.TimeDataSaved.SavedTime = CurrentTime;
         }
     }
 

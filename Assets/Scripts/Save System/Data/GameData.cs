@@ -8,23 +8,25 @@ namespace SnakeGame.SaveAndLoadSystem
     {
         public long LastUpdated;
 
-        public VolumeData VolumeDataSaved = new();
+        public VolumeData GameAudioData = new();
 
         public DifficultyData DifficultyData = new();
 
         public TimeData TimeDataSaved = new();
-        public DayCicle SavedTime;
+
+        public GraphicsData GraphicsDataSaved = new();
+        //public DayCicle SavedTime;
 
         public HighScore HighScores;
 
         public GameData()
         {
 
-            DifficultyData = new DifficultyData();
-            TimeDataSaved = new TimeData();
-            VolumeDataSaved = new VolumeData();
+            DifficultyData = new();
+            TimeDataSaved = new();
+            GameAudioData = new();
+            GraphicsDataSaved = new();
 
-            SavedTime = DayCicle.Morning;
             HighScores = new();
         }
     }
@@ -45,7 +47,7 @@ namespace SnakeGame.SaveAndLoadSystem
     public struct VolumeData
     {
         public int SoundsVolume;
-        public int MinigunVolume;
+        public int HeavyArsenalVolume;
         public int MusicVolume;
 
         public int GetSoundsVolume()
@@ -53,21 +55,14 @@ namespace SnakeGame.SaveAndLoadSystem
             return SoundsVolume;
         }
 
-        public int GetMinigunVolume()
+        public int GetHeavyArsenalVolume()
         {
-            return MinigunVolume;
+            return HeavyArsenalVolume;
         }
 
         public int GetMusicVolume()
         {
             return MusicVolume;
-        }
-
-        public void Save(int soundsVolume = 9, int minigunVolume = 1, int musicVolume = 6)
-        {
-            SoundsVolume = soundsVolume;
-            MinigunVolume = minigunVolume;
-            MusicVolume = musicVolume;
         }
     }
 
@@ -79,6 +74,13 @@ namespace SnakeGame.SaveAndLoadSystem
     {
         public DayCicle SavedTime;
         public double SecondsToRealTime;
+    }
+
+    [System.Serializable]
+    public struct GraphicsData
+    {
+        public bool IsFullscreen;
+        public bool VSyncOn;
     }
 
 }

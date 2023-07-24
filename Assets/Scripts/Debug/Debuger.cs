@@ -14,6 +14,8 @@ namespace SnakeGame.Debuging
             return $"<color={color}>{myString}</color>";
         }
 
+#if ENABLE_LOGS
+
         public static void Log(this UnityEngine.Object myObject, params object[] message)
         {
             DoLog(Debug.Log, "<:)".Color("green"), myObject, message);
@@ -77,5 +79,6 @@ namespace SnakeGame.Debuging
             function($"{prefix} [{myObject}]: {string.Join("; ", message)}\n");
 #endif
         }
+#endif
     }
 }
