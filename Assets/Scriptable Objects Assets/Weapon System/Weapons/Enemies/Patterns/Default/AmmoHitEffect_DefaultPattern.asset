@@ -42,16 +42,23 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
-  Type: 4
-  particleDuration: 0.7
-  startParticleSize: 0.5
-  startParticleSpeed: 7
-  startLifetime: 0.7
-  maxParticles: 100
+  Type: 1
+  particleDuration: 0.25
+  startParticleSize: 0.2
+  startParticleSpeed: 10
+  startLifetime: 0.45
+  maxParticles: 250
   emissionRate: 0
-  burstNumber: 100
-  gravityEffect: -0.1
+  burstNumber: 250
+  gravityEffect: 1
   sprite: {fileID: 21300000, guid: 043c9a5d94f0a9440abc9282340c7856, type: 3}
   minVelocityOverLifetime: {x: -1, y: -1, z: 0}
   maxVelocityOverLifetime: {x: 10, y: 10, z: 0}
   ammoHitEffectPrefab: {fileID: 8467163931044552805, guid: fdea5c72d8ade9e40834d6c093aa4e29, type: 3}
+  Radius: 1.25
+  Angle: 25
+  RadiusThickness: 0.25
+  Arc: 360
+  Mode: 3
+  Spread: 0
+  Speed: 10

@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/HighscoresWindow.uss?fileID=7433441132597879392&amp;guid=77346c2cade589041855c90b1257ab88&amp;type=3#HighscoresWindow" />
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 800px; height: 600px; justify-content: center; align-self: auto; align-items: center;">
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column; height: auto; width: auto;">
+            <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); justify-content: flex-start; flex-direction: row; align-items: flex-end; padding-right: 0; margin-right: 0; margin-left: 0; margin-top: 43px; width: 750px; height: 20px;">
+                <ui:Label tabindex="-1" text="Name:" display-tooltip-when-elided="true" name="NameLabel" class="HighscoreHeading highscore-heading" style="margin-right: 85px;" />
+                <ui:Label tabindex="-1" text="Rank:" display-tooltip-when-elided="true" name="RankLabel" class="HighscoreHeading highscore-heading" style="margin-right: 114px;" />
+                <ui:Label tabindex="-1" text="Level:" display-tooltip-when-elided="true" name="LevelLabel" class="HighscoreHeading highscore-heading" style="margin-right: 10px;" />
+                <ui:Label tabindex="-1" text="Score:" display-tooltip-when-elided="true" name="ScoreLabel" class="HighscoreHeading highscore-heading" style="margin-right: 0; margin-left: 132px;" />
+            </ui:VisualElement>
+            <ui:ListView focusable="true" name="HighscoresList" fixed-item-height="20" show-border="false" style="width: 750px; height: 350px; margin-top: 5px; padding-right: 0; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Textures/NotInAtlas/UI/StairsToInfinity.png?fileID=2800000&amp;guid=4b54ea3df092f924c93f1d8ef3eecb16&amp;type=3#StairsToInfinity&apos;); border-left-color: rgb(75, 123, 236); border-right-color: rgb(75, 123, 236); border-top-color: rgb(45, 152, 218); border-bottom-color: rgb(45, 152, 218); border-left-width: 6px; border-right-width: 6px; border-top-width: 6px; border-bottom-width: 6px; border-top-left-radius: 15px; border-bottom-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; -unity-font-definition: initial; -unity-font: url(&apos;project://database/Assets/Resources/Fonts/FuturaStd-Book.otf?fileID=12800000&amp;guid=b7d8558e3830b164bafcd61c536f5c9e&amp;type=3#FuturaStd-Book&apos;);" />
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: center; align-items: center;">
+                <ui:Button text="Return" display-tooltip-when-elided="true" name="ReturnButton" class="MainButtonStyle main-button" style="width: 200px; height: 60px; font-size: 41px; -unity-font: resource(&apos;Fonts/FuturaStd-Book&apos;);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

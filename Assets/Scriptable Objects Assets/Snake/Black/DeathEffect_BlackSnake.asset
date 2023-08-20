@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26410a56aaa21641bda6105bdaf819d, type: 3}
+  m_Name: DeathEffect_BlackSnake
+  m_EditorClassIdentifier: 
+  ColorGradient:
+    serializedVersion: 2
+    key0: {r: 0.26477394, g: 0.27440506, b: 0.3207547, a: 1}
+    key1: {r: 0.38679248, g: 0.28279638, b: 0.3386481, a: 1}
+    key2: {r: 0.9716981, g: 0.2767028, b: 0.26125845, a: 0.15686275}
+    key3: {r: 0.3679245, g: 0.14057493, b: 0.28815272, a: 0}
+    key4: {r: 0.5660378, g: 0.088109665, b: 0.088109665, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 6168
+    ctime1: 21781
+    ctime2: 31804
+    ctime3: 42791
+    ctime4: 65535
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 48573
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: 0
+    m_NumColorKeys: 5
+    m_NumAlphaKeys: 3
+  Type: 3
+  ParticleDuration: 0.3
+  StartParticleSize: 1
+  StartParticleSpeed: 20
+  StartLifetime: 0.75
+  MaxParticles: 1000
+  EmissionRate: 500
+  BurstNumber: 50
+  MinGravityEffect: 0.01
+  MaxGravityEffect: 1
+  SpriteArray:
+  - {fileID: 21300000, guid: 727daac88a66ba249bdd00dc9998b498, type: 3}
+  - {fileID: 21300000, guid: 85a03022d9e9a8641b7e182740dfb876, type: 3}
+  MinVelocityOverLifetime: {x: 2.37, y: 5, z: 0}
+  MaxVelocityOverLifetime: {x: 1.47, y: 5, z: 0}
+  DeathEffectPrefab: {fileID: 8462543504094354173, guid: 9e4c672d44f497542ab9e35e454c5da3, type: 3}
+  Radius: 1.75
+  Angle: 25
+  RadiusThickness: 0.3
+  Arc: 360
+  Mode: 1
+  Spread: 0
+  Speed: 10
+  _PreviewParticleSystem: {fileID: 3088771929239572704, guid: fcabb6cee4201d74d8c0a18f275c72f8, type: 3}

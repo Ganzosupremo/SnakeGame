@@ -54,13 +54,23 @@ MonoBehaviour:
     isConnected: 0
     isUnavailable: 0
   spawnPositionArray:
-  - {x: -6, y: 1}
-  - {x: 4, y: -4}
-  - {x: -4, y: -9}
-  - {x: 7, y: -10}
-  - {x: -2, y: 3}
-  - {x: 1, y: 1}
+  - {x: -4, y: 3}
+  - {x: 7, y: 0}
+  - {x: 9, y: -8}
+  - {x: 1, y: -12}
+  - {x: -2, y: -5}
   enemiesByLevelList: []
   roomEnemySpawnParemetersList: []
-  foodByLevelList: []
-  roomFoodSpawnParametersList: []
+  foodByLevelList:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    spawnableObjectRatioList:
+    - dungeonObject: {fileID: 11400000, guid: 2827d98fc2373654d8806d09a86d3eae, type: 2}
+      spawnRatio: 10
+  roomFoodSpawnParametersList:
+  - gameLevel: {fileID: 11400000, guid: d03a225fb4672f74ab13b090b29d3be3, type: 2}
+    minTotalItemsToSpawn: 5
+    maxTotalItemsToSpawn: 8
+    minConcurrentItems: 3
+    maxConcurrentItems: 5
+    minSpawnInterval: 1
+    maxSpawnInterval: 2

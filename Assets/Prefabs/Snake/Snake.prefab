@@ -305,7 +305,6 @@ GameObject:
   - component: {fileID: 8266277145047211156}
   - component: {fileID: 8266277145047211176}
   - component: {fileID: 5123153779636371124}
-  - component: {fileID: 8658067785164293708}
   - component: {fileID: 4336066559190943374}
   - component: {fileID: 8266277145047211177}
   - component: {fileID: 8266277145047211178}
@@ -397,7 +396,7 @@ SpriteRenderer:
   m_SortingLayerID: -251573173
   m_SortingLayer: 4
   m_SortingOrder: 6
-  m_Sprite: {fileID: 507617228, guid: a0d9ac691a51edb4d9a62b8fcc4473cf, type: 3}
+  m_Sprite: {fileID: -484580280, guid: 90b95dff72176e24bb3a3c3f7fb6c00a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -442,6 +441,11 @@ MonoBehaviour:
   weaponReloadedEvent: {fileID: 0}
   spriteRenderer: {fileID: 0}
   _LowHealthEffect: {fileID: 11400000, guid: 1dfe4d82b6255b642bab34705ca80e57, type: 2}
+  SegmentsArray:
+  - {fileID: -1124918911, guid: 90b95dff72176e24bb3a3c3f7fb6c00a, type: 3}
+  - {fileID: 588753237, guid: 90b95dff72176e24bb3a3c3f7fb6c00a, type: 3}
+  - {fileID: 1490020449, guid: 90b95dff72176e24bb3a3c3f7fb6c00a, type: 3}
+  BurstAbilityTrail: {fileID: 0}
 --- !u!114 &8266277145047211176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,22 +473,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AbilityEffectParticleSystem: {fileID: 3754341511128468287, guid: f9b3037f5fff0564c95d0f85829a1c9e, type: 3}
---- !u!114 &8658067785164293708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8266277145047211159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85d5a1f079fccb4408937442cadf0e56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Segments:
-  - PoolSize: 100
-    PrefabToUse: {fileID: 5914190275693245931, guid: f62dfd7c22b20ed449d3e594f6ad23e3, type: 3}
-    ComponentType: SnakeGame.PlayerSystem.SnakeBody
 --- !u!114 &4336066559190943374
 MonoBehaviour:
   m_ObjectHideFlags: 0
