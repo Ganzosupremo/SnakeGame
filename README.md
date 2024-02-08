@@ -8,12 +8,14 @@ Great background music, in my humble opinion.
 
 ## CONTROLS
 ========================================================
+
 WASD; To move obviously
 Tab; Open the minimap, right click on a room to teleport
 Right Click; Fire current weapon
 ​Mouse Wheel; Switch weapons
 R; Reload current weapon
 Space bar; Activates an special ability
+
 ===================================​​​=====================
 
 
